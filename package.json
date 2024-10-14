@@ -6,7 +6,12 @@
     "dev": "bun run --watch src/index.ts"
   },
   "dependencies": {
-    "elysia": "latest"
+    "@prisma/client": "5.20.0",
+    "elysia": "latest",
+    "ism-web-service": "file:",
+    "node-cache": "^5.1.2",
+    "prisma": "^5.20.0",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "bun-types": "latest"
