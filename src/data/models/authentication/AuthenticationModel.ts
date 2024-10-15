@@ -1,18 +1,18 @@
 export type LoginModel = {
-    userName?: string;
+    username?: string;
     email?: string;
     password: string;
   }
   
   export type RegisterModel = {
     name: string;
-    userName: string;
+    username: string;
     email: string;
     password: string;
   }
   
   export type LogoutModel = {
-    userName: string;
+    username: string;
     accessToken: string;
   }
   
@@ -33,7 +33,7 @@ export type LoginModel = {
   
   export type LoginResult = {
     isSuccess: boolean;
-    userGuid?: string;
+    userId?: number;
   } & Omit<RefreshTokenResult, 'isValid'>;
   
   export type LogoutResult = {
@@ -42,12 +42,10 @@ export type LoginModel = {
   
   export type UserAuthData = {
     id: number;
-    userId: number;
+    username: string;
     hashedPassword: string;
     createdAt: Date;
     updatedAt: Date;
-    provider?: string;
-    providerAccountId?: string;
     accessToken?: string;
     refreshToken?: string;
   }

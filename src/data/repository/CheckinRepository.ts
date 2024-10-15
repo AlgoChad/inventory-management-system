@@ -1,4 +1,4 @@
-import { Prisma, PrismaClient, User } from "@prisma/client";
+import { Checkin, Prisma, PrismaClient, User } from "@prisma/client";
 import { ICacheManager } from "../caching/manager/ICacheManager";
 import EntityRepository from "./base/EntityRepository";
 import { CacheManager } from "../caching/manager/CacheManager";
@@ -10,29 +10,29 @@ const prisma = new PrismaClient({
 
 const cacheManager: ICacheManager = new CacheManager(300);
 
-class UserRepository extends EntityRepository<User, Prisma.UserCreateInput, Prisma.UserUpdateInput> {
+class CheckinRepository extends EntityRepository<Checkin, Prisma.CheckinCreateInput, Prisma.CheckinUpdateInput> {
     constructor () {
-        super(prisma.user);
+        super(prisma.checkin);
     }
 }
 
-class CachedUserRepositorySingleton {
-    private static instance: CachedRepository<User, Prisma.UserCreateInput, Prisma.UserUpdateInput>;
+class CachedCheckInRepositorySingleton {
+    private static instance: CachedRepository<Checkin, Prisma.CheckinCreateInput, Prisma.CheckinUpdateInput>;
 
     private constructor() {}
 
-    public static getInstance(): CachedRepository<User, Prisma.UserCreateInput, Prisma.UserUpdateInput> {
-        if (!CachedUserRepositorySingleton.instance) {
-            const userRepository = new UserRepository();
-            CachedUserRepositorySingleton.instance = new CachedRepository<User, Prisma.UserCreateInput, Prisma.UserUpdateInput>(
-                userRepository, 
+    public static getInstance(): CachedRepository<Checkin, Prisma.CheckinCreateInput, Prisma.CheckinUpdateInput> {
+        if (!CachedCheckInRepositorySingleton.instance) {
+            const checkinRepository = new CheckinRepository();
+            CachedCheckInRepositorySingleton.instance = new CachedRepository<Checkin, Prisma.CheckinCreateInput, Prisma.CheckinUpdateInput>(
+                checkinRepository, 
                 cacheManager,
-                "UserRepository"
+                "CheckInRepository"
             );
         }
 
-        return CachedUserRepositorySingleton.instance;
+        return CachedCheckInRepositorySingleton.instance;
     }
 }
 
-export default CachedUserRepositorySingleton.getInstance();
+export default CachedCheckInRepositorySingleton.getInstance();
