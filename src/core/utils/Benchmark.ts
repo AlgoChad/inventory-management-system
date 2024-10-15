@@ -1,5 +1,8 @@
-export async function benchmark<T>(fn: (...args: any[]) => T | Promise<T>, ...args: any[]): Promise<T> {
-    const functionName = fn.name || 'anonymous function';
+export async function benchmark<T>(
+    fn: (...args: any[]) => T | Promise<T>,
+    ...args: any[]
+): Promise<T> {
+    const functionName = fn.name || "anonymous function";
     console.log(`Benchmarking ${functionName} with arguments:`, args);
 
     const startMemory = process.memoryUsage().heapUsed;
@@ -10,7 +13,9 @@ export async function benchmark<T>(fn: (...args: any[]) => T | Promise<T>, ...ar
     const endTime = performance.now();
     const endMemory = process.memoryUsage().heapUsed;
 
-    console.log(`Execution time: ${(endTime - startTime).toFixed(2)} milliseconds`);
+    console.log(
+        `Execution time: ${(endTime - startTime).toFixed(2)} milliseconds`
+    );
     console.log(`Memory usage: ${(endMemory - startMemory) / 1024} KB`);
 
     return result;

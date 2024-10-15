@@ -6,7 +6,7 @@ import {
     GetAllCheckinPagedParams,
 } from "@/src/data/models/checkin/CheckinModel";
 import ICheckinService from "@/src/core/services/checkins/ICheckinService";
-import CheckinController from "./CheckInController";
+import CheckinController from "./CheckinController";
 import { Token } from "@/src/data/models/generic/TokenModel";
 import IAuthenticationService from "@/src/core/services/authentication/IAuthenticationService";
 import AuthenticationService from "@/src/core/services/authentication/AuthenticationService";
