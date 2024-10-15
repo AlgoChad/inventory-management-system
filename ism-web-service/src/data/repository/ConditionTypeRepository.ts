@@ -1,8 +1,8 @@
-import { PrismaClient } from "@prisma/client/extension";
+import { PrismaClient, ConditionType } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { ICacheManager } from "../caching/manager/ICacheManager";
 import { CacheManager } from "../caching/manager/CacheManager";
 import EntityRepository from "./base/EntityRepository";
-import { ConditionType, Prisma } from "@prisma/client";
 import CachedRepository from "./base/CachedRepository";
 
 const prisma = new PrismaClient({

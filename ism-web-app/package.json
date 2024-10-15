@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "remix vite:build",
-    "dev": "remix vite:dev --host 192.168.254.104 --port 5173",
+    "dev": "remix vite:dev --host localhost --port 5173",
     "lint": "eslint --ignore-path .gitignore --cache --cache-location ./node_modules/.cache/eslint .",
     "start": "remix-serve ./build/server/index.js",
     "typecheck": "tsc"
@@ -45,6 +45,7 @@
     "@remix-run/react": "^2.11.2",
     "@remix-run/serve": "^2.11.2",
     "@tanstack/react-query": "^5.54.1",
+    "@tanstack/react-table": "^8.20.5",
     "axios": "^1.7.7",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
@@ -53,6 +54,7 @@
     "date-fns": "^3.6.0",
     "embla-carousel-react": "^8.2.0",
     "flame-link-web": "file:",
+    "html-react-parser": "^5.1.18",
     "input-otp": "^1.2.4",
     "isbot": "^4.1.0",
     "isomorphic-ws": "^5.0.0",
@@ -71,7 +73,7 @@
     "recharts": "^2.12.7",
     "remix-flat-routes": "^0.6.5",
     "sonner": "^1.5.0",
-    "tailwind-merge": "^2.5.2",
+    "tailwind-merge": "^2.5.4",
     "tailwindcss-animate": "^1.0.7",
     "uuid": "^10.0.0",
     "vaul": "^0.9.1",

@@ -13,12 +13,12 @@ class Token {
     public async GenerateTokenAsync(userId: number): Promise<string | undefined> {
         const userAuthAndData = await this.repository.GetEntityAsync(async (query: PrismaClient) => {
             return await query.findFirst({
-                where: { userId: userId },
+                where: { id: userId },
                 include: {
                     personnel: true
                 }
             });
-        }, true, { userId });
+        });
 
         if (userAuthAndData) {
             const userData = userAuthAndData as unknown as Personnel
@@ -48,12 +48,12 @@ class Token {
     public async GenerateRefreshTokenAsync(userId: number): Promise<string | undefined> {
         const userAuthAndData = await this.repository.GetEntityAsync(async (query: PrismaClient) => {
             return await query.findFirst({
-                where: { userId: userId },
+                where: { id: userId },
                 include: {
                     personnel: true
                 }
             });
-        }, true, { userId });
+        });
 
         if (userAuthAndData) {
             const userData = userAuthAndData as unknown as Personnel
@@ -91,7 +91,7 @@ class Token {
                     personnel: true
                 }
             });
-        }, true, { token });
+        });
 
         return  [isTokenValid, userAuthData];
     }
@@ -109,7 +109,7 @@ class Token {
                     personnel: true
                 }
             });
-        }, true, { token, refreshToken });
+        });
 
         return [isRefreshTokenValid, userAuthData];
     }

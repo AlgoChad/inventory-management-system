@@ -45,7 +45,7 @@ class ConditionTypeService implements IConditionTypeService {
         try {
             const conditionType = await this._repository.GetEntityAsync(
                 async (query: PrismaClient) => {
-                    return await query.conditionType.findFirst({
+                    return await query.findFirst({
                         where: { id },
                         include: {
                             tools: true,
@@ -138,17 +138,9 @@ class ConditionTypeService implements IConditionTypeService {
     ): Promise<PagedList<ConditionTypeModel>> {
         const { page, limit, search } = params;
         try {
-            const where: Prisma.ConditionTypeWhereInput = {
-                name: {
-                    contains: search,
-                    mode: "insensitive",
-                },
-            };
-
             const result = await this._repository.GetAllPagedAsync(
                 async (query: PrismaClient) => {
-                    const result = await query.conditionType.findMany({
-                        where,
+                    const result = await query.findMany({
                         include: {
                             tools: true,
                         },

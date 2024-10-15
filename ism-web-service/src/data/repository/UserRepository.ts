@@ -1,4 +1,5 @@
-import { Prisma, PrismaClient, User } from "@prisma/client";
+import { PrismaClient, User } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { ICacheManager } from "../caching/manager/ICacheManager";
 import { CacheManager } from "../caching/manager/CacheManager";
 import EntityRepository from "./base/EntityRepository";

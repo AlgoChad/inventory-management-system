@@ -25,12 +25,12 @@ class AuthenticationService implements IAuthenticationService {
     }
 
     public async RegisterAsync(registerModel: RegisterModel): Promise<boolean> {
-        const { email, name, password } = registerModel;
+        const { name, email, password } = registerModel;
         try {
             const userAlreadyExists = async (email: string, name: string) => {
                 const user = await this._repository.GetEntityAsync(
                     async (query: PrismaClient) => {
-                        return await query.user.findFirst({
+                        return await query.findFirst({
                             where: {
                                 username: email,
                                 personnel: {
@@ -77,7 +77,7 @@ class AuthenticationService implements IAuthenticationService {
         try {
             const user = await this._repository.GetEntityAsync(
                 async (query: PrismaClient) => {
-                    return await query.user.findFirst({
+                    return await query.findFirst({
                         where: {
                             username: username,
                         },
@@ -193,7 +193,6 @@ class AuthenticationService implements IAuthenticationService {
         try {
             const [isTokenValid, userData] =
                 await this._tokenHelper.ValidateAccessTokenAsync(accessToken);
-
             if (isTokenValid && userData) {
                 return {
                     isValid: true,

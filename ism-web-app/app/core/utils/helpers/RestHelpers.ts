@@ -4,12 +4,11 @@ import {
     ApiResponseSchema, 
     ProblemDetail, 
     ProblemDetailSchema 
-} from "data/models/ApiModel";
-import { PaginationStructure } from "data/models/PaginationModel";
-import { z, ZodObject, ZodType } from 'zod';
+} from "@/app/data/models/generic/ApiModel";
+import { z, ZodObject } from 'zod';
 
 export const TrimSearchQueryValue = (searchQuery: Record<string, string>) => {
-    for (var query in searchQuery) {
+    for (const query in searchQuery) {
         searchQuery[query] = searchQuery[query].trim();
         if (searchQuery[query] === "" || 
             searchQuery[query] === undefined || 
@@ -17,13 +16,12 @@ export const TrimSearchQueryValue = (searchQuery: Record<string, string>) => {
             delete searchQuery[query];
         }
     }
-
     return searchQuery;
 };
 
 export const SanitizeRequest = (request: any) => {
     const url = new URL(request.url);
-    let args: any =  Object.fromEntries(url.searchParams);
+    const args: any = Object.fromEntries(url.searchParams);
     return TrimSearchQueryValue(args);
 };
 
@@ -37,29 +35,23 @@ export const GenerateQueryString = (params: Record<string, any>): string => {
     return searchParams.toString();
 };
 
-export const CreateResponse = <T extends ZodObject<any, any>>(
+export const CreateResponse = <T>(
     status: "success" | "error", 
-    message: string, 
-    schema?: T, 
+    message: string,
     error?: string, 
-    data: any = null
-): ApiResponse<z.infer<T>> => {
-    let response: ApiResponse<z.infer<T>> = { 
+    data?: T | undefined
+): ApiResponse<T> => {
+    const response: ApiResponse<T> = { 
         status, 
         message,
         error,
         data
     };
-
-    if (schema) {
-        const responseSchema = ApiResponseSchema(schema);
-        responseSchema.parse(response);
-    }
     
     return response;
 };
 
-export const HandleError = (error: any, requestOrParams?: Request | any) => {
+export const HandleError = (error: any, requestOrParams?: Request | any): ProblemDetail => {
     const traceId = uuidv4();
     console.error(`Error action cannot be done: ${error}`, { traceId });
 
