@@ -133,23 +133,45 @@ class ConditionTypeService implements IConditionTypeService {
         }
     }
 
+    public async GetAllConditionTypesAsync(): Promise<ConditionTypeModel[]> {
+        try {
+            const conditionTypes = await this._repository.GetAllAsync(
+                async (query: PrismaClient) => {
+                    const result = await query.findMany();
+
+                    return result;
+                }
+            );
+
+            return conditionTypes as ConditionTypeModel[];
+        } catch (error) {
+            console.error("Error retrieving conditionTypes:", error);
+            throw new Error("ConditionTypes retrieval failed");
+        }
+    }
+
     public async GetAllConditionTypesPagedAsync(
         params: GetAllConditionTypePagedParams
     ): Promise<PagedList<ConditionTypeModel>> {
-        const { page, limit, search } = params;
+        const { page, limit, search, column, direction } = params;
         try {
             const result = await this._repository.GetAllPagedAsync(
                 async (query: PrismaClient) => {
+                    const orderBy: { [key: string]: 'asc' | 'desc' } = {};
+
+                    if (column && direction) {
+                        orderBy[column] = direction;
+                    }
+            
                     const result = await query.findMany({
                         include: {
                             tools: true,
                         },
+                        orderBy: orderBy,
                     });
-
+            
                     return result;
-                },
-                page,
-                limit
+                }, page, limit
             );
 
             return result as PagedList<ConditionTypeModel>;

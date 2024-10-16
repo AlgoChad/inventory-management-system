@@ -24,9 +24,12 @@ const projectRoutes = new Elysia({ prefix: "/projects" })
     .get(
         "",
         async (req: ApiRequest<GetAllProjectPagedParams, {}, {}, Token>) => {
-            return await projectController.getAllProjects(req);
+            return await projectController.getAllProjectsPaged(req);
         }
     )
+    .get("/all", async (req: ApiRequest<{}, {}, {}, Token>) => {
+        return await projectController.getAllProjects(req);
+    })
     .get("/:id", async (req: ApiRequest<{}, { id: number }, {}, Token>) => {
         return await projectController.getProjectById(req);
     })

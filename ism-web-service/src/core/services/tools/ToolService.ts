@@ -23,7 +23,9 @@ class ToolService implements IToolService {
     ): Promise<ToolResult> {
         try {
             const toolCreateInput: Prisma.ToolCreateInput = {
-                ...createToolModel,
+                toolNumber: createToolModel.toolNumber,
+                toolDescription: createToolModel.toolDescription,
+                quantity: createToolModel.quantity,
                 condition: {
                     connect: {
                         id: createToolModel.conditionId,
@@ -55,7 +57,7 @@ class ToolService implements IToolService {
         try {
             const tool = await this._repository.GetEntityAsync(
                 async (query: PrismaClient) => {
-                    return await query.tool.findFirst({
+                    return await query.findFirst({
                         where: { id },
                         include: {
                             condition: true,
@@ -117,7 +119,7 @@ class ToolService implements IToolService {
         try {
             const toolResult = await this._repository.GetEntityAsync(
                 async (query: PrismaClient) => {
-                    return await query.tool.findFirst({
+                    return await query.findFirst({
                         where: { id },
                     });
                 }
@@ -148,7 +150,7 @@ class ToolService implements IToolService {
     public async GetAllToolsPagedAsync(
         params: GetAllToolPagedParams
     ): Promise<PagedList<ToolModel>> {
-        const { page, limit, search } = params;
+        const { page, limit, search, column, direction } = params;
         try {
             const where: Prisma.ToolWhereInput = {
                 toolDescription: {
@@ -159,15 +161,31 @@ class ToolService implements IToolService {
 
             const result = await this._repository.GetAllPagedAsync(
                 async (query: PrismaClient) => {
-                    const result = await query.tool.findMany({
+                    const orderBy: any = {};
+
+                    if (column && direction) {
+                        const formattedColumn = column.replace(/_/g, '.');
+                        const keys = formattedColumn.split('.');
+                        let current = orderBy;
+
+                        for (let i = 0; i < keys.length - 1; i++) {
+                            current[keys[i]] = current[keys[i]] || {};
+                            current = current[keys[i]];
+                        }
+
+                        current[keys[keys.length - 1]] = direction;
+                    }
+
+                    const result = await query.findMany({
                         where,
                         include: {
                             condition: true,
                             status: true,
                             project: true,
                             personnel: true,
-                            checkins: true,
+                            Checkin: true,
                         },
+                        orderBy: orderBy,
                     });
 
                     return result;

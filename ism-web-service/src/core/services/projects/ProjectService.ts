@@ -43,7 +43,7 @@ class ProjectService implements IProjectService {
         try {
             const project = await this._repository.GetEntityAsync(
                 async (query: PrismaClient) => {
-                    return await query.project.findFirst({
+                    return await query.findFirst({
                         where: { id },
                         include: {
                             tools: true,
@@ -102,7 +102,7 @@ class ProjectService implements IProjectService {
         try {
             const projectResult = await this._repository.GetEntityAsync(
                 async (query: PrismaClient) => {
-                    return await query.project.findFirst({
+                    return await query.findFirst({
                         where: { id },
                     });
                 }
@@ -130,10 +130,28 @@ class ProjectService implements IProjectService {
         }
     }
 
+    public async GetAllProjectsAsync(): Promise<ProjectModel[]> {
+        try {
+            const projects = await this._repository.GetAllAsync(
+                async (query: PrismaClient) => {
+                    return await query.findMany({
+                        include: {
+                            tools: true,
+                        },
+                    });
+                }
+            );
+            return projects as ProjectModel[];
+        } catch (error) {
+            console.error("Error retrieving projects:", error);
+            throw new Error("Projects retrieval failed");
+        }
+    }
+
     public async GetAllProjectsPagedAsync(
         params: GetAllProjectPagedParams
     ): Promise<PagedList<ProjectModel>> {
-        const { page, limit, search } = params;
+        const { page, limit, search, column, direction } = params;
         try {
             const where: Prisma.ProjectWhereInput = {
                 projectDescription: {
@@ -144,18 +162,22 @@ class ProjectService implements IProjectService {
 
             const result = await this._repository.GetAllPagedAsync(
                 async (query: PrismaClient) => {
-                    const result = await query.project.findMany({
-                        where,
+                    const orderBy: { [key: string]: 'asc' | 'desc' } = {};
+
+                    if (column && direction) {
+                        orderBy[column] = direction;
+                    }
+            
+                    const result = await query.findMany({
                         include: {
                             tools: true,
-                            checkins: true,
                         },
+                        orderBy: orderBy,
                     });
-
+            
                     return result;
                 }, page, limit
             );
-
             return result as PagedList<ProjectModel>;
         } catch (error) {
             console.error("Error retrieving projects:", error);

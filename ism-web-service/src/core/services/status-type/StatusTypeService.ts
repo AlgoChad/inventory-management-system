@@ -129,27 +129,43 @@ class StatusTypeService implements IStatusTypeService {
         }
     }
 
+    public async GetAllStatusTypesAsync(): Promise<StatusTypeModel[]> {
+        try {
+            const statusTypes = await this._repository.GetAllAsync(
+                async (query: PrismaClient) => {
+                    const result = await query.findMany();
+
+                    return result;
+                }
+            );
+
+            return statusTypes as StatusTypeModel[];
+        } catch (error) {
+            console.error("Error retrieving conditionTypes:", error);
+            throw new Error("ConditionTypes retrieval failed");
+        }
+    }
+
     public async GetAllStatusTypesPagedAsync(
         params: GetAllStatusTypePagedParams
     ): Promise<PagedList<StatusTypeModel>> {
-        const { page, limit, search } = params;
+        const { page, limit, search, column, direction } = params;
         try {
-            const where: Prisma.StatusTypeWhereInput = {
-                name: {
-                    contains: search,
-                    mode: "insensitive",
-                },
-            };
-
             const result = await this._repository.GetAllPagedAsync(
                 async (query: PrismaClient) => {
+                    const orderBy: { [key: string]: 'asc' | 'desc' } = {};
+
+                    if (column && direction) {
+                        orderBy[column] = direction;
+                    }
+            
                     const result = await query.findMany({
-                        where,
                         include: {
                             tools: true,
                         },
+                        orderBy: orderBy,
                     });
-
+            
                     return result;
                 }, page, limit
             );

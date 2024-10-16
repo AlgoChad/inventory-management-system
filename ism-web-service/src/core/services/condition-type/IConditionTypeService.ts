@@ -6,5 +6,6 @@ export default interface IConditionTypeService {
   GetConditionTypeByIdAsync(id: number): Promise<ConditionTypeResult>;
   UpdateConditionTypeAsync(id: number, updateConditionTypeModel: UpdateConditionTypeModel): Promise<ConditionTypeResult>;
   DeleteConditionTypeAsync(id: number): Promise<ConditionTypeResult>;
+  GetAllConditionTypesAsync(): Promise<ConditionTypeModel[]>;
   GetAllConditionTypesPagedAsync(params: GetAllConditionTypePagedParams): Promise<PagedList<ConditionTypeModel>>;
 }

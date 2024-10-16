@@ -29,7 +29,7 @@ class ConditionTypeController extends BaseController {
         this.authService = authService;
     }
 
-    public async getAllConditionTypes(
+    public async getAllConditionTypesPaged(
         req: ApiRequest<GetAllConditionTypePagedParams, {}, {}>
     ): Promise<ApiResponse<PagedList<ConditionTypeModel>> | ProblemDetail> {
         try {
@@ -53,6 +53,36 @@ class ConditionTypeController extends BaseController {
                 );
             } else {
                 return CreateResponse<PagedList<ConditionTypeModel>>(
+                    "error",
+                    "No ConditionTypes found",
+                    undefined,
+                    result
+                );
+            }
+        } catch (error) {
+            return this.handleError(error);
+        }
+    }
+
+    public async getAllConditionTypes(
+        req: ApiRequest<{}, {}, {}>
+    ): Promise<ApiResponse<ConditionTypeModel[]> | ProblemDetail> {
+        try {
+            const validationError = await this.validateAccessToken(req);
+            if (validationError)
+                return validationError as unknown as ApiResponse<ConditionTypeModel[]>;
+
+            const result = await this.conditionTypeService.GetAllConditionTypesAsync();
+
+            if (result.length > 0) {
+                return CreateResponse<ConditionTypeModel[]>(
+                    "success",
+                    "ConditionTypes fetched successfully",
+                    undefined,
+                    result
+                );
+            } else {
+                return CreateResponse<ConditionTypeModel[]>(
                     "error",
                     "No ConditionTypes found",
                     undefined,

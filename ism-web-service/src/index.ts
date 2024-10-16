@@ -6,12 +6,14 @@ import conditionTypeRoutes from "./routes/condition-type";
 import projectRoutes from "./routes/projects";
 import statusTypeRoutes from "./routes/status-type";
 import toolRoutes from "./routes/tools";
+import personnelRoutes from "./routes/personnel";
 
 const app = new Elysia().get("/", () => "Hello Elysia").use(swagger());
 
 app.group("/api", (app) =>
     app
         .use(authenticationRoutes)
+        .use(personnelRoutes)
         .use(checkinRoutes)
         .use(conditionTypeRoutes)
         .use(statusTypeRoutes)

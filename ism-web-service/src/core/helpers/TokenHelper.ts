@@ -10,7 +10,7 @@ const REFRESH_TOKEN_EXPIRATION_DAYS = 30; // 30 days
 const CUSTOM_TOKEN_EXPIRATION_SECONDS = CUSTOM_TOKEN_EXPIRATION_MINUTES * 60;
 const REFRESH_TOKEN_EXPIRATION_SECONDS = REFRESH_TOKEN_EXPIRATION_DAYS * 24 * 60 * 60;
 
-let isValidationEnabled = true; // Global variable to control validation
+let isValidationEnabled = false; // Global variable to control validation
 
 const base64UrlEncode = (str: string): string => Buffer.from(str).toString('base64url');
 

@@ -13,8 +13,7 @@ import AuthenticationService from "@/src/core/services/authentication/Authentica
 import { ApiRequest } from "@/src/data/models/generic/ApiModel";
 
 const statusTypeService: IStatusTypeService = new StatusTypeService();
-const authenticationService: IAuthenticationService =
-    new AuthenticationService();
+const authenticationService: IAuthenticationService = new AuthenticationService();
 const statusTypeController = new StatusTypeController(
     statusTypeService,
     authenticationService
@@ -24,9 +23,12 @@ const statusTypeRoutes = new Elysia({ prefix: "/status-types" })
     .get(
         "",
         async (req: ApiRequest<GetAllStatusTypePagedParams, {}, {}, Token>) => {
-            return await statusTypeController.getAllStatusTypes(req);
+            return await statusTypeController.getAllStatusTypesPaged(req);
         }
     )
+    .get("/all", async (req: ApiRequest<{}, {}, {}, Token>) => {
+        return await statusTypeController.getAllStatusTypes(req);
+    })
     .get("/:id", async (req: ApiRequest<{}, { id: number }, {}, Token>) => {
         return await statusTypeController.getStatusTypeById(req);
     })

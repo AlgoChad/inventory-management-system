@@ -16,20 +16,21 @@ import CreateConditionTypeForm from "./components/condition-types/ConditionTypeF
 import { Button } from "~/components/ui/button";
 import CreateStatusTypeForm from "./components/status-types/StatusTypeForm";
 
-const API_BASE_URL = "http://localhost:3000/api"; // Base URL for your API
-const API_TOKEN =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJnaXZpbGxhbW9yMDFAZ21haWwuY29tIiwiaWF0IjoxNzI5MDg0MjI0LCJleHAiOjE3MjkwOTAyMjR9.jMeoZWLAKiLIVxzSD6Ox6-Qnz8uTJDK0Jzrh-LnyWe0"; // Your JWT token
+const API_BASE_URL = process.env.API_BASE_URL as string;
+const API_TOKEN = process.env.API_TOKEN as string;
 const restClient = new RestClient(API_BASE_URL, API_TOKEN);
 
 export const loader: LoaderFunction = async ({ request }) => {
     const parsedArgs = SanitizeRequest(request);
     try {
-        const getConditionTyles = async () => {
+        const getConditionTypes = async () => {
             const conditionTypes = await restClient.Get<
                 ApiResponse<PagedList<ConditionTypeModel>>
             >(`/condition-types`, {
                 page: parsedArgs.page || 1,
                 limit: parsedArgs.limit || 10,
+                column: parsedArgs.orderBy || "createdAt",
+                direction: parsedArgs.orderDir|| "asc",
             });
 
             if (!conditionTypes.data) {
@@ -58,6 +59,8 @@ export const loader: LoaderFunction = async ({ request }) => {
             >(`/status-types`, {
                 page: parsedArgs.page || 1,
                 limit: parsedArgs.limit || 10,
+                column: parsedArgs.orderBy || "createdAt",
+                direction: parsedArgs.orderDir|| "asc",
             });
 
             if (!statusTypes.data) {
@@ -81,14 +84,15 @@ export const loader: LoaderFunction = async ({ request }) => {
         };
 
         const data = await promiseHash({
-            conditionTypes: getConditionTyles(),
+            conditionTypes: getConditionTypes(),
             statusTypes: getStatusTypes()
         });
 
-        console.log (data)
-
         return json({
-            ...data,
+            ...(await promiseHash({
+                conditionTypes: getConditionTypes(),
+                statusTypes: getStatusTypes()
+            })),
         });
     } catch (error) {
         throw new Response("Failed to load data", { status: 500 });
@@ -126,17 +130,21 @@ export default function Index() {
 
     return (
         <div>
-            <div style={{ display: 'flex', flexDirection: 'row', gap: '1rem' }}>
-                <ScrollArea style={{ width: '45%' }} className="h-auto rounded-md border p-4">
-                    <Button style={{margin: '10px'}} onClick={openConditionDialog}>Create Condition Type</Button>
+            <div className="flex flex-col md:flex-row gap-4">
+                <ScrollArea className="w-full md:w-1/2 h-auto rounded-md border p-4">
+                    <div className="flex justify-end mb-4">
+                        <Button className="m-2" onClick={openConditionDialog}>Create Condition Type</Button>
+                    </div>
                     <ConditionTypesTable table={conditionTypes} />
                 </ScrollArea>
-                <ScrollArea style={{ width: '45%' }} className="h-auto rounded-md border p-4">
-                    <Button style={{margin: '10px'}} onClick={openStatusDialog}>Create Status Type</Button>
+                <ScrollArea className="w-full md:w-1/2 h-auto rounded-md border p-4">
+                    <div className="flex justify-end mb-4">
+                        <Button className="m-2" onClick={openStatusDialog}>Create Status Type</Button>
+                    </div>
                     <StatusTypesTable table={statusTypes} />
                 </ScrollArea>
             </div>
-            <div style={{ marginTop: '2rem' }}>
+            <div className="mt-8">
                 <CreateConditionTypeForm isOpen={isConditionDialogOpen} onClose={closeConditionDialog} />
                 <CreateStatusTypeForm isOpen={isStatusDialogOpen} onClose={closeStatusDialog} />
             </div>

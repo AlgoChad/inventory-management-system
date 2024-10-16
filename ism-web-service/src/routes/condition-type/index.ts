@@ -13,8 +13,7 @@ import AuthenticationService from "@/src/core/services/authentication/Authentica
 import { ApiRequest } from "@/src/data/models/generic/ApiModel";
 
 const conditionTypeService: IConditionTypeService = new ConditionTypeService();
-const authenticationService: IAuthenticationService =
-    new AuthenticationService();
+const authenticationService: IAuthenticationService = new AuthenticationService();
 const conditionTypeController = new ConditionTypeController(
     conditionTypeService,
     authenticationService
@@ -26,9 +25,12 @@ const conditionTypeRoutes = new Elysia({ prefix: "/condition-types" })
         async (
             req: ApiRequest<GetAllConditionTypePagedParams, {}, {}, Token>
         ) => {
-            return await conditionTypeController.getAllConditionTypes(req);
+            return await conditionTypeController.getAllConditionTypesPaged(req);
         }
     )
+    .get("/all", async (req: ApiRequest<{}, {}, {}, Token>) => {
+        return await conditionTypeController.getAllConditionTypes(req);
+    })
     .get("/:id", async (req: ApiRequest<{}, { id: number }, {}, Token>) => {
         return await conditionTypeController.getConditionTypeById(req);
     })
@@ -46,7 +48,7 @@ const conditionTypeRoutes = new Elysia({ prefix: "/condition-types" })
     )
     .post(
         "/delete/:id",
-        async (req: ApiRequest<{ }, { id: number }, {}, Token>) => {
+        async (req: ApiRequest<{}, { id: number }, {}, Token>) => {
             return await conditionTypeController.deleteConditionType(req);
         }
     );

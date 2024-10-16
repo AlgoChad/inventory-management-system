@@ -6,5 +6,6 @@ export default interface IProjectService {
   GetProjectByIdAsync(id: number): Promise<ProjectResult>;
   UpdateProjectAsync(id: number, updateProjectModel: UpdateProjectModel): Promise<ProjectResult>;
   DeleteProjectAsync(id: number): Promise<ProjectResult>;
+  GetAllProjectsAsync(): Promise<ProjectModel[]>;
   GetAllProjectsPagedAsync(params: GetAllProjectPagedParams): Promise<PagedList<ProjectModel>>;
 }

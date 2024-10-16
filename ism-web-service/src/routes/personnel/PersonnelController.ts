@@ -1,11 +1,11 @@
-import IProjectService from "@/src/core/services/projects/IProjectService";
+import IPersonnelService from "@/src/core/services/personnel/IPersonnelService";
 import {
-    CreateProjectModel,
-    UpdateProjectModel,
-    GetAllProjectPagedParams,
-    ProjectModel,
-    ProjectResult,
-} from "@/src/data/models/project/ProjectModel";
+    CreatePersonnelModel,
+    UpdatePersonnelModel,
+    GetAllPersonnelPagedParams,
+    PersonnelModel,
+    PersonnelResult,
+} from "@/src/data/models/personnel/PersonnelModel";
 import {
     ApiResponse,
     ProblemDetail,
@@ -16,45 +16,45 @@ import { PagedList } from "@/src/data/models/generic/PaginationModel";
 import IAuthenticationService from "@/src/core/services/authentication/IAuthenticationService";
 import BaseController from "@/src/core/classes/BaseController";
 
-class ProjectController extends BaseController {
-    private projectService: IProjectService;
+class PersonnelController extends BaseController {
+    private personnelService: IPersonnelService;
     protected authService: IAuthenticationService;
 
     constructor(
-        projectService: IProjectService,
+        personnelService: IPersonnelService,
         authService: IAuthenticationService
     ) {
         super(authService);
-        this.projectService = projectService;
+        this.personnelService = personnelService;
         this.authService = authService;
     }
 
-    public async getAllProjectsPaged(
-        req: ApiRequest<GetAllProjectPagedParams, {}, {}>
-    ): Promise<ApiResponse<PagedList<ProjectModel>> | ProblemDetail> {
+    public async getAllPersonnelPaged(
+        req: ApiRequest<GetAllPersonnelPagedParams, {}, {}>
+    ): Promise<ApiResponse<PagedList<PersonnelModel>> | ProblemDetail> {
         try {
             const validationError = await this.validateAccessToken(req);
             if (validationError)
                 return validationError as unknown as ApiResponse<
-                    PagedList<ProjectModel>
+                    PagedList<PersonnelModel>
                 >;
 
             const query = req.query;
-            const result = await this.projectService.GetAllProjectsPagedAsync(
+            const result = await this.personnelService.GetAllPersonnelPagedAsync(
                 query
             );
 
             if (result.list.length > 0) {
-                return CreateResponse<PagedList<ProjectModel>>(
+                return CreateResponse<PagedList<PersonnelModel>>(
                     "success",
-                    "Projects fetched successfully",
+                    "Personnel fetched successfully",
                     undefined,
                     result
                 );
             } else {
-                return CreateResponse<PagedList<ProjectModel>>(
+                return CreateResponse<PagedList<PersonnelModel>>(
                     "error",
-                    "No Projects found",
+                    "No personnel found",
                     undefined,
                     result
                 );
@@ -64,28 +64,27 @@ class ProjectController extends BaseController {
         }
     }
 
-    public async getAllProjects(
+    public async getAllPersonnel(
         req: ApiRequest<{}, {}, {}>
-    ) : Promise<ApiResponse<ProjectModel[]> | ProblemDetail> {
+    ): Promise<ApiResponse<PersonnelModel[]> | ProblemDetail> {
         try {
             const validationError = await this.validateAccessToken(req);
             if (validationError)
-                return validationError as unknown as ApiResponse<
-                    ProjectModel[]
-                >;
+                return validationError as unknown as ApiResponse<PersonnelModel[]>;
 
-            const result = await this.projectService.GetAllProjectsAsync();
+            const result = await this.personnelService.GetAllPersonnelAsync();
+
             if (result.length > 0) {
-                return CreateResponse<ProjectModel[]>(
+                return CreateResponse<PersonnelModel[]>(
                     "success",
-                    "Projects fetched successfully",
+                    "Personnel fetched successfully",
                     undefined,
                     result
                 );
             } else {
-                return CreateResponse<ProjectModel[]>(
+                return CreateResponse<PersonnelModel[]>(
                     "error",
-                    "No Projects found",
+                    "No personnel found",
                     undefined,
                     result
                 );
@@ -95,27 +94,27 @@ class ProjectController extends BaseController {
         }
     }
 
-    public async getProjectById(
+    public async getPersonnelById(
         req: ApiRequest<{}, { id: number }, {}>
-    ): Promise<ApiResponse<ProjectModel> | ProblemDetail> {
+    ): Promise<ApiResponse<PersonnelModel> | ProblemDetail> {
         try {
             const validationError = await this.validateAccessToken(req);
             if (validationError)
-                return validationError as unknown as ApiResponse<ProjectModel>;
+                return validationError as unknown as ApiResponse<PersonnelModel>;
 
-            const result = await this.projectService.GetProjectByIdAsync(
+            const result = await this.personnelService.GetPersonnelByIdAsync(
                 Number(req.params.id)
             );
 
             if (result.isSuccess) {
-                return CreateResponse<ProjectModel>(
+                return CreateResponse<PersonnelModel>(
                     "success",
                     result.message,
                     undefined,
-                    result.project
+                    result.personnel
                 );
             } else {
-                return CreateResponse<ProjectModel>(
+                return CreateResponse<PersonnelModel>(
                     "error",
                     result.message,
                     undefined
@@ -126,27 +125,27 @@ class ProjectController extends BaseController {
         }
     }
 
-    public async createProject(
-        req: ApiRequest<{}, {}, CreateProjectModel>
-    ): Promise<ApiResponse<ProjectModel> | ProblemDetail> {
+    public async createPersonnel(
+        req: ApiRequest<{}, {}, CreatePersonnelModel>
+    ): Promise<ApiResponse<PersonnelModel> | ProblemDetail> {
         try {
             const validationError = await this.validateAccessToken(req);
             if (validationError)
-                return validationError as unknown as ApiResponse<ProjectModel>;
+                return validationError as unknown as ApiResponse<PersonnelModel>;
 
-            const result = await this.projectService.CreateProjectAsync(
+            const result = await this.personnelService.CreatePersonnelAsync(
                 req.body.payload
             );
 
             if (result.isSuccess) {
-                return CreateResponse<ProjectModel>(
+                return CreateResponse<PersonnelModel>(
                     "success",
                     result.message,
                     undefined,
-                    result.project
+                    result.personnel
                 );
             } else {
-                return CreateResponse<ProjectModel>(
+                return CreateResponse<PersonnelModel>(
                     "error",
                     result.message,
                     undefined
@@ -157,27 +156,27 @@ class ProjectController extends BaseController {
         }
     }
 
-    public async updateProject(
-        req: ApiRequest<{}, { id: number }, UpdateProjectModel>
-    ): Promise<ApiResponse<ProjectModel> | ProblemDetail> {
+    public async updatePersonnel(
+        req: ApiRequest<{}, { id: number }, UpdatePersonnelModel>
+    ): Promise<ApiResponse<PersonnelModel> | ProblemDetail> {
         try {
             const validationError = await this.validateAccessToken(req);
             if (validationError)
-                return validationError as unknown as ApiResponse<ProjectModel>;
+                return validationError as unknown as ApiResponse<PersonnelModel>;
 
-            const result = await this.projectService.UpdateProjectAsync(
+            const result = await this.personnelService.UpdatePersonnelAsync(
                 Number(req.params.id),
                 req.body.payload
             );
             if (result.isSuccess) {
-                return CreateResponse<ProjectModel>(
+                return CreateResponse<PersonnelModel>(
                     "success",
                     result.message,
                     undefined,
-                    result.project
+                    result.personnel
                 );
             } else {
-                return CreateResponse<ProjectModel>(
+                return CreateResponse<PersonnelModel>(
                     "error",
                     result.message,
                     undefined
@@ -188,7 +187,7 @@ class ProjectController extends BaseController {
         }
     }
 
-    public async deleteProject(
+    public async deletePersonnel(
         req: ApiRequest<{}, { id: number }, {}>
     ): Promise<ApiResponse<null> | ProblemDetail> {
         try {
@@ -196,7 +195,7 @@ class ProjectController extends BaseController {
             if (validationError)
                 return validationError as unknown as ApiResponse<null>;
 
-            const result = await this.projectService.DeleteProjectAsync(
+            const result = await this.personnelService.DeletePersonnelAsync(
                 Number(req.params.id)
             );
             if (result.isSuccess) {
@@ -220,4 +219,4 @@ class ProjectController extends BaseController {
     }
 }
 
-export default ProjectController;
+export default PersonnelController;

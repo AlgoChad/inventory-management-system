@@ -6,5 +6,6 @@ export default interface IStatusTypeService {
   GetStatusTypeByIdAsync(id: number): Promise<StatusTypeResult>;
   UpdateStatusTypeAsync(id: number, updateStatusTypeModel: UpdateStatusTypeModel): Promise<StatusTypeResult>;
   DeleteStatusTypeAsync(id: number): Promise<StatusTypeResult>;
+  GetAllStatusTypesAsync(): Promise<StatusTypeModel[]>;
   GetAllStatusTypesPagedAsync(params: GetAllStatusTypePagedParams): Promise<PagedList<StatusTypeModel>>;
 }

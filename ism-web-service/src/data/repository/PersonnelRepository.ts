@@ -10,28 +10,28 @@ const prisma = new PrismaClient({
 
 const cacheManager: ICacheManager = new CacheManager(300);
 
-class PersonelRepository extends EntityRepository<Personnel, Prisma.PersonnelCreateInput, Prisma.PersonnelUpdateInput> {
+class PersonnelRepository extends EntityRepository<Personnel, Prisma.PersonnelCreateInput, Prisma.PersonnelUpdateInput> {
     constructor() {
         super(prisma.personnel);
     }
 }
 
-class CachedPersonelRepositorySingleton {
+class CachedPersonnelRepositorySingleton {
     private static instance: CachedRepository<Personnel, Prisma.PersonnelCreateInput, Prisma.PersonnelUpdateInput>;
 
     private constructor() { }
     
     public static getInstance(): CachedRepository<Personnel, Prisma.PersonnelCreateInput, Prisma.PersonnelUpdateInput> {
-        if (!CachedPersonelRepositorySingleton.instance) {
-            const personelRepository = new PersonelRepository();
-            CachedPersonelRepositorySingleton.instance = new CachedRepository<Personnel, Prisma.PersonnelCreateInput, Prisma.PersonnelUpdateInput>(
+        if (!CachedPersonnelRepositorySingleton.instance) {
+            const personelRepository = new PersonnelRepository();
+            CachedPersonnelRepositorySingleton.instance = new CachedRepository<Personnel, Prisma.PersonnelCreateInput, Prisma.PersonnelUpdateInput>(
                 personelRepository, 
                 cacheManager,
                 "PersonelRepository"
             );
         }
-        return CachedPersonelRepositorySingleton.instance;
+        return CachedPersonnelRepositorySingleton.instance;
     }
 }
 
-export default CachedPersonelRepositorySingleton.getInstance();
+export default CachedPersonnelRepositorySingleton.getInstance();

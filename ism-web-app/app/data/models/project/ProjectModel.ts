@@ -7,10 +7,10 @@ export type ProjectModel = {
   createdAt: Date;
   updatedAt: Date;
   tools: any[]; // Replace with actual Tool model if available
-  checkins: any[]; // Replace with actual Checkin model if available
+  checkin: any[]; // Replace with actual Checkin model if available
 }
 
-export type CreateProjectModel = Omit<ProjectModel, 'id' | 'createdAt' | 'updatedAt' | 'tools' | 'checkins'>;
+export type CreateProjectModel = Omit<ProjectModel, 'id' | 'createdAt' | 'updatedAt' | 'tools' | 'checkin'>;
 export type UpdateProjectModel = Partial<CreateProjectModel>;
 
 export type ProjectResult = {

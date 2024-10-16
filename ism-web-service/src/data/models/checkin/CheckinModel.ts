@@ -23,4 +23,8 @@ export interface GetAllCheckinPagedParams {
   page?: number;
   limit?: number;
   search?: string;
+  order?: {
+    column: string;
+    direction: 'asc' | 'desc';
+  }
 }

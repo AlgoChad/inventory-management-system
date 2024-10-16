@@ -29,7 +29,7 @@ class StatusTypeController extends BaseController {
         this.authService = authService;
     }
 
-    public async getAllStatusTypes(
+    public async getAllStatusTypesPaged(
         req: ApiRequest<GetAllStatusTypePagedParams, {}, {}>
     ): Promise<ApiResponse<PagedList<StatusTypeModel>> | ProblemDetail> {
         try {
@@ -63,6 +63,37 @@ class StatusTypeController extends BaseController {
             return this.handleError(error);
         }
     }
+
+    public async getAllStatusTypes(
+        req: ApiRequest<{}, {}, {}>
+    ): Promise<ApiResponse<StatusTypeModel[]> | ProblemDetail> {
+        try {
+            const validationError = await this.validateAccessToken(req);
+            if (validationError)
+                return validationError as unknown as ApiResponse<StatusTypeModel[]>;
+
+            const result = await this.statusTypeService.GetAllStatusTypesAsync();
+
+            if (result.length > 0) {
+                return CreateResponse<StatusTypeModel[]>(
+                    "success",
+                    "StatusTypes fetched successfully",
+                    undefined,
+                    result
+                );
+            } else {
+                return CreateResponse<StatusTypeModel[]>(
+                    "error",
+                    "No StatusTypes found",
+                    undefined,
+                    result
+                );
+            }
+        } catch (error) {
+            return this.handleError(error);
+        }
+    }
+
 
     public async getStatusTypeById(
         req: ApiRequest<{}, { id: number }, {}>

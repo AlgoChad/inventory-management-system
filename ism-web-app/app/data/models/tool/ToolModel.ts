@@ -14,7 +14,7 @@ export type ToolModel = {
   status: any; // Replace with actual StatusType model if available
   project?: any; // Replace with actual Project model if available
   personnel?: any; // Replace with actual Personnel model if available
-  checkins: any[]; // Replace with actual Checkin model if available
+  checkin: any[]; // Replace with actual Checkin model if available
 }
 
 export type CreateToolModel = Omit<ToolModel, 'id' | 'createdAt' | 'updatedAt' | 'condition' | 'status' | 'project' | 'personnel' | 'checkins'>;
