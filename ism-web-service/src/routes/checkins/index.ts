@@ -41,8 +41,11 @@ const checkinRoutes = new Elysia({ prefix: "/checkins" })
             return await checkinController.updateCheckin(req);
         }
     )
-    .delete("/:id", async (req: ApiRequest<{}, { id: number }, {}, Token>) => {
-        return await checkinController.deleteCheckin(req);
-    });
+    .post(
+        "/delete/:id",
+        async (req: ApiRequest<{}, { id: number }, {}, Token>) => {
+            return await checkinController.deleteCheckin(req);
+        }
+    );
 
 export default checkinRoutes;

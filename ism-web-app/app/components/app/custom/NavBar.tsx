@@ -20,12 +20,9 @@ const navItems: NavElement[] = [
     { path: '/', label: 'Home', icon: FaHome },
     { type: 'divider' },
     { 
-        path: '/todos', 
-        label: 'My To-Dos', 
+        path: '/settings', 
+        label: 'Settings', 
         icon: FaList,
-        children: [
-            { path: '/todos/create', label: 'New To-Do', icon: FaPlus },
-        ]
     },
     { type: 'divider' },
     { path: '/about', label: 'About', icon: FaAngleDown },

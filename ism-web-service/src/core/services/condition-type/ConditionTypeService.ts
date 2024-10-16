@@ -105,7 +105,7 @@ class ConditionTypeService implements IConditionTypeService {
         try {
             const conditionTypeResult = await this._repository.GetEntityAsync(
                 async (query: PrismaClient) => {
-                    return await query.conditionType.findFirst({
+                    return await query.findFirst({
                         where: { id },
                     });
                 }
@@ -147,7 +147,9 @@ class ConditionTypeService implements IConditionTypeService {
                     });
 
                     return result;
-                }, page, limit
+                },
+                page,
+                limit
             );
 
             return result as PagedList<ConditionTypeModel>;

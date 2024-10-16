@@ -43,7 +43,7 @@ class StatusTypeService implements IStatusTypeService {
         try {
             const statusType = await this._repository.GetEntityAsync(
                 async (query: PrismaClient) => {
-                    return await query.statusType.findFirst({
+                    return await query.findFirst({
                         where: { id },
                         include: {
                             tools: true,
@@ -101,7 +101,7 @@ class StatusTypeService implements IStatusTypeService {
         try {
             const statusTypeResult = await this._repository.GetEntityAsync(
                 async (query: PrismaClient) => {
-                    return await query.statusType.findFirst({
+                    return await query.findFirst({
                         where: { id },
                     });
                 }
@@ -143,7 +143,7 @@ class StatusTypeService implements IStatusTypeService {
 
             const result = await this._repository.GetAllPagedAsync(
                 async (query: PrismaClient) => {
-                    const result = await query.statusType.findMany({
+                    const result = await query.findMany({
                         where,
                         include: {
                             tools: true,

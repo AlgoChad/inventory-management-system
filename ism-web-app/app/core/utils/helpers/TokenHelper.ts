@@ -2,6 +2,14 @@ import crypto from 'crypto';
 
 const secretKey = "burnie-john";
 
+// Expiration times in human-readable format
+const CUSTOM_TOKEN_EXPIRATION_MINUTES = 180; // 15 minutes
+const REFRESH_TOKEN_EXPIRATION_DAYS = 30; // 30 days
+
+// Convert human-readable format to seconds
+const CUSTOM_TOKEN_EXPIRATION_SECONDS = CUSTOM_TOKEN_EXPIRATION_MINUTES * 60;
+const REFRESH_TOKEN_EXPIRATION_SECONDS = REFRESH_TOKEN_EXPIRATION_DAYS * 24 * 60 * 60;
+
 const base64UrlEncode = (str: string): string => Buffer.from(str).toString('base64url');
 
 const generateSignature = (header: string, payload: string): string => {
@@ -43,11 +51,11 @@ const validateToken = (token: string): boolean => {
 };
 
 const generateCustomToken = (user: { id: number, userName: string, email: string }): string => {
-    return generateToken(user, 100 * 60); //change to 15 for 15 mins
+    return generateToken(user, CUSTOM_TOKEN_EXPIRATION_SECONDS);
 };
 
 const generateRefreshToken = (user: { id: number, userName: string, email: string }): string => {
-    return generateToken(user, 30 * 24 * 60 * 60);
+    return generateToken(user, REFRESH_TOKEN_EXPIRATION_SECONDS);
 };
 
 const validateCustomToken = (token: string): boolean => {

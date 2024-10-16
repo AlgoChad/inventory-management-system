@@ -23,26 +23,32 @@ const conditionTypeController = new ConditionTypeController(
 const conditionTypeRoutes = new Elysia({ prefix: "/condition-types" })
     .get(
         "",
-        async (req: ApiRequest<GetAllConditionTypePagedParams, {}, {}, Token>) => {
+        async (
+            req: ApiRequest<GetAllConditionTypePagedParams, {}, {}, Token>
+        ) => {
             return await conditionTypeController.getAllConditionTypes(req);
         }
     )
     .get("/:id", async (req: ApiRequest<{}, { id: number }, {}, Token>) => {
         return await conditionTypeController.getConditionTypeById(req);
     })
-    .post("/", async (req: ApiRequest<{}, {}, CreateConditionTypeModel, Token>) => {
-        return await conditionTypeController.createConditionType(req);
-    })
+    .post(
+        "/",
+        async (req: ApiRequest<{}, {}, CreateConditionTypeModel, Token>) => {
+            return await conditionTypeController.createConditionType(req);
+        }
+    )
     .put(
         "/:id",
-        async (
-            req: ApiRequest<{}, { id: number }, UpdateConditionTypeModel, Token>
-        ) => {
+        async (req: ApiRequest<{}, { id: number }, UpdateConditionTypeModel, Token>) => {
             return await conditionTypeController.updateConditionType(req);
         }
     )
-    .delete("/:id", async (req: ApiRequest<{}, { id: number }, {}, Token>) => {
-        return await conditionTypeController.deleteConditionType(req);
-    });
+    .post(
+        "/delete/:id",
+        async (req: ApiRequest<{ }, { id: number }, {}, Token>) => {
+            return await conditionTypeController.deleteConditionType(req);
+        }
+    );
 
 export default conditionTypeRoutes;

@@ -15,18 +15,12 @@ import { ApiRequest } from "@/src/data/models/generic/ApiModel";
 const toolService: IToolService = new ToolService();
 const authenticationService: IAuthenticationService =
     new AuthenticationService();
-const toolController = new ToolController(
-    toolService,
-    authenticationService
-);
+const toolController = new ToolController(toolService, authenticationService);
 
 const toolRoutes = new Elysia({ prefix: "/tools" })
-    .get(
-        "",
-        async (req: ApiRequest<GetAllToolPagedParams, {}, {}, Token>) => {
-            return await toolController.getAllTools(req);
-        }
-    )
+    .get("", async (req: ApiRequest<GetAllToolPagedParams, {}, {}, Token>) => {
+        return await toolController.getAllTools(req);
+    })
     .get("/:id", async (req: ApiRequest<{}, { id: number }, {}, Token>) => {
         return await toolController.getToolById(req);
     })
@@ -35,14 +29,15 @@ const toolRoutes = new Elysia({ prefix: "/tools" })
     })
     .put(
         "/:id",
-        async (
-            req: ApiRequest<{}, { id: number }, UpdateToolModel, Token>
-        ) => {
+        async (req: ApiRequest<{}, { id: number }, UpdateToolModel, Token>) => {
             return await toolController.updateTool(req);
         }
     )
-    .delete("/:id", async (req: ApiRequest<{}, { id: number }, {}, Token>) => {
-        return await toolController.deleteTool(req);
-    });
+    .post(
+        "/delete/:id",
+        async (req: ApiRequest<{}, { id: number }, {}, Token>) => {
+            return await toolController.deleteTool(req);
+        }
+    );
 
 export default toolRoutes;

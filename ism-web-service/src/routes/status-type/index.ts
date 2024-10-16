@@ -30,9 +30,12 @@ const statusTypeRoutes = new Elysia({ prefix: "/status-types" })
     .get("/:id", async (req: ApiRequest<{}, { id: number }, {}, Token>) => {
         return await statusTypeController.getStatusTypeById(req);
     })
-    .post("/", async (req: ApiRequest<{}, {}, CreateStatusTypeModel, Token>) => {
-        return await statusTypeController.createStatusType(req);
-    })
+    .post(
+        "/",
+        async (req: ApiRequest<{}, {}, CreateStatusTypeModel, Token>) => {
+            return await statusTypeController.createStatusType(req);
+        }
+    )
     .put(
         "/:id",
         async (
@@ -41,8 +44,11 @@ const statusTypeRoutes = new Elysia({ prefix: "/status-types" })
             return await statusTypeController.updateStatusType(req);
         }
     )
-    .delete("/:id", async (req: ApiRequest<{}, { id: number }, {}, Token>) => {
-        return await statusTypeController.deleteStatusType(req);
-    });
+    .post(
+        "/delete/:id",
+        async (req: ApiRequest<{}, { id: number }, {}, Token>) => {
+            return await statusTypeController.deleteStatusType(req);
+        }
+    );
 
 export default statusTypeRoutes;

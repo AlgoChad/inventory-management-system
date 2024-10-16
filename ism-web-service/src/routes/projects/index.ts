@@ -41,8 +41,11 @@ const projectRoutes = new Elysia({ prefix: "/projects" })
             return await projectController.updateProject(req);
         }
     )
-    .delete("/:id", async (req: ApiRequest<{}, { id: number }, {}, Token>) => {
-        return await projectController.deleteProject(req);
-    });
+    .post(
+        "/delete/:id",
+        async (req: ApiRequest<{}, { id: number }, {}, Token>) => {
+            return await projectController.deleteProject(req);
+        }
+    );
 
 export default projectRoutes;

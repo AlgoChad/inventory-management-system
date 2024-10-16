@@ -152,7 +152,7 @@ export function DataTable<TData, TValue>({
               <Link
                 to={{
                   search: setSearchParamsString(searchParams, {
-                    pageNumber: 1,
+                    page: 1,
                   }),
                 }}
                 preventScrollReset
@@ -171,7 +171,7 @@ export function DataTable<TData, TValue>({
               <Link
                 to={{
                   search: setSearchParamsString(searchParams, {
-                    pageNumber: pageNumber <= 1 ? 1 : +pageNumber - 1,
+                    page: pageNumber <= 1 ? 1 : +pageNumber - 1,
                   }),
                 }}
                 preventScrollReset
@@ -190,7 +190,7 @@ export function DataTable<TData, TValue>({
               <Link
                 to={{
                   search: setSearchParamsString(searchParams, {
-                    pageNumber:
+                    page:
                       pageNumber >= Math.ceil(totalCount / pageLength)
                         ? Math.ceil(totalCount / pageLength)
                         : +pageNumber + 1,
@@ -212,7 +212,7 @@ export function DataTable<TData, TValue>({
               <Link
                 to={{
                   search: setSearchParamsString(searchParams, {
-                    pageNumber:Math.ceil(totalCount > 0 ? totalCount / pageLength : 1),
+                    page:Math.ceil(totalCount > 0 ? totalCount / pageLength : 1),
                   }),
                 }}
                 preventScrollReset

@@ -1,73 +1,36 @@
-import { json, LoaderFunction, ActionFunction } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
-import RestClient from "~/data/rest/RestClient";
-import { DataTable } from "@/app/components/app/custom/Datatable";
+import { useState } from "react";
 import { ColumnDef } from "@tanstack/react-table";
-import { ConditionTypeModel } from "~/data/models/condition-type/ConditionTypeModel";
-import { SanitizeRequest } from "~/core/utils/helpers/RestHelpers";
-import { ApiResponse } from "~/data/models/generic/ApiModel";
-import { PagedList } from "~/data/models/generic/PaginationModel";
 import { Button } from "~/components/ui/button";
 import { ArrowDirection } from "~/components/app/custom/PaginationArrow";
+import { ConditionTypeModel } from "~/data/models/condition-type/ConditionTypeModel";
+import { Datatable } from "~/data/models/generic/DatatableModel";
+import { DataTable } from "~/components/app/custom/Datatable";
+import EditConditionTypeForm from "./EditConditionTypeForm";
+import { useFetcher } from "@remix-run/react";
 
-const API_BASE_URL = "http://localhost:3000/api"; // Base URL for your API
-const API_TOKEN =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJnaXZpbGxhbW9yMDFAZ21haWwuY29tIiwiaWF0IjoxNzI5MDA2Mjk2LCJleHAiOjE3MjkwMTIyOTZ9.7zgiD7579MozwOXQoKnocxSISoYcmfoN-qXeMLGDo1w"; // Your JWT token
-const restClient = new RestClient(API_BASE_URL, API_TOKEN);
+interface ConditionTypesTableProps {
+    table: Datatable<ConditionTypeModel>;
+}
 
-export const loader: LoaderFunction = async ({ request }) => {
-    const parsedArgs = SanitizeRequest(request);
-    try {
-        const conditionTypes = await restClient.Get<
-            ApiResponse<PagedList<ConditionTypeModel>>
-        >(`/condition-types`, {
-            page: parsedArgs.pageNumber || 1,
-            limit: parsedArgs.pageLength || 1,
-        });
+const ConditionTypesTable: React.FC<ConditionTypesTableProps> = ({ table }) => {
+    const { data, pagination, defaultSort } = table;
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [selectedItem, setSelectedItem] = useState<ConditionTypeModel | null>(null);
+    const fetcher = useFetcher();
 
-        if (!conditionTypes.data) {
-            throw new Response("Failed to load data", { status: 500 });
-        }
-
-        const data = {
-            data: conditionTypes.data.list,
-            pagination: {
-                page: conditionTypes.data.pagination.currentPage,
-                length: conditionTypes.data.pagination.pageSize,
-                totalCount: conditionTypes.data.pagination.totalItems,
-            },
-            defaultSort: {
-                id: "createdAt",
-                desc: "asc",
-            },
-        };
-
-        return json(data);
-    } catch (error) {
-        throw new Response("Failed to load data", { status: 500 });
-    }
-};
-
-export const action: ActionFunction = async ({ request }) => {
-    const formData = await request.formData();
-    const newConditionType = {
-        name: formData.get("name"),
+    const openEditModal = (item: ConditionTypeModel) => {
+        setSelectedItem(item);
+        setIsEditModalOpen(true);
     };
 
-    try {
-        await restClient.Post("/condition-types", newConditionType);
-        return json({ success: true });
-    } catch (error) {
-        return json(
-            { success: false, error: (error as Error).message },
-            { status: 500 }
-        );
-    }
-};
+    const closeEditModal = () => {
+        setSelectedItem(null);
+        setIsEditModalOpen(false);
+    };
 
-export default function Index() {
-    const loaderData = useLoaderData<typeof loader>();
-    const { data, pagination, defaultSort } = loaderData;
+    const handleDelete = (id: number) => {
+        fetcher.submit({ id }, { method: "post", action: "/settings/condition-types/delete" });
+    };
 
     const columns: ColumnDef<ConditionTypeModel>[] = [
         {
@@ -154,6 +117,23 @@ export default function Index() {
                 );
             },
         },
+        {
+            accessorKey: "actions",
+            header: "Actions",
+            cell: ({ row }) => {
+                const rowValue = row.original;
+                return (
+                    <div className="text-center space-x-2">
+                        <Button variant="default" onClick={() => openEditModal(rowValue)}>
+                            Edit
+                        </Button>
+                        <Button variant='destructive' onClick={() => handleDelete(rowValue.id)}>
+                            Delete
+                        </Button>
+                    </div>
+                );
+            },
+        },
     ];
 
     return (
@@ -164,6 +144,15 @@ export default function Index() {
                 pagination={pagination}
                 defaultSort={defaultSort}
             />
+            {isEditModalOpen && selectedItem && (
+                <EditConditionTypeForm
+                    isOpen={isEditModalOpen}
+                    onClose={closeEditModal}
+                    item={selectedItem}
+                />
+            )}
         </div>
     );
 }
+
+export default ConditionTypesTable;

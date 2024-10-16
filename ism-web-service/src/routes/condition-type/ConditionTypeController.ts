@@ -44,8 +44,6 @@ class ConditionTypeController extends BaseController {
                 query
             );
 
-            console.log(result);
-
             if (result.list.length > 0) {
                 return CreateResponse<PagedList<ConditionTypeModel>>(
                     "success",
