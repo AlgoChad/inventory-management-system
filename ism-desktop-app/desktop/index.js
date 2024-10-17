@@ -14,7 +14,9 @@ async function createWindow(url) {
             preload: path.join(__dirname, 'preload.js'),
         },
      });
-     
+
+     win.webContents.openDevTools();
+
     win.setMenuBarVisibility(false);
 	await win.loadURL(url);
     ipcMain.on('minimize-window', () => {

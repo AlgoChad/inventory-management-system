@@ -133,7 +133,7 @@ class CheckinService implements ICheckinService {
     public async GetAllCheckinsPagedAsync(
         params: GetAllCheckinPagedParams
     ): Promise<PagedList<CheckinModel>> {
-        const { page, limit, search } = params;
+        const { page, limit, search, column, direction } = params;
         try {
             const where: Prisma.CheckinWhereInput = {
                 tool: {
@@ -146,14 +146,20 @@ class CheckinService implements ICheckinService {
 
             const result = await this._repository.GetAllPagedAsync(
                 async (query: PrismaClient) => {
+                    const orderBy: { [key: string]: 'asc' | 'desc' } = {};
+
+                    if (column && direction) {
+                        orderBy[column] = direction;
+                    }
+            
                     const result = await query.findMany({
-                        where,
                         include: {
                             tool: true,
                             project: true,
                         },
+                        orderBy: orderBy,
                     });
-
+            
                     return result;
                 }, page, limit
             );

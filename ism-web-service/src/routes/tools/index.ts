@@ -19,7 +19,10 @@ const toolController = new ToolController(toolService, authenticationService);
 
 const toolRoutes = new Elysia({ prefix: "/tools" })
     .get("", async (req: ApiRequest<GetAllToolPagedParams, {}, {}, Token>) => {
-        return await toolController.getAllTools(req);
+        return await toolController.getAllToolsPaged(req);
+    })
+    .get("/all", async (req: ApiRequest<{}, {}, {}, Token>) => {
+        return await toolController.getAllTools();
     })
     .get("/:id", async (req: ApiRequest<{}, { id: number }, {}, Token>) => {
         return await toolController.getToolById(req);

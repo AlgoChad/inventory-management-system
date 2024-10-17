@@ -6,5 +6,6 @@ export default interface IToolService {
   GetToolByIdAsync(id: number): Promise<ToolResult>;
   UpdateToolAsync(id: number, updateToolModel: UpdateToolModel): Promise<ToolResult>;
   DeleteToolAsync(id: number): Promise<ToolResult>;
+  GetAllToolsAsync(): Promise<ToolModel[]>;
   GetAllToolsPagedAsync(params: GetAllToolPagedParams): Promise<PagedList<ToolModel>>;
 }

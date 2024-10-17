@@ -35,7 +35,7 @@ model Tool {
   status          StatusType      @relation(fields: [statusId], references: [id])
   projectId       Int?
   project         Project?        @relation(fields: [projectId], references: [id])
-  personnelId     Int? @unique
+  personnelId     Int? 
   personnel       Personnel?      @relation(fields: [personnelId], references: [id])
   createdAt       DateTime        @default(now())
   updatedAt       DateTime        @updatedAt

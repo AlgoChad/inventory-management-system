@@ -36,6 +36,16 @@ class ToolService implements IToolService {
                         id: createToolModel.statusId,
                     },
                 },
+                project: {
+                    connect: {
+                        id: createToolModel.projectId,
+                    },
+                },
+                personnel: {
+                    connect: {
+                        id: createToolModel.personnelId,
+                    },
+                },
             };
 
             const tool = await this._repository.InsertAsync(toolCreateInput);
@@ -144,6 +154,29 @@ class ToolService implements IToolService {
                 isSuccess: false,
                 message: "Tool deletion failed",
             };
+        }
+    }
+
+    public async GetAllToolsAsync(): Promise<ToolModel[]> {
+        try {
+            const tools = await this._repository.GetAllAsync(
+                async (query: PrismaClient) => {
+                    return await query.findMany({
+                        include: {
+                            condition: true,
+                            status: true,
+                            project: true,
+                            personnel: true,
+                            Checkin: true,
+                        },
+                    });
+                }
+            );
+
+            return tools as ToolModel[];
+        } catch (error) {
+            console.error("Error retrieving tools:", error);
+            throw new Error("Tools retrieval failed");
         }
     }
 

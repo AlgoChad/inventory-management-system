@@ -10,4 +10,8 @@ module.exports = {
     routes: async (defineRoutes) => {
         return flatRoutes('routes', defineRoutes);
     },
+    env: {
+    API_BASE_URL: process.env.API_BASE_URL,
+    API_TOKEN: process.env.API_TOKEN,
+  },
 }

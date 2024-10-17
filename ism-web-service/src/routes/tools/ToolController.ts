@@ -29,7 +29,7 @@ class ToolController extends BaseController {
         this.authService = authService;
     }
 
-    public async getAllTools(
+    public async getAllToolsPaged(
         req: ApiRequest<GetAllToolPagedParams, {}, {}>
     ): Promise<ApiResponse<PagedList<ToolModel>> | ProblemDetail> {
         try {
@@ -53,6 +53,29 @@ class ToolController extends BaseController {
                 );
             } else {
                 return CreateResponse<PagedList<ToolModel>>(
+                    "error",
+                    "No Tools found",
+                    undefined,
+                    result
+                );
+            }
+        } catch (error) {
+            return this.handleError(error);
+        }
+    }
+
+    public async getAllTools() {
+        try {
+            const result = await this.toolService.GetAllToolsAsync();
+            if (result.length > 0) {
+                return CreateResponse<ToolModel[]>(
+                    "success",
+                    "Tools fetched successfully",
+                    undefined,
+                    result
+                );
+            } else {
+                return CreateResponse<ToolModel[]>(
                     "error",
                     "No Tools found",
                     undefined,
