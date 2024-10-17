@@ -115,7 +115,7 @@ export default function Index() {
                 <h1 className="text-2xl font-semibold">Settings</h1>
             </div>
             <div className="flex flex-col md:flex-row gap-4">
-                <ScrollArea className="w-full md:w-1/2 h-auto rounded-md border p-4">
+                <ScrollArea className="w-full md:w-1/2 h-auto rounded-md border p-4 bg-white shadow-md">
                     <div className="flex justify-end mb-4">
                         <Button className="m-2" onClick={openConditionDialog}>
                             Create Condition Type
@@ -123,7 +123,7 @@ export default function Index() {
                     </div>
                     <ConditionTypesTable table={conditionTypes} />
                 </ScrollArea>
-                <ScrollArea className="w-full md:w-1/2 h-auto rounded-md border p-4">
+                <ScrollArea className="w-full md:w-1/2 h-auto rounded-md border p-4 bg-white shadow-md">
                     <div className="flex justify-end mb-4">
                         <Button className="m-2" onClick={openStatusDialog}>
                             Create Status Type

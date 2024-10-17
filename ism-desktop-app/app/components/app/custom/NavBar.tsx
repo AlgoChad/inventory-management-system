@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { Link, useLocation } from 'react-router-dom';
+import { useLocation } from "react-router-dom";
+import { Link } from "@remix-run/react";
 import {
     FaChevronLeft,
     FaChevronRight,
@@ -12,12 +13,14 @@ import {
     FaCheckCircle,
     FaUsers,
     FaInfoCircle,
+    FaUserCog,
+    FaExclamationTriangle,
+    FaListAlt
 } from "react-icons/fa";
 import { Button } from "~/components/ui/button";
 
-
 type NavItem = {
-    path: string;
+    path?: string;
     label: string;
     icon: React.ComponentType<{ className: string }>;
     children?: NavItem[];
@@ -33,30 +36,63 @@ const navItems: NavElement[] = [
     { path: "/", label: "Home", icon: FaHome },
     { type: "divider" },
     {
-        path: "/settings",
-        label: "Settings",
-        icon: FaCogs,
+        path: "/reports/project-specific",
+        label: "Reports",
+        icon: FaList,
+        children: [
+            {
+                path: "/project-specific",
+                label: "Project Specific Field Location",
+                icon: FaProjectDiagram,
+            },
+            {
+                path: "/reports/queries",
+                label: "Reports and Queries",
+                icon: FaInfoCircle,
+                children: [
+                    { path: "/reports/queries/tools-by-project", label: "Tools by Project", icon: FaProjectDiagram },
+                    { path: "/reports/queries/maintenance-alerts", label: "Maintenance Alerts", icon: FaExclamationTriangle },
+                    { path: "/reports/queries/tools-movement-history", label: "Tools Movement History", icon: FaListAlt },
+                    { path: "/reports/queries/tools-availability", label: "Tools Availability", icon: FaToolbox },
+                ],
+            },
+        ],
     },
+    { type: "divider" },
     {
         path: "/tools",
-        label: "Tools",
-        icon: FaToolbox,
+        label: "Master Data",
+        icon: FaCogs,
+        children: [
+            {
+                path: "/tools",
+                label: "Tools",
+                icon: FaToolbox,
+            },
+            {
+                path: "/projects",
+                label: "Projects",
+                icon: FaProjectDiagram,
+            },
+            {
+                path: "/checkins",
+                label: "Check-ins",
+                icon: FaCheckCircle,
+            },
+            {
+                path: "/personnel",
+                label: "Personnel",
+                icon: FaUsers,
+            },
+            {
+                path: "/settings",
+                label: "Dropdown Settings",
+                icon: FaCogs,
+            },
+        ],
     },
-    {
-        path: "/projects",
-        label: "Projects",
-        icon: FaProjectDiagram,
-    },
-    {
-        path: "/checkins",
-        label: "Check-ins",
-        icon: FaCheckCircle,
-    },
-    {
-        path: "/personnel",
-        label: "Personnel",
-        icon: FaUsers,
-    },
+    { type: "divider" },
+    { path: "/settings/account", label: "Account", icon: FaUserCog },
     { type: "divider" },
     { path: "/about", label: "About", icon: FaInfoCircle },
 ];
@@ -88,11 +124,11 @@ function Navbar() {
         navItems.forEach((item) => {
             if (isNavItem(item) && item.children) {
                 const isActive =
-                    location.pathname.startsWith(item.path) ||
+                    location.pathname.startsWith(item.path || "") ||
                     item.children.some((child) =>
-                        location.pathname.startsWith(child.path)
+                        location.pathname.startsWith(child.path || "")
                     );
-                newExpandedItems[item.path] = isActive;
+                newExpandedItems[item.path || item.label] = isActive;
             }
         });
         setExpandedItems(newExpandedItems);
@@ -110,7 +146,7 @@ function Navbar() {
     };
 
     const isNavItem = (item: NavElement): item is NavItem => {
-        return (item as NavItem).path !== undefined;
+        return (item as NavItem).label !== undefined;
     };
 
     const renderNavItems = (items: NavElement[]) => {
@@ -123,34 +159,79 @@ function Navbar() {
 
             if (isNavItem(item)) {
                 const NavIcon = item.icon;
-                const isItemExpanded = expandedItems[item.path] || false;
+                const isItemExpanded = expandedItems[item.path || item.label] || false;
 
                 return (
-                    <li key={item.path} className="flex flex-col group">
+                    <li key={item.path || item.label} className="flex flex-col group">
                         <Button asChild>
-                            <Link
-                                to={item.path}
-                                className={`text-white hover:text-gray-400 flex items-start justify-start ${
-                                    isExpanded ? "" : "justify-center"
-                                }`}
-                                onClick={() => toggleItemExpansion(item.path)}
-                            >
-                                <NavIcon
-                                    className={`text-sm ${
-                                        isExpanded ? "mr-2" : ""
+                            {item.path ? (
+                                <Link
+                                    to={item.path}
+                                    className={`text-white hover:text-gray-400 flex items-start justify-start ${
+                                        isExpanded ? "" : "justify-center"
                                     }`}
-                                />
-                                {isExpanded && <span>{item.label}</span>}
-                                {item.children && isExpanded && (
-                                    <span
-                                        className={`ml-auto transition-transform duration-300 ${
-                                            isItemExpanded ? "rotate-180" : ""
+                                    onClick={() => toggleItemExpansion(item.path || item.label)}
+                                >
+                                    <NavIcon
+                                        className={`text-sm ${
+                                            isExpanded ? "mr-2" : ""
                                         }`}
-                                    >
-                                        <FaAngleDown />
-                                    </span>
-                                )}
-                            </Link>
+                                    />
+                                    {isExpanded && (
+                                        <span
+                                            className={`${
+                                                item.label.length > 15
+                                                    ? "text-xs"
+                                                    : "text-sm"
+                                            }`}
+                                        >
+                                            {item.label}
+                                        </span>
+                                    )}
+                                    {item.children && isExpanded && (
+                                        <span
+                                            className={`ml-auto transition-transform duration-300 ${
+                                                isItemExpanded ? "rotate-180" : ""
+                                            }`}
+                                        >
+                                            <FaAngleDown />
+                                        </span>
+                                    )}
+                                </Link>
+                            ) : (
+                                <div
+                                    className={`text-white hover:text-gray-400 flex items-start justify-start ${
+                                        isExpanded ? "" : "justify-center"
+                                    }`}
+                                    onClick={() => toggleItemExpansion(item.label)}
+                                >
+                                    <NavIcon
+                                        className={`text-sm ${
+                                            isExpanded ? "mr-2" : ""
+                                        }`}
+                                    />
+                                    {isExpanded && (
+                                        <span
+                                            className={`${
+                                                item.label.length > 15
+                                                    ? "text-xs"
+                                                    : "text-sm"
+                                            }`}
+                                        >
+                                            {item.label}
+                                        </span>
+                                    )}
+                                    {item.children && isExpanded && (
+                                        <span
+                                            className={`ml-auto transition-transform duration-300 ${
+                                                isItemExpanded ? "rotate-180" : ""
+                                            }`}
+                                        >
+                                            <FaAngleDown />
+                                        </span>
+                                    )}
+                                </div>
+                            )}
                         </Button>
                         {item.children && isExpanded && (
                             <ul
@@ -173,7 +254,7 @@ function Navbar() {
 
     return (
         <nav
-            className={`flex flex-col bg-black h-screen p-4 transition-width duration-300 ${
+            className={`flex flex-col bg-black h-screen p-4 transition-width duration-300 shadow-lg ${
                 isExpanded ? "w-60" : "w-20"
             }`}
         >

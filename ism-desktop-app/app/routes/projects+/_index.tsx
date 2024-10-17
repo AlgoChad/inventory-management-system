@@ -65,14 +65,14 @@ export default function Index() {
             <div className="m-4">
                 <h1 className="text-2xl font-bold">Projects</h1>
             </div>
-            <ScrollArea className="h-auto rounded-md border p-4">
-                <div className="flex justify-end mb-4">
-                    <Button className="m-2" onClick={openCreateModal}>
-                        Create Project
-                    </Button>
-                </div>
-                <ProjectsTable table={projects} />
-            </ScrollArea>
+            <ScrollArea className="h-auto rounded-md border p-4 bg-white shadow-md">
+                    <div className="flex justify-end mb-4">
+                        <Button className="m-2" onClick={openCreateModal}>
+                            Create Project
+                        </Button>
+                    </div>
+                    <ProjectsTable table={projects} />
+                </ScrollArea>
             {isCreateModalOpen && (
                 <CreateProjectForm
                     isOpen={isCreateModalOpen}

@@ -110,6 +110,7 @@ export default function Index() {
     const loaderData = useLoaderData<typeof loader>();
     const { tools, conditionTypes, statusTypes, projects, personnel } =
         loaderData;
+        
     const projectsData = projects.data.map((project: ProjectModel) => ({
         id: project.id,
         name: project.projectDescription,

@@ -23,7 +23,7 @@ const CreateCheckinForm: React.FC<CreateCheckinFormProps> = ({ isOpen, onClose, 
         formData.append("toolId", toolId);
         formData.append("projectId", projectId);
 
-        submit(formData, { method: "post", action: "/check-ins/create" });
+        submit(formData, { method: "post", action: "/checkins/create" });
 
         onClose();
     };
