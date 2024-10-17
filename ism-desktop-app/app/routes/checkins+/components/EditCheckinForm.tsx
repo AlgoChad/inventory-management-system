@@ -34,7 +34,7 @@ const EditCheckinForm: React.FC<EditCheckinFormProps> = ({ isOpen, onClose, item
             formData.append("toolId", toolId.toString());
             formData.append("projectId", projectId.toString());
 
-            submit(formData, { method: "post", action: "/check-ins/update" });
+            submit(formData, { method: "post", action: "/checkins/update" });
             onClose();
         }
     };

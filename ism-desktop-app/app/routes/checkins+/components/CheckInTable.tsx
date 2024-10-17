@@ -35,7 +35,7 @@ const CheckinTable: React.FC<CheckinTableProps> = ({ table, projects, tools }) =
     const handleDelete = (id: number) => {
         const formData = new FormData();
         formData.append("id", id.toString());
-        submit(formData, { method: "post", action: "/check-ins/delete" });
+        submit(formData, { method: "post", action: "/checkins/delete" });
     };
 
     const columns: ColumnDef<CheckinModel>[] = [
@@ -60,7 +60,7 @@ const CheckinTable: React.FC<CheckinTableProps> = ({ table, projects, tools }) =
             },
             cell: ({ row }) => {
                 const rowValue = row.original;
-                return <div className="text-center">{rowValue.toolId}</div>;
+                return <div className="text-center">{rowValue.tool.toolDescription}</div>;
             },
         },
         {
@@ -84,7 +84,7 @@ const CheckinTable: React.FC<CheckinTableProps> = ({ table, projects, tools }) =
             },
             cell: ({ row }) => {
                 const rowValue = row.original;
-                return <div className="text-center">{rowValue.projectId}</div>;
+                return <div className="text-center">{rowValue.project.projectDescription}</div>;
             },
         },
         {

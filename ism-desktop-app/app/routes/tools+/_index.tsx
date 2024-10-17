@@ -110,7 +110,6 @@ export default function Index() {
     const loaderData = useLoaderData<typeof loader>();
     const { tools, conditionTypes, statusTypes, projects, personnel } =
         loaderData;
-        
     const projectsData = projects.data.map((project: ProjectModel) => ({
         id: project.id,
         name: project.projectDescription,
@@ -126,7 +125,7 @@ export default function Index() {
             <div className="m-4">
                 <h1 className="text-2xl font-bold">Tools</h1>
             </div>
-            <ScrollArea className="h-auto rounded-md border p-4">
+            <ScrollArea className="h-auto rounded-md border p-4 bg-white shadow-md">
                 <div className="flex justify-end mb-4">
                     <Button className="m-2" onClick={openCreateModal}>
                         Create Tool

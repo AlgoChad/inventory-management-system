@@ -41,18 +41,17 @@ const navItems: NavElement[] = [
         icon: FaList,
         children: [
             {
-                path: "/project-specific",
+                path: "/reports/project-specific",
                 label: "Project Specific Field Location",
                 icon: FaProjectDiagram,
             },
             {
-                path: "/reports/queries",
+                path: "/reports/queries/tools-by-project",
                 label: "Reports and Queries",
                 icon: FaInfoCircle,
                 children: [
                     { path: "/reports/queries/tools-by-project", label: "Tools by Project", icon: FaProjectDiagram },
-                    { path: "/reports/queries/maintenance-alerts", label: "Maintenance Alerts", icon: FaExclamationTriangle },
-                    { path: "/reports/queries/tools-movement-history", label: "Tools Movement History", icon: FaListAlt },
+                    { path: "/reports/queries/tools-movement-history", label: "Movement History", icon: FaListAlt },
                     { path: "/reports/queries/tools-availability", label: "Tools Availability", icon: FaToolbox },
                 ],
             },

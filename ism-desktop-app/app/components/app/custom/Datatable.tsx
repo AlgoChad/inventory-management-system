@@ -76,8 +76,8 @@ export function DataTable<TData, TValue>({
       navigate(
         {
           search: setSearchParamsString(searchParams, {
-            orderBy: sorting[0]?.id,
-            orderDir: sorting[0]?.desc ? "desc" : "asc",
+            orderBy: sorting[0].id,
+            orderDir: sorting[0].desc ? "desc" : "asc",
           }),
         },
         { preventScrollReset: true }
