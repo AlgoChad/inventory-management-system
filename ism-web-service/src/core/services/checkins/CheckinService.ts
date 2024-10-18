@@ -130,6 +130,26 @@ class CheckinService implements ICheckinService {
         }
     }
 
+    public async GetAllCheckinsAsync(): Promise<CheckinModel[]> {
+        try {
+            const checkins = await this._repository.GetAllAsync(
+                async (query: PrismaClient) => {
+                    return await query.findMany({
+                        include: {
+                            tool: true,
+                            project: true,
+                        },
+                    });
+                }
+            );
+
+            return checkins as CheckinModel[];
+        } catch (error) {
+            console.error("Error retrieving checkins:", error);
+            throw new Error("Checkins retrieval failed");
+        }
+    }
+
     public async GetAllCheckinsPagedAsync(
         params: GetAllCheckinPagedParams
     ): Promise<PagedList<CheckinModel>> {
@@ -146,12 +166,12 @@ class CheckinService implements ICheckinService {
 
             const result = await this._repository.GetAllPagedAsync(
                 async (query: PrismaClient) => {
-                    const orderBy: { [key: string]: 'asc' | 'desc' } = {};
+                    const orderBy: { [key: string]: "asc" | "desc" } = {};
 
                     if (column && direction) {
                         orderBy[column] = direction;
                     }
-            
+
                     const result = await query.findMany({
                         include: {
                             tool: true,
@@ -159,9 +179,11 @@ class CheckinService implements ICheckinService {
                         },
                         orderBy: orderBy,
                     });
-            
+
                     return result;
-                }, page, limit
+                },
+                page,
+                limit
             );
 
             return result as PagedList<CheckinModel>;

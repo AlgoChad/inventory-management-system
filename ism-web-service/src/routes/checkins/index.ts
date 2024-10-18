@@ -24,9 +24,12 @@ const checkinRoutes = new Elysia({ prefix: "/checkins" })
     .get(
         "",
         async (req: ApiRequest<GetAllCheckinPagedParams, {}, {}, Token>) => {
-            return await checkinController.getAllCheckins(req);
+            return await checkinController.getAllCheckinsPaged(req);
         }
     )
+    .get("/all", async (req: ApiRequest<{}, {}, {}, Token>) => {
+        return await checkinController.getAllCheckins(req);
+    })
     .get("/:id", async (req: ApiRequest<{}, { id: number }, {}, Token>) => {
         return await checkinController.getCheckinById(req);
     })

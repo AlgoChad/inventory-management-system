@@ -1,4 +1,3 @@
-import { Tool } from "@prisma/client";
 
 export type ToolModel = {
     id: number;
@@ -11,11 +10,11 @@ export type ToolModel = {
     personnelId?: number;
     createdAt: Date;
     updatedAt: Date;
-    condition: any; // Replace with actual ConditionType model if available
-    status: any; // Replace with actual StatusType model if available
-    project?: any; // Replace with actual Project model if available
-    personnel?: any; // Replace with actual Personnel model if available
-    checkins: any[]; // Replace with actual Checkin model if available
+    condition: any;
+    status: any;
+    project?: any;
+    personnel?: any;
+    checkins: any[];
 };
 
 export type CreateToolModel = Omit<

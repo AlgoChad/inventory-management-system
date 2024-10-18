@@ -56,19 +56,19 @@ export default function Index() {
 
     return (
         <div className="p-4">
-            <h1 className="text-3xl font-bold mb-6 text-center text-black">Projects</h1>
-            <div className="h-[calc(100vh-200px)] overflow-y-auto bg-white p-6 rounded-lg shadow-lg">
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            <h1 className="text-2xl font-bold mb-4 text-center text-black">Projects</h1>
+            <div className="h-[calc(100vh-200px)] overflow-y-auto bg-white p-4 rounded-lg shadow-lg">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     {projects.map((project: ProjectModel) => (
-                        <div key={project.id} className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
-                            <h2 className="text-2xl font-semibold mb-4 text-black">{project.projectDescription}</h2>
-                            <p className="text-black mb-2">
+                        <div key={project.id} className="bg-white p-4 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
+                            <h2 className="text-xl font-semibold mb-2 text-black">{project.projectDescription}</h2>
+                            <p className="text-black mb-1">
                                 <span className="font-semibold">Start Date:</span> <Badge variant="default">{new Date(project.startDate).toDateString()}</Badge>
                             </p>
-                            <p className="text-black mb-4">
+                            <p className="text-black mb-2">
                                 <span className="font-semibold">End Date:</span> <Badge variant="default">{new Date(project.endDate).toDateString()}</Badge>
                             </p>
-                            <h3 className="text-xl font-semibold mt-4 mb-2 text-black">Tools</h3>
+                            <h3 className="text-lg font-semibold mt-2 mb-1 text-black">Tools</h3>
                             <ProjectToolsTable tools={project.tools} />
                         </div>
                     ))}

@@ -1,4 +1,3 @@
-import { ConditionType } from "@prisma/client";
 
 export type ConditionTypeModel = {
     id: number;

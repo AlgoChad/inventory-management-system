@@ -40,30 +40,30 @@ const GroupedToolList: React.FC<GroupedToolListProps> = ({ groupedTools, current
 
     return (
         <div>
-            <div className="h-[calc(100vh-200px)] overflow-y-auto bg-white p-6 rounded-lg shadow-lg">
-                <div className="flex justify-end mb-4">
+            <div className="h-[calc(100vh-200px)] overflow-y-auto bg-white p-4 rounded-lg shadow-lg">
+                <div className="flex justify-end mb-2">
                     <Button
-                        className={`px-4 py-2 rounded ${sortOrder === "asc" ? "" : "bg-gray-200 text-black"}`}
+                        className={`px-2 py-1 text-xs rounded ${sortOrder === "asc" ? "" : "bg-gray-200 text-black"}`}
                         onClick={() => handleSortChange("asc")}
                     >
                         Sort Ascending
                     </Button>
                     <Button
-                        className={`ml-2 px-4 py-2 rounded ${sortOrder === "desc" ? "" : "bg-gray-200 text-black"}`}
+                        className={`ml-2 px-2 py-1 text-xs rounded ${sortOrder === "desc" ? "" : "bg-gray-200 text-black"}`}
                         onClick={() => handleSortChange("desc")}
                     >
                         Sort Descending
                     </Button>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {sortedGroups.map(([projectId, { projectDescription, tools }]) => {
                         const currentProjectPage = currentPageState[Number(projectId)] || 1;
                         const totalPagesLocal = Math.ceil(tools.length / pageSize);
                         const paginatedTools = tools.slice((currentProjectPage - 1) * pageSize, currentProjectPage * pageSize);
 
                         return (
-                            <div key={projectId} className="bg-white p-6 rounded-lg shadow-lg">
-                                <h1 className="text-2xl font-bold mb-4 text-black">Project Name: {projectDescription}</h1>
+                            <div key={projectId} className="bg-white p-4 rounded-lg shadow-lg">
+                                <h1 className="text-xl font-bold mb-2 text-black">Project Name: {projectDescription}</h1>
                                 <ToolTable tools={paginatedTools} />
                                 <Pagination
                                     currentPage={currentProjectPage}

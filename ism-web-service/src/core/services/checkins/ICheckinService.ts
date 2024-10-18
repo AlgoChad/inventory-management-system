@@ -17,6 +17,7 @@ export default interface ICheckinService {
         updateCheckinModel: UpdateCheckinModel
     ): Promise<CheckinResult>;
     DeleteCheckinAsync(id: number): Promise<CheckinResult>;
+    GetAllCheckinsAsync(): Promise<CheckinModel[]>;
     GetAllCheckinsPagedAsync(
         params: GetAllCheckinPagedParams
     ): Promise<PagedList<CheckinModel>>;

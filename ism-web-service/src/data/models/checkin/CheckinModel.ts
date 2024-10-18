@@ -1,5 +1,3 @@
-import { Checkin } from "@prisma/client";
-
 export type CheckinModel = {
     id: number;
     toolId: number;

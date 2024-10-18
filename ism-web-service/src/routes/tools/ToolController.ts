@@ -40,9 +40,7 @@ class ToolController extends BaseController {
                 >;
 
             const query = req.query;
-            const result = await this.toolService.GetAllToolsPagedAsync(
-                query
-            );
+            const result = await this.toolService.GetAllToolsPagedAsync(query);
 
             if (result.list.length > 0) {
                 return CreateResponse<PagedList<ToolModel>>(
@@ -64,7 +62,9 @@ class ToolController extends BaseController {
         }
     }
 
-    public async getAllTools() {
+    public async getAllTools(
+        req: ApiRequest<{}, {}, {}>
+    ): Promise<ApiResponse<ToolModel[]> | ProblemDetail> {
         try {
             const result = await this.toolService.GetAllToolsAsync();
             if (result.length > 0) {

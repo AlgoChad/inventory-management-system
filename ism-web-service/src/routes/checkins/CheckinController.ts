@@ -29,7 +29,7 @@ class CheckinController extends BaseController {
         this.authService = authService;
     }
 
-    public async getAllCheckins(
+    public async getAllCheckinsPaged(
         req: ApiRequest<GetAllCheckinPagedParams, {}, {}>
     ): Promise<ApiResponse<PagedList<CheckinModel>> | ProblemDetail> {
         try {
@@ -53,6 +53,32 @@ class CheckinController extends BaseController {
                 );
             } else {
                 return CreateResponse<PagedList<CheckinModel>>(
+                    "error",
+                    "No Checkins found",
+                    undefined,
+                    result
+                );
+            }
+        } catch (error) {
+            return this.handleError(error);
+        }
+    }
+
+    public async getAllCheckins(
+        req: ApiRequest<{}, {}, {}>
+    ): Promise<ApiResponse<CheckinModel[]> | ProblemDetail> {
+        try {
+            const result = await this.checkinService.GetAllCheckinsAsync();
+
+            if (result.length > 0) {
+                return CreateResponse<CheckinModel[]>(
+                    "success",
+                    "Checkins fetched successfully",
+                    undefined,
+                    result
+                );
+            } else {
+                return CreateResponse<CheckinModel[]>(
                     "error",
                     "No Checkins found",
                     undefined,

@@ -13,7 +13,6 @@ export const loader: LoaderFunction = async ({ request }) => {
     const API_TOKEN = process.env.API_TOKEN as string;
     const restClient = new RestClient(API_BASE_URL, API_TOKEN);
 
-    const parsedArgs = SanitizeRequest(request);
     try {
         const getTools = async () => {
             const tools = await restClient.Get<ApiResponse<ToolModel[]>>(`/tools/all`);
@@ -35,11 +34,9 @@ export default function Index() {
     const loaderData = useLoaderData<typeof loader>();
     const { paginatedGroups, currentPage, totalPages, handlePageChange, setPageSize } = useFetchTools(loaderData);
 
-
-
     return (
         <div className="p-4">
-            <h1 className="text-3xl font-bold mb-6 text-center text-black">Tools</h1>
+            <h1 className="text-2xl font-bold mb-4 text-center text-black">Tools</h1>
             <div className="">
                 <GroupedToolList
                     groupedTools={paginatedGroups}

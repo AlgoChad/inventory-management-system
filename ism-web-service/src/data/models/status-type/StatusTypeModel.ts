@@ -1,4 +1,3 @@
-import { StatusType } from "@prisma/client";
 
 export type StatusTypeModel = {
     id: number;

@@ -17,7 +17,9 @@ interface GroupedTools {
 }
 
 const useFetchTools = (loaderData: LoaderData) => {
-    const [tools, setTools] = useState<ToolModel[]>(Array.isArray(loaderData.tools.data) ? loaderData.tools.data : []);
+    const [tools, setTools] = useState<ToolModel[]>(
+        Array.isArray(loaderData.tools.data) ? loaderData.tools.data : []
+    );
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [pageSize, setPageSize] = useState<number>(4); // Page size for groups
     const [paginatedGroups, setPaginatedGroups] = useState<GroupedTools>({});
@@ -37,7 +39,11 @@ const useFetchTools = (loaderData: LoaderData) => {
         }, {} as GroupedTools);
     };
 
-    const paginateGroups = (groups: GroupedTools, page: number, size: number): GroupedTools => {
+    const paginateGroups = (
+        groups: GroupedTools,
+        page: number,
+        size: number
+    ): GroupedTools => {
         const groupEntries = Object.entries(groups);
         const start = (page - 1) * size;
         const end = start + size;
@@ -57,7 +63,13 @@ const useFetchTools = (loaderData: LoaderData) => {
         setPaginatedGroups(paginateGroups(groupedTools, page, pageSize));
     };
 
-    return { paginatedGroups, currentPage, totalPages, handlePageChange, setPageSize };
+    return {
+        paginatedGroups,
+        currentPage,
+        totalPages,
+        handlePageChange,
+        setPageSize,
+    };
 };
 
 export default useFetchTools;
