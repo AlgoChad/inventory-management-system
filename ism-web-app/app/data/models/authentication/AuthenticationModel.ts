@@ -2,44 +2,44 @@ export type LoginModel = {
     username?: string;
     email?: string;
     password: string;
-  }
-  
-  export type RegisterModel = {
+};
+
+export type RegisterModel = {
     name: string;
     email: string;
     password: string;
-  }
-  
-  export type LogoutModel = {
+};
+
+export type LogoutModel = {
     username: string;
     accessToken: string;
-  }
-  
-  export type RefreshTokenModel = {
+};
+
+export type RefreshTokenModel = {
     accessToken: string;
     refreshToken: string;
-  }
-  
-  export type ValidateTokenResult = {
+};
+
+export type ValidateTokenResult = {
     isValid: boolean;
     message?: string;
-  }
-  
-  export type RefreshTokenResult = {
+};
+
+export type RefreshTokenResult = {
     accessToken?: string;
     refreshToken?: string;
-  } & ValidateTokenResult;
-  
-  export type LoginResult = {
+} & ValidateTokenResult;
+
+export type LoginResult = {
     isSuccess: boolean;
     userId?: number;
-  } & Omit<RefreshTokenResult, 'isValid'>;
-  
-  export type LogoutResult = {
+} & Omit<RefreshTokenResult, "isValid">;
+
+export type LogoutResult = {
     isSuccess: boolean;
-  } & Omit<RefreshTokenResult, 'isValid'>;
-  
-  export type UserAuthData = {
+} & Omit<RefreshTokenResult, "isValid">;
+
+export type UserAuthData = {
     id: number;
     username: string;
     hashedPassword: string;
@@ -47,10 +47,10 @@ export type LoginModel = {
     updatedAt: Date;
     accessToken?: string;
     refreshToken?: string;
-  }
-  
-  export type UserAuthResult = {
+};
+
+export type UserAuthResult = {
     isSuccess: boolean;
     message?: string;
     data?: UserAuthData;
-  }
+};

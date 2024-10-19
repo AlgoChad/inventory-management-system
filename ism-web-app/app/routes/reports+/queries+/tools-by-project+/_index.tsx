@@ -36,7 +36,7 @@ export default function Index() {
 
     return (
         <div className="p-4">
-            <h1 className="text-2xl font-bold mb-4 text-center text-black">Tools</h1>
+            <h1 className="text-2xl font-bold mb-4 text-center text-black">Tools by Project</h1>
             <div className="">
                 <GroupedToolList
                     groupedTools={paginatedGroups}
