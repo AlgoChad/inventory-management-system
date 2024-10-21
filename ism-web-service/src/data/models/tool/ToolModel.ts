@@ -2,6 +2,7 @@
 export type ToolModel = {
     id: number;
     toolNumber: string;
+    toolname: string;
     toolDescription: string;
     quantity: number;
     conditionId: number;

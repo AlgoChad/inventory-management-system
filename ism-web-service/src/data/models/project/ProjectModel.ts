@@ -1,6 +1,7 @@
 
 export type ProjectModel = {
     id: number;
+    projectName: string;
     projectDescription: string;
     startDate: Date;
     endDate: Date;

@@ -1,22 +1,13 @@
-import { json, LoaderFunction } from "@remix-run/node";
-import { Link } from "@remix-run/react";
-import RestClient from "~/data/rest/RestClient";
-import { buttonVariants } from "~/components/ui/button";
+import { LoaderFunction, redirect } from "@remix-run/node";
+import { getSession } from "~/sessions";
 
 export const loader: LoaderFunction = async ({ request }) => {
-    const API_BASE_URL = process.env.API_BASE_URL as string;
-    const API_TOKEN = process.env.API_TOKEN as string;
-    const restClient = new RestClient(API_BASE_URL, API_TOKEN);
+    const session = await getSession(request.headers.get("Cookie"));
+    const userId = session.get("userId");
 
-    return json({ success: true });
+    if (!userId) {
+        return redirect("/login");
+    }
+
+    return redirect("/home");
 };
-
-export default () => {
-   
-    return (
-        <main>
-			<h1>Welcome to Remix</h1>
-            <Link to="/tools" className={buttonVariants({ variant: "default" })}>Click here</Link>
-		</main>
-    );
-}

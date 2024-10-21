@@ -9,7 +9,7 @@ interface ToolTableProps {
 const ToolTable: React.FC<ToolTableProps> = ({ tools }) => {
     return (
         <div className="overflow-x-auto">
-            <table className="min-w-full bg-white rounded-lg shadow-md text-sm">
+            <table className="min-w-full bg-white rounded-lg shadow-md text-xs">
                 <thead>
                     <tr className="bg-black text-white">
                         <th className="py-1 px-2 border-b text-left">Tool Description</th>

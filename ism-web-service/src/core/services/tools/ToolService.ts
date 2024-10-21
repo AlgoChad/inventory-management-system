@@ -23,6 +23,7 @@ class ToolService implements IToolService {
     ): Promise<ToolResult> {
         try {
             const toolCreateInput: Prisma.ToolCreateInput = {
+                toolname: createToolModel.toolname,
                 toolNumber: createToolModel.toolNumber,
                 toolDescription: createToolModel.toolDescription,
                 quantity: createToolModel.quantity,

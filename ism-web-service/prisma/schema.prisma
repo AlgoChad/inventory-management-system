@@ -1,88 +1,91 @@
-
 generator client {
-  provider = "prisma-client-js"
+    provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
 }
 
 model ConditionType {
-  id        Int      @id @default(autoincrement())
-  name      String   @unique
-  tools     Tool[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+    id        Int      @id @default(autoincrement())
+    name      String   @unique
+    tools     Tool[]
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 }
 
 model StatusType {
-  id        Int      @id @default(autoincrement())
-  name      String   @unique
-  tools     Tool[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+    id        Int      @id @default(autoincrement())
+    name      String   @unique
+    tools     Tool[]
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 }
 
 model Tool {
-  id              Int             @id @default(autoincrement())
-  toolNumber      String          @unique
-  toolDescription String
-  quantity        Int
-  conditionId     Int
-  statusId        Int
-  condition       ConditionType   @relation(fields: [conditionId], references: [id])
-  status          StatusType      @relation(fields: [statusId], references: [id])
-  projectId       Int?
-  project         Project?        @relation(fields: [projectId], references: [id])
-  personnelId     Int? 
-  personnel       Personnel?      @relation(fields: [personnelId], references: [id])
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt
+    id              Int           @id @default(autoincrement())
+    toolNumber      String        @unique
+    toolname        String
+    toolDescription String
+    quantity        Int
+    conditionId     Int
+    statusId        Int
+    condition       ConditionType @relation(fields: [conditionId], references: [id])
+    status          StatusType    @relation(fields: [statusId], references: [id])
+    projectId       Int?
+    project         Project?      @relation(fields: [projectId], references: [id])
+    personnelId     Int?
+    personnel       Personnel?    @relation(fields: [personnelId], references: [id])
+    createdAt       DateTime      @default(now())
+    updatedAt       DateTime      @updatedAt
 
-  Checkin Checkin[]
+    Checkin Checkin[]
 }
 
 model Project {
-  id               Int             @id @default(autoincrement())
-  projectDescription String
-  startDate        DateTime
-  endDate          DateTime
-  tools            Tool[]
-  createdAt        DateTime        @default(now())
-  updatedAt        DateTime        @updatedAt
+    id                 Int      @id @default(autoincrement())
+    projectName        String   @unique
+    projectDescription String
+    startDate          DateTime
+    endDate            DateTime
+    tools              Tool[]
+    createdAt          DateTime @default(now())
+    updatedAt          DateTime @updatedAt
 
-  Checkin Checkin[]
+    Checkin Checkin[]
 }
 
 model Checkin {
-  id        Int      @id @default(autoincrement())
-  toolId    Int
-  projectId Int
-  tool      Tool     @relation(fields: [toolId], references: [id])
-  project   Project  @relation(fields: [projectId], references: [id])
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+    id           Int       @id @default(autoincrement())
+    toolId       Int
+    projectId    Int
+    tool         Tool      @relation(fields: [toolId], references: [id])
+    project      Project   @relation(fields: [projectId], references: [id])
+    checkInDate  DateTime
+    checkOutDate DateTime?
+    createdAt    DateTime  @default(now())
+    updatedAt    DateTime  @updatedAt
 }
 
 model Personnel {
-  id        Int      @id @default(autoincrement())
-  name      String
-  userId    Int?     @unique
-  user      User?    @relation(fields: [userId], references: [id])
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+    id        Int      @id @default(autoincrement())
+    name      String
+    userId    Int?     @unique
+    user      User?    @relation(fields: [userId], references: [id])
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 
-  Tool Tool[]
+    Tool Tool[]
 }
 
 model User {
-  id           Int      @id @default(autoincrement())
-  username     String   @unique
-  password     String
-  accessToken  String?
-  refreshToken String?
-  personnel    Personnel?
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+    id           Int        @id @default(autoincrement())
+    username     String     @unique
+    password     String
+    accessToken  String?
+    refreshToken String?
+    personnel    Personnel?
+    createdAt    DateTime   @default(now())
+    updatedAt    DateTime   @updatedAt
 }

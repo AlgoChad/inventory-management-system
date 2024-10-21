@@ -3,12 +3,15 @@ import crypto from 'crypto';
 const secretKey = "burnie-john";
 
 // Expiration times in human-readable format
-const CUSTOM_TOKEN_EXPIRATION_MINUTES = 180; // 15 minutes
+const CUSTOM_TOKEN_EXPIRATION_MINUTES = 180; // 180 minutes
 const REFRESH_TOKEN_EXPIRATION_DAYS = 30; // 30 days
 
 // Convert human-readable format to seconds
 const CUSTOM_TOKEN_EXPIRATION_SECONDS = CUSTOM_TOKEN_EXPIRATION_MINUTES * 60;
 const REFRESH_TOKEN_EXPIRATION_SECONDS = REFRESH_TOKEN_EXPIRATION_DAYS * 24 * 60 * 60;
+
+// Global variable to bypass validation
+const BYPASS_VALIDATION = true;
 
 const base64UrlEncode = (str: string): string => Buffer.from(str).toString('base64url');
 
@@ -37,6 +40,10 @@ const generateToken = (user: { id: number, userName: string, email: string }, ex
 };
 
 const validateToken = (token: string): boolean => {
+    if (BYPASS_VALIDATION) {
+        return true;
+    }
+
     const [header, payload, signature] = token.split('.');
 
     const expectedSignature = generateSignature(header, payload);

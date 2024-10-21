@@ -121,6 +121,7 @@ class AuthenticationService implements IAuthenticationService {
                         isSuccess: true,
                         accessToken: user.accessToken,
                         refreshToken: user.refreshToken,
+                        userId: user.id as number,
                     };
                 } else {
                     await this._repository.UpdateAsync({
@@ -145,6 +146,7 @@ class AuthenticationService implements IAuthenticationService {
                     isSuccess: true,
                     accessToken: accessToken,
                     refreshToken: refreshToken,
+                    userId: user.id as number,
                 };
             } else {
                 return {

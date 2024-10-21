@@ -33,7 +33,7 @@ type NavDivider = {
 type NavElement = NavItem | NavDivider;
 
 const navItems: NavElement[] = [
-    { path: "/", label: "Home", icon: FaHome },
+    { path: "/home", label: "Home", icon: FaHome },
     { type: "divider" },
     {
         path: "/reports/project-specific",
@@ -250,6 +250,10 @@ function Navbar() {
             return null;
         });
     };
+
+    if (location.pathname === "/login") {
+        return null;
+    }
 
     return (
         <nav

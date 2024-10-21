@@ -1,3 +1,4 @@
+
 export type ConditionTypeModel = {
     id: number;
     name: string;
@@ -22,4 +23,6 @@ export interface GetAllConditionTypePagedParams {
     page?: number;
     limit?: number;
     search?: string;
+    column: string;
+    direction: "asc" | "desc";
 }

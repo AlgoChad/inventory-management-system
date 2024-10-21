@@ -2,10 +2,12 @@ export type CheckinModel = {
     id: number;
     toolId: number;
     projectId: number;
+    checkInDate: Date;
+    checkOutDate?: Date;
     createdAt: Date;
     updatedAt: Date;
-    tool: any; // Replace with actual Tool model if available
-    project: any; // Replace with actual Project model if available
+    tool: any;
+    project: any;
 };
 
 export type CreateCheckinModel = Omit<

@@ -2,11 +2,10 @@ import axios, { AxiosInstance, AxiosResponse } from 'axios';
 
 export default class RestClient {
     private axiosInstance: AxiosInstance;
-    private baseUrl: string;
 
     constructor(baseUrl: string, token?: string) {
-        this.baseUrl = baseUrl;
         this.axiosInstance = axios.create({
+            baseURL: baseUrl,
             headers: {
                 'Content-Type': 'application/json',
                 "accessToken": token
@@ -23,17 +22,18 @@ export default class RestClient {
     public async Get<T>(url: string, params?: Record<string, any>): Promise<T> {
         const queryString = this.BuildQueryString(params);
         try {
-            const response: AxiosResponse<T> = await this.axiosInstance.get(`${this.baseUrl}${url}${queryString}`);
+            const response: AxiosResponse<T> = await this.axiosInstance.get(`${url}${queryString}`);
             return response.data;
         } catch (error) {
             const err = error as any;
+            console.log("test");
             throw new Error(`Failed to fetch data: ${err.response?.statusText || err.message}`);
         }
     }
 
     public async Post<T>(url: string, data: any): Promise<T> {
         try {
-            const response: AxiosResponse<T> = await this.axiosInstance.post(`${this.baseUrl}${url}`, data);
+            const response: AxiosResponse<T> = await this.axiosInstance.post(url, data);
             return response.data;
         } catch (error) {
             const err = error as any;
@@ -43,7 +43,7 @@ export default class RestClient {
 
     public async Put<T>(url: string, data: any): Promise<T> {
         try {
-            const response: AxiosResponse<T> = await this.axiosInstance.put(`${this.baseUrl}${url}`, data);
+            const response: AxiosResponse<T> = await this.axiosInstance.put(url, data);
             return response.data;
         } catch (error) {
             const err = error as any;
@@ -53,7 +53,7 @@ export default class RestClient {
 
     public async Patch<T>(url: string, data: any): Promise<T> {
         try {
-            const response: AxiosResponse<T> = await this.axiosInstance.patch(`${this.baseUrl}${url}`, data);
+            const response: AxiosResponse<T> = await this.axiosInstance.patch(url, data);
             return response.data;
         } catch (error) {
             const err = error as any;
@@ -64,7 +64,7 @@ export default class RestClient {
     public async Delete(url: string, params?: Record<string, any>): Promise<void> {
         const queryString = this.BuildQueryString(params);
         try {
-            await this.axiosInstance.delete(`${this.baseUrl}${url}${queryString}`);
+            await this.axiosInstance.delete(`${url}${queryString}`);
         } catch (error) {
             const err = error as any;
             throw new Error(`Failed to delete data: ${err.response?.statusText || err.message}`);

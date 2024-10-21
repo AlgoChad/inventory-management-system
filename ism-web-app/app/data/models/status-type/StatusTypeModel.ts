@@ -1,3 +1,4 @@
+
 export type StatusTypeModel = {
     id: number;
     name: string;
@@ -10,7 +11,6 @@ export type CreateStatusTypeModel = Omit<
     StatusTypeModel,
     "id" | "createdAt" | "updatedAt" | "tools"
 >;
-
 export type UpdateStatusTypeModel = Partial<CreateStatusTypeModel>;
 
 export type StatusTypeResult = {
@@ -23,4 +23,6 @@ export interface GetAllStatusTypePagedParams {
     page?: number;
     limit?: number;
     search?: string;
+    column: string;
+    direction: "asc" | "desc";
 }

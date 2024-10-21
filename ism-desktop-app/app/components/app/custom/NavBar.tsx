@@ -33,7 +33,7 @@ type NavDivider = {
 type NavElement = NavItem | NavDivider;
 
 const navItems: NavElement[] = [
-    { path: "/", label: "Home", icon: FaHome },
+    { path: "/home", label: "Home", icon: FaHome },
     { type: "divider" },
     {
         path: "/reports/project-specific",
@@ -59,32 +59,32 @@ const navItems: NavElement[] = [
     },
     { type: "divider" },
     {
-        path: "/tools",
+        path: "/master-data/tools",
         label: "Master Data",
         icon: FaCogs,
         children: [
             {
-                path: "/tools",
+                path: "/master-data/tools",
                 label: "Tools",
                 icon: FaToolbox,
             },
             {
-                path: "/projects",
+                path: "/master-data/projects",
                 label: "Projects",
                 icon: FaProjectDiagram,
             },
             {
-                path: "/checkins",
+                path: "/master-data/checkins",
                 label: "Check-ins",
                 icon: FaCheckCircle,
             },
             {
-                path: "/personnel",
+                path: "/master-data/personnel",
                 label: "Personnel",
                 icon: FaUsers,
             },
             {
-                path: "/settings",
+                path: "/master-data/settings",
                 label: "Dropdown Settings",
                 icon: FaCogs,
             },
@@ -250,6 +250,10 @@ function Navbar() {
             return null;
         });
     };
+
+    if (location.pathname === "/login") {
+        return null;
+    }
 
     return (
         <nav
