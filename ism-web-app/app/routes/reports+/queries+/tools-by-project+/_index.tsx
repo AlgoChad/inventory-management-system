@@ -1,7 +1,5 @@
 import { json, LoaderFunction } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import { useCallback } from "react";
-import { SanitizeRequest } from "~/core/utils/helpers/RestHelpers";
 import { ApiResponse } from "~/data/models/generic/ApiModel";
 import { ToolModel } from "~/data/models/tool/ToolModel";
 import RestClient from "~/data/rest/RestClient";
