@@ -28,7 +28,7 @@ const useGroupedCheckins = (checkins: CheckinModel[]) => {
                 };
             }
             acc[tool.id].projects.push({
-                projectDescription: project.projectDescription,
+                projectDescription: project.projectName,
                 startDate: project.startDate,
                 endDate: project.endDate,
             });

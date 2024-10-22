@@ -3,6 +3,7 @@ export type ProjectModel = {
     id: number;
     projectName: string;
     projectDescription: string;
+    color: string;
     startDate: Date;
     endDate: Date;
     createdAt: Date;

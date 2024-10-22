@@ -6,7 +6,7 @@ export const loader: LoaderFunction = async ({ request }) => {
     const userId = session.get("userId");
 
     if (!userId) {
-        return redirect("/login");
+        return redirect("/auth/login");
     }
 
     return redirect("/home");

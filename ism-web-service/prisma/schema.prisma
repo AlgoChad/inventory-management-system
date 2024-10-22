@@ -47,6 +47,7 @@ model Project {
     id                 Int      @id @default(autoincrement())
     projectName        String   @unique
     projectDescription String
+    color              String
     startDate          DateTime
     endDate            DateTime
     tools              Tool[]

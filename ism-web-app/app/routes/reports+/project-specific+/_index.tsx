@@ -61,7 +61,7 @@ export default function Index() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     {projects.map((project: ProjectModel) => (
                         <div key={project.id} className="bg-white p-4 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
-                            <h2 className="text-xl font-semibold mb-2 text-black">{project.projectDescription}</h2>
+                            <h2 className="text-xl font-semibold mb-2 text-black">{project.projectName}</h2>
                             <p className="text-black mb-1">
                                 <span className="font-semibold">Start Date:</span> <Badge variant="default">{new Date(project.startDate).toDateString()}</Badge>
                             </p>

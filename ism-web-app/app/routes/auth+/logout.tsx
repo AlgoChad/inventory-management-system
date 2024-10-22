@@ -3,7 +3,7 @@ import { destroySession, getSession } from "~/sessions";
 
 export const action: ActionFunction = async ({ request }) => {
     const session = await getSession(request.headers.get("Cookie"));
-    return redirect("/login", {
+    return redirect("/auth/login", {
         headers: {
             "Set-Cookie": await destroySession(session),
         },

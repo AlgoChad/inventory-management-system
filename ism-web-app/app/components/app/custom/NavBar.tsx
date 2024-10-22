@@ -162,11 +162,11 @@ function Navbar() {
 
                 return (
                     <li key={item.path || item.label} className="flex flex-col group">
-                        <Button asChild>
+                        <Button asChild className="bg-[#fca923] hover:bg-[#e89c1f] text-black">
                             {item.path ? (
                                 <Link
                                     to={item.path}
-                                    className={`text-white hover:text-gray-400 flex items-start justify-start ${
+                                    className={`text-black hover:text-gray-600 flex items-start justify-start ${
                                         isExpanded ? "" : "justify-center"
                                     }`}
                                     onClick={() => toggleItemExpansion(item.path || item.label)}
@@ -199,7 +199,7 @@ function Navbar() {
                                 </Link>
                             ) : (
                                 <div
-                                    className={`text-white hover:text-gray-400 flex items-start justify-start ${
+                                    className={`text-black hover:text-gray-600 flex items-start justify-start ${
                                         isExpanded ? "" : "justify-center"
                                     }`}
                                     onClick={() => toggleItemExpansion(item.label)}
@@ -251,13 +251,13 @@ function Navbar() {
         });
     };
 
-    if (location.pathname === "/login") {
+    if (location.pathname === "/auth/login") {
         return null;
     }
 
     return (
         <nav
-            className={`flex flex-col bg-black h-screen p-4 transition-width duration-300 shadow-lg ${
+            className={`flex flex-col bg-[#2f5f7c] h-screen p-4 transition-width duration-300 shadow-lg ${
                 isExpanded ? "w-60" : "w-20"
             }`}
         >

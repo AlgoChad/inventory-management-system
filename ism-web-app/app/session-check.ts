@@ -3,7 +3,7 @@ import { getSession } from "~/sessions";
 
 export const requireUserSession: LoaderFunction = async ({ request }) => {
     const url = new URL(request.url);
-    if (url.pathname === "/login") {
+    if (url.pathname === "/auth/login") {
         return null;
     }
 
@@ -11,7 +11,7 @@ export const requireUserSession: LoaderFunction = async ({ request }) => {
     const userId = session.get("userId");
 
     if (!userId) {
-        throw redirect("/login");
+        throw redirect("/auth/login");
     }
 
     return null;

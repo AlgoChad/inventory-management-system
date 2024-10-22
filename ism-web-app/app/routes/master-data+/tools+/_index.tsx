@@ -112,7 +112,7 @@ export default function Index() {
         loaderData;
     const projectsData = projects.data.map((project: ProjectModel) => ({
         id: project.id,
-        name: project.projectDescription,
+        name: project.projectName,
     }));
 
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);

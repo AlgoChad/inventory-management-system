@@ -5,6 +5,7 @@ import { LoginModel, LoginResult } from "@/app/data/models/authentication/Authen
 import RestClient from "@/app/data/rest/RestClient";
 import { getSession, commitSession } from "app/sessions";
 import { ApiResponse } from "~/data/models/generic/ApiModel";
+import { Button } from "~/components/ui/button";
 
 const API_BASE_URL = process.env.API_BASE_URL as string;
 const API_TOKEN = process.env.API_TOKEN as string;
@@ -46,9 +47,10 @@ export default function LoginPage() {
     const actionData = useActionData<{ error?: string }>();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
 
     return (
-        <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-lg">
+        <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-lg transform transition-all duration-500 hover:scale-105">
             <h1 className="text-2xl font-semibold text-center text-gray-800">Login</h1>
             <Form method="post" className="space-y-4 mt-4">
                 <div>
@@ -61,7 +63,7 @@ export default function LoginPage() {
                         name="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className="mt-1 block w-full px-3 py-2 border border-black rounded-md shadow-sm focus:outline-none focus:ring-black focus:border-black sm:text-sm bg-white text-gray-900"
+                        className="mt-1 block w-full px-3 py-2 border border-black rounded-md shadow-sm focus:outline-none focus:ring-black focus:border-black sm:text-sm bg-white text-gray-900 transition duration-300 ease-in-out transform focus:scale-105"
                     />
                 </div>
                 <div>
@@ -69,25 +71,36 @@ export default function LoginPage() {
                         Password:
                     </label>
                     <input
-                        type="password"
+                        type={showPassword ? "text" : "password"}
                         id="password"
                         name="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required
-                        className="mt-1 block w-full px-3 py-2 border border-black rounded-md shadow-sm focus:outline-none focus:ring-black focus:border-black sm:text-sm bg-white text-gray-900"
+                        className="mt-1 block w-full px-3 py-2 border border-black rounded-md shadow-sm focus:outline-none focus:ring-black focus:border-black sm:text-sm bg-white text-gray-900 transition duration-300 ease-in-out transform focus:scale-105"
                     />
+                    <div className="mt-2">
+                        <label className="inline-flex items-center">
+                            <input
+                                type="checkbox"
+                                checked={showPassword}
+                                onChange={() => setShowPassword(!showPassword)}
+                                className="form-checkbox"
+                            />
+                            <span className="ml-2 text-sm text-gray-700">Show Password</span>
+                        </label>
+                    </div>
                 </div>
                 {actionData?.error && (
                     <div className="text-red-500 text-sm">{actionData.error}</div>
                 )}
                 <div className="flex justify-end">
-                    <button
+                    <Button
                         type="submit"
-                        className="inline-flex justify-center py-2 px-4 border border-black shadow-sm text-sm font-medium rounded-md text-black bg-white hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
+                        className="bg-[#fca923] text-black hover:bg-[#e89c1f] px-4 py-2 rounded-md shadow-md transition duration-300"
                     >
                         Login
-                    </button>
+                    </Button>
                 </div>
             </Form>
         </div>

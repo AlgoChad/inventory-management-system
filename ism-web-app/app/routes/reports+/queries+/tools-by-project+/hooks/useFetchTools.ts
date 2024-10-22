@@ -30,7 +30,7 @@ const useFetchTools = (loaderData: LoaderData) => {
             const projectId = tool.projectId ?? -1;
             if (!acc[projectId]) {
                 acc[projectId] = {
-                    projectDescription: tool.project.projectDescription,
+                    projectDescription: tool.project.projectName,
                     tools: [],
                 };
             }
