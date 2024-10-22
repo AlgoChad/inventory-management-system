@@ -46,7 +46,6 @@ class ProjectService implements IProjectService {
                     return await query.findFirst({
                         where: { id },
                         include: {
-                            tools: true,
                             Checkin: true,
                         },
                     });
@@ -153,13 +152,6 @@ class ProjectService implements IProjectService {
     ): Promise<PagedList<ProjectModel>> {
         const { page, limit, search, column, direction } = params;
         try {
-            const where: Prisma.ProjectWhereInput = {
-                projectDescription: {
-                    contains: search,
-                    mode: "insensitive",
-                },
-            };
-
             const result = await this._repository.GetAllPagedAsync(
                 async (query: PrismaClient) => {
                     const orderBy: { [key: string]: 'asc' | 'desc' } = {};
@@ -169,9 +161,6 @@ class ProjectService implements IProjectService {
                     }
             
                     const result = await query.findMany({
-                        include: {
-                            tools: true,
-                        },
                         orderBy: orderBy,
                     });
             

@@ -23,9 +23,8 @@ class ToolService implements IToolService {
     ): Promise<ToolResult> {
         try {
             const toolCreateInput: Prisma.ToolCreateInput = {
-                toolname: createToolModel.toolname,
+                toolName: createToolModel.toolName,
                 toolNumber: createToolModel.toolNumber,
-                toolDescription: createToolModel.toolDescription,
                 quantity: createToolModel.quantity,
                 condition: {
                     connect: {
@@ -35,11 +34,6 @@ class ToolService implements IToolService {
                 status: {
                     connect: {
                         id: createToolModel.statusId,
-                    },
-                },
-                project: {
-                    connect: {
-                        id: createToolModel.projectId,
                     },
                 },
                 personnel: {
@@ -73,7 +67,6 @@ class ToolService implements IToolService {
                         include: {
                             condition: true,
                             status: true,
-                            project: true,
                             personnel: true,
                             Checkin: true,
                         },
@@ -166,7 +159,6 @@ class ToolService implements IToolService {
                         include: {
                             condition: true,
                             status: true,
-                            project: true,
                             personnel: true,
                             Checkin: true,
                         },
@@ -187,10 +179,14 @@ class ToolService implements IToolService {
         const { page, limit, search, column, direction } = params;
         try {
             const where: Prisma.ToolWhereInput = {
-                toolDescription: {
+                toolName: {
                     contains: search,
                     mode: "insensitive",
                 },
+                toolNumber: {
+                    contains: search,
+                    mode: "insensitive",
+                }
             };
 
             const result = await this._repository.GetAllPagedAsync(
@@ -215,7 +211,6 @@ class ToolService implements IToolService {
                         include: {
                             condition: true,
                             status: true,
-                            project: true,
                             personnel: true,
                             Checkin: true,
                         },

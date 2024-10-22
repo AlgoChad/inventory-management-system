@@ -3,12 +3,12 @@ export type ProjectModel = {
     id: number;
     projectName: string;
     projectDescription: string;
+    color: string;
     startDate: Date;
     endDate: Date;
     createdAt: Date;
     updatedAt: Date;
-    tools: any[]; // Replace with actual Tool model if available
-    checkins: any[]; // Replace with actual Checkin model if available
+    checkins: any[];
 };
 
 export type CreateProjectModel = Omit<

@@ -8,8 +8,7 @@ export type ProjectModel = {
     endDate: Date;
     createdAt: Date;
     updatedAt: Date;
-    tools: any[]; // Replace with actual Tool model if available
-    checkins: any[]; // Replace with actual Checkin model if available
+    checkins: any[];
 };
 
 export type CreateProjectModel = Omit<

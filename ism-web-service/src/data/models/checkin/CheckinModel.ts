@@ -1,5 +1,7 @@
 export type CheckinModel = {
     id: number;
+    checkInColor: string;
+    checkInQuantity: number;
     toolId: number;
     projectId: number;
     checkInDate: Date;

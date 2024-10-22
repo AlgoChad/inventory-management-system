@@ -13,7 +13,6 @@ import { Button } from "~/components/ui/button";
 import { StatusTypeModel } from "~/data/models/status-type/StatusTypeModel";
 import { ConditionTypeModel } from "~/data/models/condition-type/ConditionTypeModel";
 import { ScrollArea } from "~/components/ui/scroll-area";
-import { ProjectModel } from "~/data/models/project/ProjectModel";
 import { PersonnelModel } from "~/data/models/personnel/PersonnelModel";
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -69,13 +68,6 @@ export const loader: LoaderFunction = async ({ request }) => {
             return statusTypes;
         };
 
-        const getProjects = async () => {
-            const projects = await restClient.Get<ApiResponse<ProjectModel[]>>(
-                `/projects/all`
-            );
-
-            return projects;
-        };
 
         const getPersonnel = async () => {
             const personnel = await restClient.Get<
@@ -85,12 +77,11 @@ export const loader: LoaderFunction = async ({ request }) => {
             return personnel;
         };
 
-        const [tools, conditionTypes, statusTypes, projects, personnel] =
+        const [tools, conditionTypes, statusTypes, personnel] =
             await Promise.all([
                 getTools(),
                 getConditionTypes(),
                 getStatusTypes(),
-                getProjects(),
                 getPersonnel(),
             ]);
 
@@ -98,7 +89,6 @@ export const loader: LoaderFunction = async ({ request }) => {
             tools,
             conditionTypes,
             statusTypes,
-            projects,
             personnel,
         });
     } catch (error) {
@@ -110,11 +100,7 @@ export default function Index() {
     const loaderData = useLoaderData<typeof loader>();
     const { tools, conditionTypes, statusTypes, projects, personnel } =
         loaderData;
-    const projectsData = projects.data.map((project: ProjectModel) => ({
-        id: project.id,
-        name: project.projectName,
-    }));
-
+  
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
     const openCreateModal = () => setIsCreateModalOpen(true);
@@ -135,7 +121,6 @@ export default function Index() {
                     table={tools}
                     conditionTypes={conditionTypes.data}
                     statusTypes={statusTypes.data}
-                    projects={projectsData}
                     personnel={personnel.data}
                 />
             </ScrollArea>
@@ -145,7 +130,6 @@ export default function Index() {
                     onClose={closeCreateModal}
                     conditionTypes={conditionTypes.data}
                     statusTypes={statusTypes.data}
-                    projects={projectsData}
                     personnel={personnel.data}
                 />
             )}

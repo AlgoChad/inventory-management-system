@@ -7,9 +7,15 @@ const restClient = new RestClient(API_BASE_URL, API_TOKEN);
 
 export const action: ActionFunction = async ({ request }) => {
     const formData = await request.formData();
-    const toolname = formData.get("toolname");
-    const toolNumber = formData.get("toolNumber");
-    const toolDescription = formData.get("toolDescription");
+    const toolName = formData.get("toolName");
+    let toolNameArray = toolName?.toString().split(" ");
+    let toolNameInitials: string = "";
+
+    toolNameArray?.forEach((item) => {
+        toolNameInitials += item.charAt(0).toUpperCase();
+    });
+
+    const toolNumber = toolNameInitials + "-00" + Math.floor(Math.random() * 1000);
     const quantity = formData.get("quantity");
     const conditionId = formData.get("conditionId");
     const statusId = formData.get("statusId");
@@ -17,9 +23,7 @@ export const action: ActionFunction = async ({ request }) => {
     const personnelId = formData.get("personnelId");
 
     if (
-        typeof toolname !== "string" || toolname.trim() === "" ||
-        typeof toolNumber !== "string" || toolNumber.trim() === "" ||
-        typeof toolDescription !== "string" || toolDescription.trim() === "" ||
+        typeof toolName !== "string" || toolName.trim() === "" ||
         typeof quantity !== "string" || quantity.trim() === ""
     ) {
         return json(
@@ -31,9 +35,8 @@ export const action: ActionFunction = async ({ request }) => {
     try {
         const response = await restClient.Post("/tools", {
             payload: {
-                toolname,
+                toolName,
                 toolNumber,
-                toolDescription,
                 quantity: Number(quantity),
                 conditionId: conditionId ? Number(conditionId) : undefined,
                 statusId: statusId ? Number(statusId) : undefined,

@@ -2,18 +2,15 @@
 export type ToolModel = {
     id: number;
     toolNumber: string;
-    toolname: string;
-    toolDescription: string;
+    toolName: string;
     quantity: number;
     conditionId: number;
     statusId: number;
-    projectId?: number;
     personnelId?: number;
     createdAt: Date;
     updatedAt: Date;
     condition: any;
     status: any;
-    project?: any;
     personnel?: any;
     checkins: any[];
 };

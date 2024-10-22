@@ -10,32 +10,25 @@ interface EditToolFormProps {
     item: ToolModel;
     conditionTypes: Array<{ id: number; name: string }>;
     statusTypes: Array<{ id: number; name: string }>;
-    projects: Array<{ id: number; name: string }>;
     personnel: Array<{ id: number; name: string }>;
 }
 
-const EditToolForm: React.FC<EditToolFormProps> = ({ isOpen, onClose, item, conditionTypes, statusTypes, projects, personnel }) => {
+const EditToolForm: React.FC<EditToolFormProps> = ({ isOpen, onClose, item, conditionTypes, statusTypes, personnel }) => {
     const submit = useSubmit();
-    const [toolName, setToolName] = useState(item.toolname || "");
-    const [toolNumber, setToolNumber] = useState(item.toolNumber);
-    const [toolDescription, setToolDescription] = useState(item.toolDescription);
+    const [toolName, setToolName] = useState(item.toolName || "");
     const [quantity, setQuantity] = useState(item.quantity);
     const [conditionId, setConditionId] = useState(item.conditionId || "");
     const [statusId, setStatusId] = useState(item.statusId || "");
-    const [projectId, setProjectId] = useState(item.projectId || "");
     const [personnelId, setPersonnelId] = useState(item.personnelId || "");
 
     const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault();
         const formData = new FormData();
         formData.append("id", item.id.toString());
-        formData.append("toolname", toolName);
-        formData.append("toolNumber", toolNumber);
-        formData.append("toolDescription", toolDescription);
+        formData.append("toolName", toolName);
         formData.append("quantity", quantity.toString());
         if (conditionId) formData.append("conditionId", conditionId.toString());
         if (statusId) formData.append("statusId", statusId.toString());
-        if (projectId) formData.append("projectId", projectId.toString());
         if (personnelId) formData.append("personnelId", personnelId.toString());
     
         submit(formData, { method: "post", action: `/master-data/tools/update` });
@@ -66,34 +59,6 @@ const EditToolForm: React.FC<EditToolFormProps> = ({ isOpen, onClose, item, cond
                                 name="toolName"
                                 value={toolName}
                                 onChange={(e) => setToolName(e.target.value)}
-                                required
-                                className="mt-1 block w-full px-3 py-2 border border-black rounded-md shadow-sm focus:outline-none focus:ring-black focus:border-black sm:text-sm bg-white text-gray-900"
-                            />
-                        </div>
-                        <div>
-                            <label htmlFor="toolNumber" className="block text-sm font-medium text-gray-700">
-                                Tool Number:
-                            </label>
-                            <input
-                                type="text"
-                                id="toolNumber"
-                                name="toolNumber"
-                                value={toolNumber}
-                                onChange={(e) => setToolNumber(e.target.value)}
-                                required
-                                className="mt-1 block w-full px-3 py-2 border border-black rounded-md shadow-sm focus:outline-none focus:ring-black focus:border-black sm:text-sm bg-white text-gray-900"
-                            />
-                        </div>
-                        <div>
-                            <label htmlFor="toolDescription" className="block text-sm font-medium text-gray-700">
-                                Description:
-                            </label>
-                            <input
-                                type="text"
-                                id="toolDescription"
-                                name="toolDescription"
-                                value={toolDescription}
-                                onChange={(e) => setToolDescription(e.target.value)}
                                 required
                                 className="mt-1 block w-full px-3 py-2 border border-black rounded-md shadow-sm focus:outline-none focus:ring-black focus:border-black sm:text-sm bg-white text-gray-900"
                             />
@@ -144,25 +109,6 @@ const EditToolForm: React.FC<EditToolFormProps> = ({ isOpen, onClose, item, cond
                             >
                                 <option value="">Select Status</option>
                                 {statusTypes.map((status) => (
-                                    <option key={status.id} value={status.id}>
-                                        {status.name}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-                        <div>
-                            <label htmlFor="projectId" className="block text-sm font-medium text-gray-700">
-                                Project:
-                            </label>
-                            <select
-                                id="projectId"
-                                name="projectId"
-                                value={projectId}
-                                onChange={(e) => setProjectId(Number(e.target.value))}
-                                className="mt-1 block w-full px-3 py-2 border border-black rounded-md shadow-sm focus:outline-none focus:ring-black focus:border-black sm:text-sm bg-white text-gray-900"
-                            >
-                                <option value="">Select Project</option>
-                                {projects.map((status) => (
                                     <option key={status.id} value={status.id}>
                                         {status.name}
                                     </option>

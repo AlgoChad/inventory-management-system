@@ -12,7 +12,6 @@ interface ToolTableProps {
     table: Datatable<ToolModel>;
     conditionTypes: Array<{ id: number; name: string }>;
     statusTypes: Array<{ id: number; name: string }>;
-    projects: Array<{ id: number; name: string }>;
     personnel: Array<{ id: number; name: string }>;
 }
 
@@ -20,7 +19,6 @@ const ToolTable: React.FC<ToolTableProps> = ({
     table,
     conditionTypes,
     statusTypes,
-    projects,
     personnel,
 }) => {
     const { data, pagination, defaultSort } = table;
@@ -58,7 +56,7 @@ const ToolTable: React.FC<ToolTableProps> = ({
                                 )
                             }
                         >
-                            Tool ID
+                            Tool Code
                             <ArrowDirection direction={column.getIsSorted()} />
                         </Button>
                     </div>
@@ -90,35 +88,7 @@ const ToolTable: React.FC<ToolTableProps> = ({
             },
             cell: ({ row }) => {
                 const rowValue = row.original;
-                return <div className="text-center">{rowValue.toolname}</div>;
-            },
-        },
-        {
-            accessorKey: "toolDescription",
-            header: ({ column }) => {
-                return (
-                    <div className="text-center">
-                        <Button
-                            variant="ghost"
-                            onClick={() =>
-                                column.toggleSorting(
-                                    column.getIsSorted() === "asc"
-                                )
-                            }
-                        >
-                            Description
-                            <ArrowDirection direction={column.getIsSorted()} />
-                        </Button>
-                    </div>
-                );
-            },
-            cell: ({ row }) => {
-                const rowValue = row.original;
-                return (
-                    <div className="text-center">
-                        {rowValue.toolDescription}
-                    </div>
-                );
+                return <div className="text-center">{rowValue.toolName}</div>;
             },
         },
         {
@@ -297,7 +267,6 @@ const ToolTable: React.FC<ToolTableProps> = ({
                     item={selectedItem}
                     conditionTypes={conditionTypes}
                     statusTypes={statusTypes}
-                    projects={projects}
                     personnel={personnel}
                 />
             )}
