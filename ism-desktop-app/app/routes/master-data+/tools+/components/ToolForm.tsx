@@ -8,31 +8,27 @@ interface CreateToolFormProps {
     onClose: () => void;
     conditionTypes: Array<{ id: number; name: string }>;
     statusTypes: Array<{ id: number; name: string }>;
-    projects: Array<{ id: number; name: string }>;
     personnel: Array<{ id: number; name: string }>;
 }
 
-const CreateToolForm: React.FC<CreateToolFormProps> = ({ isOpen, onClose, conditionTypes, statusTypes, projects, personnel }) => {
+const CreateToolForm: React.FC<CreateToolFormProps> = ({ isOpen, onClose, conditionTypes, statusTypes, personnel }) => {
     const submit = useSubmit();
     const [toolName, setToolName] = useState("");
-    const [toolNumber, setToolNumber] = useState("");
     const [toolDescription, setToolDescription] = useState("");
     const [quantity, setQuantity] = useState<number | undefined>(undefined);
     const [conditionId, setConditionId] = useState<number | undefined>(undefined);
     const [statusId, setStatusId] = useState<number | undefined>(undefined);
-    const [projectId, setProjectId] = useState<number | undefined>(undefined);
+   
     const [personnelId, setPersonnelId] = useState<number | undefined>(undefined);
 
     const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault();
         const formData = new FormData();
-        formData.append("toolname", toolName);
-        formData.append("toolNumber", toolNumber);
+        formData.append("toolName", toolName);
         formData.append("toolDescription", toolDescription);
         if (quantity !== undefined) formData.append("quantity", quantity.toString());
         if (conditionId !== undefined) formData.append("conditionId", conditionId.toString());
         if (statusId !== undefined) formData.append("statusId", statusId.toString());
-        if (projectId !== undefined) formData.append("projectId", projectId.toString());
         if (personnelId !== undefined) formData.append("personnelId", personnelId.toString());
 
         submit(formData, { method: "post", action: "/master-data/tools/create" });
@@ -63,20 +59,6 @@ const CreateToolForm: React.FC<CreateToolFormProps> = ({ isOpen, onClose, condit
                                 name="toolName"
                                 value={toolName}
                                 onChange={(e) => setToolName(e.target.value)}
-                                required
-                                className="mt-1 block w-full px-3 py-2 border border-black rounded-md shadow-sm focus:outline-none focus:ring-black focus:border-black sm:text-sm bg-white text-gray-900"
-                            />
-                        </div>
-                        <div>
-                            <label htmlFor="toolNumber" className="block text-sm font-medium text-gray-700">
-                                Tool Number:
-                            </label>
-                            <input
-                                type="text"
-                                id="toolNumber"
-                                name="toolNumber"
-                                value={toolNumber}
-                                onChange={(e) => setToolNumber(e.target.value)}
                                 required
                                 className="mt-1 block w-full px-3 py-2 border border-black rounded-md shadow-sm focus:outline-none focus:ring-black focus:border-black sm:text-sm bg-white text-gray-900"
                             />
@@ -141,25 +123,6 @@ const CreateToolForm: React.FC<CreateToolFormProps> = ({ isOpen, onClose, condit
                             >
                                 <option value="">Select Status</option>
                                 {statusTypes.map((status) => (
-                                    <option key={status.id} value={status.id}>
-                                        {status.name}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-                        <div>
-                            <label htmlFor="projectId" className="block text-sm font-medium text-gray-700">
-                                Project:
-                            </label>
-                            <select
-                                id="projectId"
-                                name="projectId"
-                                value={projectId}
-                                onChange={(e) => setProjectId(Number(e.target.value))}
-                                className="mt-1 block w-full px-3 py-2 border border-black rounded-md shadow-sm focus:outline-none focus:ring-black focus:border-black sm:text-sm bg-white text-gray-900"
-                            >
-                                <option value="">Select Project</option>
-                                {projects.map((status) => (
                                     <option key={status.id} value={status.id}>
                                         {status.name}
                                     </option>

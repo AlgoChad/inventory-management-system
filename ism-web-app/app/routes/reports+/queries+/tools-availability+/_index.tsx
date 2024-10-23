@@ -1,7 +1,6 @@
 import { json, LoaderFunction } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import { useCallback, useState } from "react";
-import { SanitizeRequest } from "~/core/utils/helpers/RestHelpers";
+import { useState } from "react";
 import { ApiResponse } from "~/data/models/generic/ApiModel";
 import { ToolModel } from "~/data/models/tool/ToolModel";
 import RestClient from "~/data/rest/RestClient";
@@ -55,11 +54,11 @@ export default function Index() {
     };
 
     return (
-        <div className="p-2">
-            <h1 className="text-2xl font-bold mb-4 text-center text-black">
+        <div className="p-4 bg-gray-100">
+            <h1 className="text-3xl font-bold mb-6 text-center text-gray-800">
                 Tools Availability
             </h1>
-            <div className="h-[calc(100vh-200px)] overflow-y-auto bg-white p-4 rounded-lg shadow-lg">
+            <div className="bg-white p-6 rounded-lg shadow-lg">
                 <div className="flex justify-center mb-4">
                     <Button onClick={toggleView}>
                         {view === "status"
@@ -67,31 +66,35 @@ export default function Index() {
                             : "Show by Status"}
                     </Button>
                 </div>
-                {view === "status" ? (
-                    <GroupedToolCards
-                        groupedTools={paginatedStatusGroups}
-                        title="Grouped by Status"
-                    />
-                ) : (
-                    <GroupedToolCards
-                        groupedTools={paginatedConditionGroups}
-                        title="Grouped by Condition"
-                    />
-                )}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {view === "status" ? (
+                        <GroupedToolCards
+                            groupedTools={paginatedStatusGroups}
+                            title="Grouped by Status"
+                        />
+                    ) : (
+                        <GroupedToolCards
+                            groupedTools={paginatedConditionGroups}
+                            title="Grouped by Condition"
+                        />
+                    )}
+                </div>
+                <div className="flex justify-center mt-4">
+                    {view === "status" ? (
+                        <Pagination
+                            currentPage={statusPage}
+                            totalPages={totalStatusPages}
+                            onPageChange={handleStatusPageChange}
+                        />
+                    ) : (
+                        <Pagination
+                            currentPage={conditionPage}
+                            totalPages={totalConditionPages}
+                            onPageChange={handleConditionPageChange}
+                        />
+                    )}
+                </div>
             </div>
-            {view === "status" ? (
-                <Pagination
-                    currentPage={statusPage}
-                    totalPages={totalStatusPages}
-                    onPageChange={handleStatusPageChange}
-                />
-            ) : (
-                <Pagination
-                    currentPage={conditionPage}
-                    totalPages={totalConditionPages}
-                    onPageChange={handleConditionPageChange}
-                />
-            )}
         </div>
     );
 }

@@ -46,11 +46,10 @@ const navItems: NavElement[] = [
                 icon: FaProjectDiagram,
             },
             {
-                path: "/reports/queries/tools-by-project",
+                path: "/reports/queries/tools-movement-history",
                 label: "Reports and Queries",
                 icon: FaInfoCircle,
                 children: [
-                    { path: "/reports/queries/tools-by-project", label: "Tools by Project", icon: FaProjectDiagram },
                     { path: "/reports/queries/tools-movement-history", label: "Movement History", icon: FaListAlt },
                     { path: "/reports/queries/tools-availability", label: "Tools Availability", icon: FaToolbox },
                 ],

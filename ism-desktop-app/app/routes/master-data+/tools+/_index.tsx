@@ -1,5 +1,5 @@
 import { json, LoaderFunction } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { Form, useLoaderData } from "@remix-run/react";
 import { useEffect, useState } from "react";
 import { SanitizeRequest } from "~/core/utils/helpers/RestHelpers";
 import { ApiResponse } from "~/data/models/generic/ApiModel";
@@ -13,18 +13,18 @@ import { Button } from "~/components/ui/button";
 import { StatusTypeModel } from "~/data/models/status-type/StatusTypeModel";
 import { ConditionTypeModel } from "~/data/models/condition-type/ConditionTypeModel";
 import { ScrollArea } from "~/components/ui/scroll-area";
-import { ProjectModel } from "~/data/models/project/ProjectModel";
 import { PersonnelModel } from "~/data/models/personnel/PersonnelModel";
+import { Label } from "~/components/ui/label";
+import { Input } from "~/components/ui/input";
+import { Search } from "lucide-react";
 
 export const loader: LoaderFunction = async ({ request }) => {
     const API_BASE_URL = process.env.API_BASE_URL as string;
     const API_TOKEN = process.env.API_TOKEN as string;
-
-    console.log(API_BASE_URL);
-    console.log(API_TOKEN);
     const restClient = new RestClient(API_BASE_URL, API_TOKEN);
 
     const parsedArgs = SanitizeRequest(request);
+    console.log(parsedArgs);
 
     try {
         const getTools = async () => {
@@ -33,10 +33,10 @@ export const loader: LoaderFunction = async ({ request }) => {
             >(`/tools`, {
                 page: parsedArgs.page || 1,
                 limit: parsedArgs.limit || 10,
+                search: parsedArgs.search || "",
                 column: parsedArgs.orderBy || "createdAt",
                 direction: parsedArgs.orderDir || "asc",
             });
-            console.log(tools);
 
             if (!tools.data) {
                 throw new Response("Failed to load data", { status: 500 });
@@ -54,7 +54,6 @@ export const loader: LoaderFunction = async ({ request }) => {
                     desc: "asc",
                 },
             };
-
 
             return toolsTable;
         };
@@ -75,13 +74,6 @@ export const loader: LoaderFunction = async ({ request }) => {
             return statusTypes;
         };
 
-        const getProjects = async () => {
-            const projects = await restClient.Get<ApiResponse<ProjectModel[]>>(
-                `/projects/all`
-            );
-
-            return projects;
-        };
 
         const getPersonnel = async () => {
             const personnel = await restClient.Get<
@@ -91,12 +83,11 @@ export const loader: LoaderFunction = async ({ request }) => {
             return personnel;
         };
 
-        const [tools, conditionTypes, statusTypes, projects, personnel] =
+        const [tools, conditionTypes, statusTypes, personnel] =
             await Promise.all([
                 getTools(),
                 getConditionTypes(),
                 getStatusTypes(),
-                getProjects(),
                 getPersonnel(),
             ]);
 
@@ -104,11 +95,10 @@ export const loader: LoaderFunction = async ({ request }) => {
             tools,
             conditionTypes,
             statusTypes,
-            projects,
             personnel,
         });
-    } catch (error) {  
-        throw new Response("Failed to load data" + error, { status: 500 });
+    } catch (error) {
+        throw new Response("Failed to load data", { status: 500 });
     }
 };
 
@@ -116,11 +106,7 @@ export default function Index() {
     const loaderData = useLoaderData<typeof loader>();
     const { tools, conditionTypes, statusTypes, projects, personnel } =
         loaderData;
-    const projectsData = projects.data.map((project: ProjectModel) => ({
-        id: project.id,
-        name: project.projectDescription,
-    }));
-
+  
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
     const openCreateModal = () => setIsCreateModalOpen(true);
@@ -132,16 +118,36 @@ export default function Index() {
                 <h1 className="text-2xl font-bold">Tools</h1>
             </div>
             <ScrollArea className="h-auto rounded-md border p-4 bg-white shadow-md">
-                <div className="flex justify-end mb-4">
+                <div className="flex justify-between items-center mb-4">
                     <Button className="m-2" onClick={openCreateModal}>
                         Create Tool
                     </Button>
+                    <Form method="GET" className="w-full max-w-md border p-5 rounded-md">
+                        <div className="flex items-center space-x-2">
+                            <div className="flex-grow">
+                                <Label className="block text-sm font-medium text-gray-700">Search</Label>
+                                <Input
+                                    className="mt-1 block w-full text-xs h-[30px] px-2 py-1 border rounded-md"
+                                    name="search"
+                                    type="text"
+                                />
+                            </div>
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                className="h-8 gap-1 mt-6"
+                                type="submit"
+                            >
+                                <Search className="h-3.5 w-3.5" />
+                                Search
+                            </Button>
+                        </div>
+                    </Form>
                 </div>
                 <ToolTable
                     table={tools}
                     conditionTypes={conditionTypes.data}
                     statusTypes={statusTypes.data}
-                    projects={projectsData}
                     personnel={personnel.data}
                 />
             </ScrollArea>
@@ -151,7 +157,6 @@ export default function Index() {
                     onClose={closeCreateModal}
                     conditionTypes={conditionTypes.data}
                     statusTypes={statusTypes.data}
-                    projects={projectsData}
                     personnel={personnel.data}
                 />
             )}

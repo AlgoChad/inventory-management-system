@@ -5,7 +5,7 @@ export const loader: LoaderFunction = async ({ request }) => {
     const pathname = url.pathname;
 
     if (pathname === "/") {
-        return redirect("/login");
+        return redirect("auth/login");
     }
 
     return redirect("/home");

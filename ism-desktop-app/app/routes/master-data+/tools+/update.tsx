@@ -8,9 +8,7 @@ const restClient = new RestClient(API_BASE_URL, API_TOKEN);
 export const action: ActionFunction = async ({ request }) => {
     const formData = await request.formData();
     const id = formData.get("id");
-    const toolname = formData.get("toolname");
-    const toolNumber = formData.get("toolNumber");
-    const toolDescription = formData.get("toolDescription");
+    const toolName = formData.get("toolName");
     const quantity = formData.get("quantity");
     const conditionId = formData.get("conditionId");
     const statusId = formData.get("statusId");
@@ -19,9 +17,7 @@ export const action: ActionFunction = async ({ request }) => {
 
     if (
         typeof id !== "string" || id.trim() === "" ||
-        typeof toolname !== "string" || toolname.trim() === "" ||
-        typeof toolNumber !== "string" || toolNumber.trim() === "" ||
-        typeof toolDescription !== "string" || toolDescription.trim() === "" ||
+        typeof toolName !== "string" || toolName.trim() === "" ||
         typeof quantity !== "string" || quantity.trim() === ""
     ) {
         return json(
@@ -33,9 +29,7 @@ export const action: ActionFunction = async ({ request }) => {
     try {
         const response = await restClient.Put(`/tools/${id}`, {
             payload: {
-                toolname,
-                toolNumber,
-                toolDescription,
+                toolName,
                 quantity: Number(quantity),
                 conditionId: conditionId ? Number(conditionId) : undefined,
                 statusId: statusId ? Number(statusId) : undefined,

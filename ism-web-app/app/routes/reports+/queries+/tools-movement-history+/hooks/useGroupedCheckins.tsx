@@ -6,9 +6,13 @@ interface GroupedCheckins {
     [toolId: number]: {
         tool: CheckinModel['tool'];
         projects: {
+            projectName: string;
             projectDescription: string;
             startDate: string;
             endDate: string;
+            isCheckedOut: boolean;
+            checkInQuantity: number;
+            checkInColor: string;
         }[];
     };
 }
@@ -20,7 +24,7 @@ const useGroupedCheckins = (checkins: CheckinModel[]) => {
 
     useEffect(() => {
         const grouped: GroupedCheckins = checkins.reduce((acc, checkin) => {
-            const { tool, project } = checkin;
+            const { tool, project, checkInQuantity, checkInColor, checkOutDate } = checkin;
             if (!acc[tool.id]) {
                 acc[tool.id] = {
                     tool,
@@ -28,15 +32,19 @@ const useGroupedCheckins = (checkins: CheckinModel[]) => {
                 };
             }
             acc[tool.id].projects.push({
-                projectDescription: project.projectName,
+                projectName: project.projectName,
+                projectDescription: project.projectDescription,
                 startDate: project.startDate,
                 endDate: project.endDate,
+                isCheckedOut: checkOutDate? true : false,
+                checkInQuantity,
+                checkInColor,
             });
             return acc;
         }, {} as GroupedCheckins);
 
         Object.values(grouped).forEach((group) => {
-            group.projects.sort((a: ProjectModel, b: ProjectModel) => {
+            group.projects.sort((a: GroupedCheckins[0]['projects'][0], b: GroupedCheckins[0]['projects'][0]) => {
                 const startDateA = new Date(a.startDate).getTime();
                 const startDateB = new Date(b.startDate).getTime();
                 const endDateA = new Date(a.endDate).getTime();
@@ -63,4 +71,3 @@ const useGroupedCheckins = (checkins: CheckinModel[]) => {
 };
 
 export default useGroupedCheckins;
- 

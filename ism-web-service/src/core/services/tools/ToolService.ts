@@ -178,16 +178,22 @@ class ToolService implements IToolService {
     ): Promise<PagedList<ToolModel>> {
         const { page, limit, search, column, direction } = params;
         try {
-            const where: Prisma.ToolWhereInput = {
-                toolName: {
-                    contains: search,
-                    mode: "insensitive",
-                },
-                toolNumber: {
-                    contains: search,
-                    mode: "insensitive",
-                }
-            };
+            const where: Prisma.ToolWhereInput = search ? {
+                OR: [
+                    {
+                        toolName: {
+                            contains: search.toLocaleLowerCase().trim(),
+                            mode: "insensitive",
+                        },
+                    },
+                    {
+                        toolNumber: {
+                            contains: search.toLocaleLowerCase().trim(),
+                            mode: "insensitive",
+                        },
+                    },
+                ],
+            } : {};
 
             const result = await this._repository.GetAllPagedAsync(
                 async (query: PrismaClient) => {
@@ -218,7 +224,7 @@ class ToolService implements IToolService {
                     });
 
                     return result;
-                }, page, limit
+                }, page, limit, false
             );
 
             return result as PagedList<ToolModel>;

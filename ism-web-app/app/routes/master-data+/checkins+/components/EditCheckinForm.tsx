@@ -19,16 +19,36 @@ const EditCheckinForm: React.FC<EditCheckinFormProps> = ({ isOpen, onClose, item
     const [toolId, setToolId] = useState(item?.toolId || "");
     const [projectId, setProjectId] = useState(item?.projectId || "");
     const [checkInDate, setCheckInDate] = useState(item?.checkInDate ? new Date(item.checkInDate).toISOString().split('T')[0] : "");
-    const [checkOutDate, setCheckOutDate] = useState(item?.checkOutDate ? new Date(item.checkOutDate).toISOString().split('T')[0] : "");
+    const [checkInQuantity, setCheckInQuantity] = useState(item?.checkInQuantity || 0);
+    const [availableQuantity, setAvailableQuantity] = useState(0);
+    const [projectColor, setProjectColor] = useState<string>("#000000");
 
     useEffect(() => {
         if (item) {
             setToolId(item.toolId);
             setProjectId(item.projectId);
             setCheckInDate(item.checkInDate ? new Date(item.checkInDate).toISOString().split('T')[0] : "");
-            setCheckOutDate(item.checkOutDate ? new Date(item.checkOutDate).toISOString().split('T')[0] : "");
+            setCheckInQuantity(item.checkInQuantity || 0);
         }
     }, [item]);
+
+    useEffect(() => {
+        const selectedTool = tools.find(tool => tool.id === Number(toolId));
+        if (selectedTool) {
+            setAvailableQuantity(selectedTool.quantity);
+        } else {
+            setAvailableQuantity(0);
+        }
+    }, [toolId, tools]);
+
+    useEffect(() => {
+        const selectedProject = projects.find(project => project.id === Number(projectId));
+        if (selectedProject) {
+            setProjectColor(selectedProject.color);
+        } else {
+            setProjectColor("#000000");
+        }
+    }, [projectId, projects]);
 
     const handleEditSubmit = (event: React.FormEvent) => {
         event.preventDefault();
@@ -38,7 +58,7 @@ const EditCheckinForm: React.FC<EditCheckinFormProps> = ({ isOpen, onClose, item
             formData.append("toolId", toolId.toString());
             formData.append("projectId", projectId.toString());
             formData.append("checkInDate", checkInDate);
-            formData.append("checkOutDate", checkOutDate);
+            formData.append("checkInQuantity", checkInQuantity.toString());
 
             submit(formData, { method: "post", action: "/master-data/checkins/update" });
             onClose();
@@ -74,30 +94,57 @@ const EditCheckinForm: React.FC<EditCheckinFormProps> = ({ isOpen, onClose, item
                                 <option value="">Select a tool</option>
                                 {tools.map((tool) => (
                                     <option key={tool.id} value={tool.id}>
-                                        {tool.toolDescription}
+                                        {tool.toolName}
                                     </option>
                                 ))}
                             </select>
+                            {toolId && (
+                                <p className="mt-2 text-sm text-gray-600">
+                                    Available Quantity: {availableQuantity}
+                                </p>
+                            )}
                         </div>
                         <div>
                             <label htmlFor="projectId" className="block text-sm font-medium text-gray-700">
                                 Project:
                             </label>
-                            <select
-                                id="projectId"
-                                name="projectId"
-                                value={projectId}
-                                onChange={(e) => setProjectId(e.target.value)}
-                                required
-                                className="mt-1 block w-full px-3 py-2 border border-black rounded-md shadow-sm focus:outline-none focus:ring-black focus:border-black sm:text-sm bg-white text-gray-900"
-                            >
-                                <option value="">Select a project</option>
-                                {projects.map((project) => (
-                                    <option key={project.id} value={project.id}>
-                                        {project.projectDescription}
-                                    </option>
-                                ))}
-                            </select>
+                            <div className="flex items-center">
+                                <select
+                                    id="projectId"
+                                    name="projectId"
+                                    value={projectId}
+                                    onChange={(e) => setProjectId(e.target.value)}
+                                    required
+                                    className="mt-1 block w-auto px-3 py-2 border border-black rounded-md shadow-sm focus:outline-none focus:ring-black focus:border-black sm:text-sm bg-white text-gray-900"
+                                >
+                                    <option value="">Select a project</option>
+                                    {projects.map((project) => (
+                                        <option key={project.id} value={project.id}>
+                                            {project.projectName}
+                                        </option>
+                                    ))}
+                                </select>
+                                {projectId && (
+                                    <div className="ml-2 flex items-center space-x-2">
+                                        <div className="flex items-center space-x-1">
+                                            <div
+                                                className="w-6 h-6 rounded-full border border-black"
+                                                style={{ backgroundColor: item?.checkInColor }}
+                                            ></div>
+                                            <span className="text-sm">Current</span>
+                                        </div>
+                                        {item?.checkInColor !== projectColor && (
+                                            <div className="flex items-center space-x-1">
+                                                <div
+                                                    className="w-6 h-6 rounded-full border border-black"
+                                                    style={{ backgroundColor: projectColor }}
+                                                ></div>
+                                                <span className="text-sm">From Project</span>
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
+                            </div>
                         </div>
                         <div>
                             <label htmlFor="checkInDate" className="block text-sm font-medium text-gray-700">
@@ -114,20 +161,22 @@ const EditCheckinForm: React.FC<EditCheckinFormProps> = ({ isOpen, onClose, item
                             />
                         </div>
                         <div>
-                            <label htmlFor="checkOutDate" className="block text-sm font-medium text-gray-700">
-                                Check-Out Date:
+                            <label htmlFor="checkInQuantity" className="block text-sm font-medium text-gray-700">
+                                Check-In Quantity:
                             </label>
                             <input
-                                type="date"
-                                id="checkOutDate"
-                                name="checkOutDate"
-                                value={checkOutDate}
-                                onChange={(e) => setCheckOutDate(e.target.value)}
+                                type="number"
+                                id="checkInQuantity"
+                                name="checkInQuantity"
+                                value={checkInQuantity}
+                                onChange={(e) => setCheckInQuantity(Number(e.target.value))}
+                                required
                                 className="mt-1 block w-full px-3 py-2 border border-black rounded-md shadow-sm focus:outline-none focus:ring-black focus:border-black sm:text-sm bg-white text-gray-900"
                             />
                         </div>
                         <div className="flex justify-end">
                             <Button
+                                disabled={item?.checkOutDate !== null}
                                 type="submit"
                             >
                                 Update

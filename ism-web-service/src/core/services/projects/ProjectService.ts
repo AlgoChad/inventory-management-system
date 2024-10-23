@@ -133,11 +133,7 @@ class ProjectService implements IProjectService {
         try {
             const projects = await this._repository.GetAllAsync(
                 async (query: PrismaClient) => {
-                    return await query.findMany({
-                        include: {
-                            tools: true,
-                        },
-                    });
+                    return await query.findMany();
                 }
             );
             return projects as ProjectModel[];

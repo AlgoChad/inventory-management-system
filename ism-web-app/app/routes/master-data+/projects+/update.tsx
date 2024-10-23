@@ -11,6 +11,7 @@ export const action: ActionFunction = async ({ request }) => {
     const id = formData.get("id");
     const projectName = formData.get("projectName");
     const projectDescription = formData.get("projectDescription");
+    const color = formData.get("color");
     const startDate = formData.get("startDate");
     const endDate = formData.get("endDate");
 
@@ -29,6 +30,7 @@ export const action: ActionFunction = async ({ request }) => {
 
     const updatedProject: UpdateProjectModel = {
         projectName,
+        color: color?.toString() || "",
         projectDescription,
         startDate: new Date(startDate),
         endDate: new Date(endDate),

@@ -8,7 +8,9 @@ import { ToolModel } from "~/data/models/tool/ToolModel";
 import { Datatable } from "~/data/models/generic/DatatableModel";
 import { DataTable } from "~/components/app/custom/Datatable";
 import EditCheckinForm from "./EditCheckinForm";
+import TransferCheckinForm from "./TransferCheckinForm";
 import { useSubmit } from "@remix-run/react";
+import { Badge } from "~/components/ui/badge";
 
 interface CheckinTableProps {
     table: Datatable<CheckinModel>;
@@ -19,6 +21,7 @@ interface CheckinTableProps {
 const CheckinTable: React.FC<CheckinTableProps> = ({ table, projects, tools }) => {
     const { data, pagination, defaultSort } = table;
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
     const [selectedItem, setSelectedItem] = useState<CheckinModel | null>(null);
     const submit = useSubmit();
 
@@ -32,11 +35,27 @@ const CheckinTable: React.FC<CheckinTableProps> = ({ table, projects, tools }) =
         setIsEditModalOpen(false);
     };
 
+    const openTransferModal = (item: CheckinModel) => {
+        setSelectedItem(item);
+        setIsTransferModalOpen(true);
+    };
+
+    const closeTransferModal = () => {
+        setSelectedItem(null);
+        setIsTransferModalOpen(false);
+    };
+
     const handleDelete = (id: number) => {
         const formData = new FormData();
         formData.append("id", id.toString());
         submit(formData, { method: "post", action: "/master-data/checkins/delete" });
     };
+
+    const handleCheckout = (id: number) => {
+        const formData = new FormData();
+        formData.append("id", id.toString());
+        submit(formData, { method: "post", action: "/master-data/checkins/checkout" });
+    }
 
     const columns: ColumnDef<CheckinModel>[] = [
         {
@@ -60,7 +79,7 @@ const CheckinTable: React.FC<CheckinTableProps> = ({ table, projects, tools }) =
             },
             cell: ({ row }) => {
                 const rowValue = row.original;
-                return <div className="text-center">{rowValue.tool.toolname}</div>;
+                return <div className="text-center">{rowValue.tool.toolName}</div>;
             },
         },
         {
@@ -210,12 +229,46 @@ const CheckinTable: React.FC<CheckinTableProps> = ({ table, projects, tools }) =
             },
         },
         {
+            accessorKey: "isCheckOut",
+            header: ({column}) => {
+                return (
+                    <div className="text-center">
+                        <span>Status</span>
+                    </div>
+                );
+            },
+            cell: ({ row }) => {
+                const rowValue = row.original;
+                return (
+                    <div className="text-center">
+                        <Badge variant={rowValue.checkOutDate ? "destructive" : "secondary"}>{rowValue.checkOutDate ? "Is Checked Out": "Is Checked In"}</Badge>
+                    </div>
+                );
+            }
+        },
+        {
             accessorKey: "actions",
-            header: "Actions",
+            header: ({column}) => {
+                return (
+                    <div className="text-center">
+                        <span>Actions</span>
+                    </div>
+                );
+            },
             cell: ({ row }) => {
                 const rowValue = row.original;
                 return (
                     <div className="text-center space-x-2">
+                        {!rowValue.checkOutDate && (
+                            <>
+                                <Button variant="outline" onClick={() => handleCheckout(rowValue.id)}>
+                                    Checkout
+                                </Button>
+                                <Button variant="secondary" onClick={() => openTransferModal(rowValue)}>
+                                    Transfer
+                                </Button>
+                            </>
+                        )}
                         <Button variant="default" onClick={() => openEditModal(rowValue)}>
                             Edit
                         </Button>
@@ -244,6 +297,15 @@ const CheckinTable: React.FC<CheckinTableProps> = ({ table, projects, tools }) =
                     projects={projects}
                     tools={tools}
                 />
+            )}
+            {isTransferModalOpen && selectedItem && (
+                <TransferCheckinForm
+                    isOpen={isTransferModalOpen}
+                    onClose={closeTransferModal}
+                    item={selectedItem}
+                    projects={projects} tools={tools}                
+                    
+                    />
             )}
         </div>
     );

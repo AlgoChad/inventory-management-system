@@ -192,7 +192,6 @@ export default abstract class EntityRepository<T extends { id?: number | bigint 
                     throw new Error('Invalid input: expected an array of objects.');
                 }
             } else if (typeof entityOrEntities === 'object' && entityOrEntities !== null) {
-                console.log ("test", entityOrEntities)
                 const data = await this.ModelClient.create({ data: entityOrEntities });
                 return data as T;
             } else {

@@ -44,7 +44,7 @@ const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onPage
             pageNumbers.push(
                 <Button
                     key={i}
-                    className={`${buttonVariants({ variant: 'outline' })} ${currentPage === i ? 'bg-black text-white' : 'bg-white text-black'}`}
+                    className={`${buttonVariants({ variant: 'outline' })} ${currentPage === i ? 'bg-black text-white' : 'bg-white text-black'} text-xs px-2 py-1`}
                     onClick={() => handlePageClick(i)}
                 >
                     {i}
@@ -53,37 +53,35 @@ const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onPage
         }
 
         if (startPage > 1) {
-            pageNumbers.unshift(<span key="start-ellipsis" className="px-3 py-1 mx-1">...</span>);
+            pageNumbers.unshift(<span key="start-ellipsis" className="px-2 py-1 mx-1 text-xs">...</span>);
         }
 
         if (endPage < totalPages) {
-            pageNumbers.push(<span key="end-ellipsis" className="px-3 py-1 mx-1">...</span>);
+            pageNumbers.push(<span key="end-ellipsis" className="px-2 py-1 mx-1 text-xs">...</span>);
         }
 
         return pageNumbers;
     };
 
     return (
-        <div className="flex flex-col items-center mt-4">
-            <div className="flex justify-center mb-2">
-                <Button
-                    className={`${buttonVariants({ variant: 'outline' })} bg-black text-white`}
-                    onClick={handlePrevious}
-                    disabled={currentPage === 1}
-                >
-                    Previous
-                </Button>
-                {renderPageNumbers()}
-                <Button
-                    className={`${buttonVariants({ variant: 'outline' })} bg-black text-white`}
-                    onClick={handleNext}
-                    disabled={currentPage === totalPages}
-                >
-                    Next
-                </Button>
-                <div className="flex justify-center items-center text-black mx-2">
-                    Page {currentPage} of {totalPages}
-                </div>
+        <div className="flex items-center mt-2">
+            <Button
+                className={`${buttonVariants({ variant: 'outline' })} bg-black text-white text-xs px-2 py-1`}
+                onClick={handlePrevious}
+                disabled={currentPage === 1}
+            >
+                Previous
+            </Button>
+            {renderPageNumbers()}
+            <Button
+                className={`${buttonVariants({ variant: 'outline' })} bg-black text-white text-xs px-2 py-1`}
+                onClick={handleNext}
+                disabled={currentPage === totalPages}
+            >
+                Next
+            </Button>
+            <div className="flex justify-center items-center text-black mx-2 text-xs">
+                Page {currentPage} of {totalPages}
             </div>
         </div>
     );

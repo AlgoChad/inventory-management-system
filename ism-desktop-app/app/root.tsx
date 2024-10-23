@@ -44,7 +44,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
     return (
         <Document>
             <div className="flex flex-col h-screen overflow-hidden">
-                <div className="titlebar flex items-center justify-between px-4 py-2 bg-black text-white absolute top-0 left-0 right-0 z-10">
+                <div className="titlebar flex items-center justify-between px-4 py-2 bg-[#2f5f7c] text-white absolute top-0 left-0 right-0 z-10">
                     <div className="title">Inventory Management System</div>
                     <div className="window-controls flex space-x-2">
                         <button className="minimize" onClick={() => (window as any).api.minimizeWindow()}>

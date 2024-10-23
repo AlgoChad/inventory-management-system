@@ -26,7 +26,6 @@ export default class RestClient {
             return response.data;
         } catch (error) {
             const err = error as any;
-            console.log("test");
             throw new Error(`Failed to fetch data: ${err.response?.statusText || err.message}`);
         }
     }

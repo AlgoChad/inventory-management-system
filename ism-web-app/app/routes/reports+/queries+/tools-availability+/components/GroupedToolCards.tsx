@@ -1,11 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { ToolModel } from "~/data/models/tool/ToolModel";
-import { ScrollArea } from "~/components/ui/scroll-area";
+import Pagination from "~/components/app/custom/Pagination";
 
 interface GroupedToolCardsProps {
-    groupedTools: {
-        [key: string]: ToolModel[];
-    };
+    groupedTools: { [key: string]: ToolModel[] };
     title: string;
 }
 
@@ -13,35 +11,43 @@ const GroupedToolCards: React.FC<GroupedToolCardsProps> = ({
     groupedTools,
     title,
 }) => {
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 5;
+
+    const handlePageChange = (page: number) => {
+        setCurrentPage(page);
+    };
+
+    const paginatedGroups = Object.entries(groupedTools).slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+    );
+
+    const totalPages = Math.ceil(Object.keys(groupedTools).length / itemsPerPage);
+
     return (
-        <div className="mb-6">
-            <h2 className="text-2xl font-bold mb-4 text-black">{title}</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                {Object.entries(groupedTools).map(([key, tools]) => (
-                    <div
-                        key={key}
-                        className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 max-h-90"
-                    >
-                        <h3 className="text-xl font-bold mb-2 text-black">
-                            {key}
-                        </h3>
-                        <ul>
-                            <ScrollArea className="max-h-80 overflow-y-auto">
-                                {tools.map((tool) => (
-                                    <li
-                                        key={tool.id}
-                                        className="bg-gray-100 p-2 m-2 rounded-lg shadow-sm flex items-center text-sm"
-                                    >
-                                        <span className="font-bold mr-2">
-                                            {tool.toolNumber}
-                                        </span>
-                                        <span>{tool.toolDescription}</span>
-                                    </li>
-                                ))}
-                            </ScrollArea>
+        <div className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
+            <h2 className="text-lg font-semibold mb-2 text-gray-800">{title}</h2>
+            <div className="grid grid-cols-1 gap-4">
+                {paginatedGroups.map(([groupKey, tools]) => (
+                    <div key={groupKey} className="bg-gray-100 p-4 rounded-lg shadow-sm">
+                        <h3 className="text-md font-semibold mb-2 text-gray-700">{groupKey}</h3>
+                        <ul className="list-disc list-inside text-sm text-gray-600">
+                            {tools.map((tool) => (
+                                <li key={tool.id}>
+                                    {tool.toolNumber} - {tool.toolName}
+                                </li>
+                            ))}
                         </ul>
                     </div>
                 ))}
+            </div>
+            <div className="flex justify-center mt-4">
+                <Pagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={handlePageChange}
+                />
             </div>
         </div>
     );

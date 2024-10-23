@@ -6,7 +6,10 @@ import { ToolModel } from "~/data/models/tool/ToolModel";
 import { Datatable } from "~/data/models/generic/DatatableModel";
 import { DataTable } from "~/components/app/custom/Datatable";
 import EditToolForm from "./EditToolForm";
-import { useSubmit } from "@remix-run/react";
+import { Form, useSubmit } from "@remix-run/react";
+import { Label } from "~/components/ui/label";
+import { Input } from "~/components/ui/input";
+import { Search } from "lucide-react";
 
 interface ToolTableProps {
     table: Datatable<ToolModel>;
@@ -253,7 +256,7 @@ const ToolTable: React.FC<ToolTableProps> = ({
     ];
 
     return (
-        <div>
+        <div className="p-4">
             <DataTable
                 columns={columns}
                 tableData={data}
