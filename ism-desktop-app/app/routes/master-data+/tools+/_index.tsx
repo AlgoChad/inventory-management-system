@@ -24,7 +24,6 @@ export const loader: LoaderFunction = async ({ request }) => {
     const restClient = new RestClient(API_BASE_URL, API_TOKEN);
 
     const parsedArgs = SanitizeRequest(request);
-    console.log(parsedArgs);
 
     try {
         const getTools = async () => {
