@@ -4,9 +4,11 @@ import { Button } from "~/components/ui/button";
 import { ArrowDirection } from "~/components/app/custom/PaginationArrow";
 import { StatusTypeModel } from "~/data/models/status-type/StatusTypeModel";
 import { Datatable } from "~/data/models/generic/DatatableModel";
-import { DataTable } from "~/components/app/custom/Datatable";
+import { DataTable } from "~/components/app/custom/DatatableServer";
 import EditStatusTypeForm from "./EditStatusTypeForm";
 import { useSubmit } from "@remix-run/react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~/components/ui/tooltip";
+import { FaEdit, FaTrash } from "react-icons/fa";
 
 interface StatusTypesTableProps {
     table: Datatable<StatusTypeModel>;
@@ -37,104 +39,104 @@ const StatusTypesTable: React.FC<StatusTypesTableProps> = ({ table }) => {
     const columns: ColumnDef<StatusTypeModel>[] = [
         {
             accessorKey: "name",
-            header: ({ column }) => {
-                return (
-                    <div className="text-center">
-                        <Button
-                            variant="ghost"
-                            onClick={() =>
-                                column.toggleSorting(
-                                    column.getIsSorted() === "asc"
-                                )
-                            }
-                        >
-                            Name
-                            <ArrowDirection direction={column.getIsSorted()} />
-                        </Button>
-                    </div>
-                );
-            },
-            cell: ({ row }) => {
-                const rowValue = row.original;
-                return <div className="text-center">{rowValue.name}</div>;
-            },
+            header: ({ column }) => (
+                <div className="text-center">
+                    <Button
+                        variant="ghost"
+                        onClick={() =>
+                            column.toggleSorting(
+                                column.getIsSorted() === "asc"
+                            )
+                        }
+                    >
+                        Name
+                        <ArrowDirection direction={column.getIsSorted()} />
+                    </Button>
+                </div>
+            ),
+            cell: ({ row }) => (
+                <div className="text-center">{row.original.name}</div>
+            ),
         },
         {
             accessorKey: "createdAt",
-            header: ({ column }) => {
-                return (
-                    <div className="text-center">
-                        <Button
-                            variant="ghost"
-                            onClick={() =>
-                                column.toggleSorting(
-                                    column.getIsSorted() === "asc"
-                                )
-                            }
-                        >
-                            Created At
-                            <ArrowDirection direction={column.getIsSorted()} />
-                        </Button>
-                    </div>
-                );
-            },
-            cell: ({ row }) => {
-                const rowValue = row.original;
-                return (
-                    <div className="text-center">
-                        {new Date(
-                            rowValue.createdAt as unknown as string
-                        ).toLocaleDateString()}
-                    </div>
-                );
-            },
+            header: ({ column }) => (
+                <div className="text-center">
+                    <Button
+                        variant="ghost"
+                        onClick={() =>
+                            column.toggleSorting(
+                                column.getIsSorted() === "asc"
+                            )
+                        }
+                    >
+                        Created At
+                        <ArrowDirection direction={column.getIsSorted()} />
+                    </Button>
+                </div>
+            ),
+            cell: ({ row }) => (
+                <div className="text-center">
+                    {new Date(row.original.createdAt as unknown as string).toLocaleDateString()}
+                </div>
+            ),
         },
         {
             accessorKey: "updatedAt",
-            header: ({ column }) => {
-                return (
-                    <div className="text-center">
-                        <Button
-                            variant="ghost"
-                            onClick={() =>
-                                column.toggleSorting(
-                                    column.getIsSorted() === "asc"
-                                )
-                            }
-                        >
-                            Updated At
-                            <ArrowDirection direction={column.getIsSorted()} />
-                        </Button>
-                    </div>
-                );
-            },
-            cell: ({ row }) => {
-                const rowValue = row.original;
-                return (
-                    <div className="text-center">
-                        {new Date(
-                            rowValue.updatedAt as unknown as string
-                        ).toLocaleDateString()}
-                    </div>
-                );
-            },
+            header: ({ column }) => (
+                <div className="text-center">
+                    <Button
+                        variant="ghost"
+                        onClick={() =>
+                            column.toggleSorting(
+                                column.getIsSorted() === "asc"
+                            )
+                        }
+                    >
+                        Updated At
+                        <ArrowDirection direction={column.getIsSorted()} />
+                    </Button>
+                </div>
+            ),
+            cell: ({ row }) => (
+                <div className="text-center">
+                    {new Date(row.original.updatedAt as unknown as string).toLocaleDateString()}
+                </div>
+            ),
         },
         {
             accessorKey: "actions",
-            header: "Actions",
-            cell: ({ row }) => {
-                const rowValue = row.original;
-                return (
-                    <div className="text-center space-x-2">
-                        <Button variant="default" onClick={() => openEditModal(rowValue)}>
-                            Edit
-                        </Button>
-                        <Button variant='destructive' onClick={() => handleDelete(rowValue.id)}>
-                            Delete
-                        </Button>
-                    </div>
-                );
-            },
+            header: () => (
+                <div className="text-center">
+                    Actions
+                </div>
+            ),
+            cell: ({ row }) => (
+                <div className="text-center space-x-2">
+                    <TooltipProvider>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <Button variant="default" onClick={() => openEditModal(row.original)}>
+                                    <FaEdit />
+                                </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                                <p>Edit</p>
+                            </TooltipContent>
+                        </Tooltip>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <Button variant="destructive" onClick={() => handleDelete(row.original.id)}>
+                                    <FaTrash />
+                                </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                                <p>Delete</p>
+                            </TooltipContent>
+                        </Tooltip>
+                    </TooltipProvider>
+                </div>
+            ),
         },
     ];
 

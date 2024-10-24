@@ -4,12 +4,14 @@ import { Button } from "~/components/ui/button";
 import { ArrowDirection } from "~/components/app/custom/PaginationArrow";
 import { ToolModel } from "~/data/models/tool/ToolModel";
 import { Datatable } from "~/data/models/generic/DatatableModel";
-import { DataTable } from "~/components/app/custom/Datatable";
+import { DataTable } from "~/components/app/custom/DatatableServer";
 import EditToolForm from "./EditToolForm";
 import { Form, useSubmit } from "@remix-run/react";
 import { Label } from "~/components/ui/label";
 import { Input } from "~/components/ui/input";
-import { Search } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~/components/ui/tooltip";
+import { FaEdit, FaTrash } from "react-icons/fa";
+import { Badge } from "~/components/ui/badge";
 
 interface ToolTableProps {
     table: Datatable<ToolModel>;
@@ -42,219 +44,201 @@ const ToolTable: React.FC<ToolTableProps> = ({
     const handleDelete = (id: number) => {
         const formData = new FormData();
         formData.append("id", id.toString());
-        submit(formData, { method: "post", action: "/master-data/tools/delete" });
+        submit(formData, {
+            method: "post",
+            action: "/master-data/tools/delete",
+        });
     };
 
     const columns: ColumnDef<ToolModel>[] = [
         {
             accessorKey: "toolNumber",
-            header: ({ column }) => {
-                return (
-                    <div className="text-center">
-                        <Button
-                            variant="ghost"
-                            onClick={() =>
-                                column.toggleSorting(
-                                    column.getIsSorted() === "asc"
-                                )
-                            }
-                        >
-                            Tool Code
-                            <ArrowDirection direction={column.getIsSorted()} />
-                        </Button>
-                    </div>
-                );
-            },
-            cell: ({ row }) => {
-                const rowValue = row.original;
-                return <div className="text-center">{rowValue.toolNumber}</div>;
-            },
+            header: ({ column }) => (
+                <div className="text-center">
+                    <Button
+                        variant="ghost"
+                        onClick={() =>
+                            column.toggleSorting(column.getIsSorted() === "asc")
+                        }
+                    >
+                        Tool Code
+                        <ArrowDirection direction={column.getIsSorted()} />
+                    </Button>
+                </div>
+            ),
+            cell: ({ row }) => (
+                <div className="text-center">{row.original.toolNumber}</div>
+            ),
         },
         {
-            accessorKey: "toolname",
-            header: ({ column }) => {
-                return (
-                    <div className="text-center">
-                        <Button
-                            variant="ghost"
-                            onClick={() =>
-                                column.toggleSorting(
-                                    column.getIsSorted() === "asc"
-                                )
-                            }
-                        >
-                            Tool Name
-                            <ArrowDirection direction={column.getIsSorted()} />
-                        </Button>
-                    </div>
-                );
-            },
-            cell: ({ row }) => {
-                const rowValue = row.original;
-                return <div className="text-center">{rowValue.toolName}</div>;
-            },
+            accessorKey: "toolName",
+            header: ({ column }) => (
+                <div className="text-center">
+                    <Button
+                        variant="ghost"
+                        onClick={() =>
+                            column.toggleSorting(column.getIsSorted() === "asc")
+                        }
+                    >
+                        Tool Name
+                        <ArrowDirection direction={column.getIsSorted()} />
+                    </Button>
+                </div>
+            ),
+            cell: ({ row }) => (
+                <div className="text-center">{row.original.toolName}</div>
+            ),
         },
         {
             accessorKey: "quantity",
-            header: ({ column }) => {
-                return (
-                    <div className="text-center">
-                        <Button
-                            variant="ghost"
-                            onClick={() =>
-                                column.toggleSorting(
-                                    column.getIsSorted() === "asc"
-                                )
-                            }
-                        >
-                            Quantity
-                            <ArrowDirection direction={column.getIsSorted()} />
-                        </Button>
-                    </div>
-                );
-            },
-            cell: ({ row }) => {
-                const rowValue = row.original;
-                return <div className="text-center">{rowValue.quantity}</div>;
-            },
+            header: ({ column }) => (
+                <div className="text-center">
+                    <Button
+                        variant="ghost"
+                        onClick={() =>
+                            column.toggleSorting(column.getIsSorted() === "asc")
+                        }
+                    >
+                        Quantity
+                        <ArrowDirection direction={column.getIsSorted()} />
+                    </Button>
+                </div>
+            ),
+            cell: ({ row }) => (
+                <div className="text-center">{row.original.quantity}</div>
+            ),
         },
         {
             accessorKey: "status.name",
-            header: ({ column }) => {
-                return (
-                    <div className="text-center">
-                        <Button
-                            variant="ghost"
-                            onClick={() =>
-                                column.toggleSorting(
-                                    column.getIsSorted() === "asc"
-                                )
-                            }
-                        >
-                            Status Type
-                            <ArrowDirection direction={column.getIsSorted()} />
-                        </Button>
-                    </div>
-                );
-            },
-            cell: ({ row }) => {
-                const rowValue = row.original;
-                return (
-                    <div className="text-center">{rowValue.status.name}</div>
-                );
-            },
+            header: ({ column }) => (
+                <div className="text-center">
+                    <Button
+                        variant="ghost"
+                        onClick={() =>
+                            column.toggleSorting(column.getIsSorted() === "asc")
+                        }
+                    >
+                        Status Type
+                        <ArrowDirection direction={column.getIsSorted()} />
+                    </Button>
+                </div>
+            ),
+            cell: ({ row }) => (
+                <div className="text-center">{row.original.status.name}</div>
+            ),
         },
         {
             accessorKey: "condition.name",
-            header: ({ column }) => {
-                return (
-                    <div className="text-center">
-                        <Button
-                            variant="ghost"
-                            onClick={() =>
-                                column.toggleSorting(
-                                    column.getIsSorted() === "asc"
-                                )
-                            }
-                        >
-                            Condition Type
-                            <ArrowDirection direction={column.getIsSorted()} />
-                        </Button>
-                    </div>
-                );
-            },
-            cell: ({ row }) => {
-                const rowValue = row.original;
-                return (
-                    <div className="text-center">{rowValue.condition.name}</div>
-                );
-            },
+            header: ({ column }) => (
+                <div className="text-center">
+                    <Button
+                        variant="ghost"
+                        onClick={() =>
+                            column.toggleSorting(column.getIsSorted() === "asc")
+                        }
+                    >
+                        Condition Type
+                        <ArrowDirection direction={column.getIsSorted()} />
+                    </Button>
+                </div>
+            ),
+            cell: ({ row }) => (
+                <div className="text-center">{row.original.condition.name}</div>
+            ),
         },
         {
             accessorKey: "createdAt",
-            header: ({ column }) => {
-                return (
-                    <div className="text-center">
-                        <Button
-                            variant="ghost"
-                            onClick={() =>
-                                column.toggleSorting(
-                                    column.getIsSorted() === "asc"
-                                )
-                            }
-                        >
-                            Created At
-                            <ArrowDirection direction={column.getIsSorted()} />
-                        </Button>
-                    </div>
-                );
-            },
-            cell: ({ row }) => {
-                const rowValue = row.original;
-                return (
-                    <div className="text-center">
+            header: ({ column }) => (
+                <div className="text-center">
+                    <Button
+                        variant="ghost"
+                        onClick={() =>
+                            column.toggleSorting(column.getIsSorted() === "asc")
+                        }
+                    >
+                        Created At
+                        <ArrowDirection direction={column.getIsSorted()} />
+                    </Button>
+                </div>
+            ),
+            cell: ({ row }) => (
+                <div className="text-center">
+                    <Badge variant="default">
                         {new Date(
-                            rowValue.createdAt as unknown as string
+                            row.original.createdAt as unknown as string
                         ).toLocaleDateString()}
-                    </div>
-                );
-            },
+                    </Badge>
+                </div>
+            ),
         },
         {
             accessorKey: "updatedAt",
-            header: ({ column }) => {
-                return (
-                    <div className="text-center">
-                        <Button
-                            variant="ghost"
-                            onClick={() =>
-                                column.toggleSorting(
-                                    column.getIsSorted() === "asc"
-                                )
-                            }
-                        >
-                            Updated At
-                            <ArrowDirection direction={column.getIsSorted()} />
-                        </Button>
-                    </div>
-                );
-            },
-            cell: ({ row }) => {
-                const rowValue = row.original;
-                return (
-                    <div className="text-center">
+            header: ({ column }) => (
+                <div className="text-center">
+                    <Button
+                        variant="ghost"
+                        onClick={() =>
+                            column.toggleSorting(column.getIsSorted() === "asc")
+                        }
+                    >
+                        Updated At
+                        <ArrowDirection direction={column.getIsSorted()} />
+                    </Button>
+                </div>
+            ),
+            cell: ({ row }) => (
+                <div className="text-center">
+                    <Badge variant="default">
                         {new Date(
-                            rowValue.updatedAt as unknown as string
+                            row.original.updatedAt as unknown as string
                         ).toLocaleDateString()}
-                    </div>
-                );
-            },
+                    </Badge>
+                </div>
+            ),
         },
         {
             accessorKey: "actions",
-            header: "Actions",
-            cell: ({ row }) => {
-                const rowValue = row.original;
-                return (
-                    <div className="text-center space-x-2">
-                        <Button
-                            variant="default"
-                            onClick={() => openEditModal(rowValue)}
-                        >
-                            Edit
-                        </Button>
-                        <Button
-                            variant="destructive"
-                            onClick={() => handleDelete(rowValue.id)}
-                        >
-                            Delete
-                        </Button>
-                    </div>
-                );
-            },
+            header: () => (
+                <div className="text-center">
+                    Actions
+                </div>
+            ),
+            cell: ({ row }) => (
+                <div className="text-center space-x-2">
+                    <TooltipProvider>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <Button
+                                    variant="default"
+                                    onClick={() => openEditModal(row.original)}
+                                >
+                                    <FaEdit />
+                                </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                                <p>Edit</p>
+                            </TooltipContent>
+                        </Tooltip>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <Button
+                                    variant="destructive"
+                                    onClick={() =>
+                                        handleDelete(row.original.id)
+                                    }
+                                >
+                                    <FaTrash />
+                                </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                                <p>Delete</p>
+                            </TooltipContent>
+                        </Tooltip>
+                    </TooltipProvider>
+                </div>
+            ),
         },
     ];
-
     return (
         <div className="p-4">
             <DataTable

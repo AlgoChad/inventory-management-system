@@ -1,5 +1,13 @@
 import React, { memo } from 'react';
-import { Button, buttonVariants } from "~/components/ui/button";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "~/components/ui/pagination";
 
 interface PaginationProps {
     currentPage: number;
@@ -7,7 +15,7 @@ interface PaginationProps {
     onPageChange: (page: number) => void;
 }
 
-const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onPageChange }) => {
+const CustomPagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onPageChange }) => {
     const handlePrevious = () => {
         if (currentPage > 1) {
             onPageChange(currentPage - 1);
@@ -42,49 +50,53 @@ const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onPage
 
         for (let i = startPage; i <= endPage; i++) {
             pageNumbers.push(
-                <Button
-                    key={i}
-                    className={`${buttonVariants({ variant: 'outline' })} ${currentPage === i ? 'bg-black text-white' : 'bg-white text-black'} text-xs px-2 py-1`}
-                    onClick={() => handlePageClick(i)}
-                >
-                    {i}
-                </Button>
+                <PaginationItem key={i}>
+                    <PaginationLink
+                        href="#"
+                        isActive={currentPage === i}
+                        onClick={() => handlePageClick(i)}
+                    >
+                        {i}
+                    </PaginationLink>
+                </PaginationItem>
             );
         }
 
         if (startPage > 1) {
-            pageNumbers.unshift(<span key="start-ellipsis" className="px-2 py-1 mx-1 text-xs">...</span>);
+            pageNumbers.unshift(
+                <PaginationItem key="start-ellipsis">
+                    <PaginationEllipsis />
+                </PaginationItem>
+            );
         }
 
         if (endPage < totalPages) {
-            pageNumbers.push(<span key="end-ellipsis" className="px-2 py-1 mx-1 text-xs">...</span>);
+            pageNumbers.push(
+                <PaginationItem key="end-ellipsis">
+                    <PaginationEllipsis />
+                </PaginationItem>
+            );
         }
 
         return pageNumbers;
     };
 
     return (
-        <div className="flex items-center mt-2">
-            <Button
-                className={`${buttonVariants({ variant: 'outline' })} bg-black text-white text-xs px-2 py-1`}
-                onClick={handlePrevious}
-                disabled={currentPage === 1}
-            >
-                Previous
-            </Button>
-            {renderPageNumbers()}
-            <Button
-                className={`${buttonVariants({ variant: 'outline' })} bg-black text-white text-xs px-2 py-1`}
-                onClick={handleNext}
-                disabled={currentPage === totalPages}
-            >
-                Next
-            </Button>
-            <div className="flex justify-center items-center text-black mx-2 text-xs">
+        <Pagination>
+            <PaginationContent>
+                <PaginationItem>
+                    <PaginationPrevious href="#" onClick={handlePrevious} />
+                </PaginationItem>
+                {renderPageNumbers()}
+                <PaginationItem>
+                    <PaginationNext href="#" onClick={handleNext} />
+                </PaginationItem>
+            </PaginationContent>
+            <div className="flex justify-end items-center text-black mx-2 text-xs">
                 Page {currentPage} of {totalPages}
             </div>
-        </div>
+        </Pagination>
     );
 };
 
-export default memo(Pagination);
+export default memo(CustomPagination);

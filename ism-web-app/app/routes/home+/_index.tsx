@@ -1,57 +1,26 @@
 import { json, LoaderFunction } from "@remix-run/node";
-import { Link, useLoaderData } from "@remix-run/react";
-import { buttonVariants } from "~/components/ui/button";
+import { useLoaderData } from "@remix-run/react";
 import liveWiseLogo from "~/assets/livewise.jpg";
 import TileGallery from "./components/TileGallery";
 
+import { shuffleArray } from "~/core/utils/helpers/GeneralHelpers"; // Utility function for shuffling arrays
+
 export const loader: LoaderFunction = async () => {
-    const imageGroups = [
-        [
-            "https://loremflickr.com/1080/720/construction?random=1",
-            "https://loremflickr.com/1080/720/construction?random=2",
-            "https://loremflickr.com/1080/720/construction?random=3",
-            "https://loremflickr.com/1080/720/construction?random=4",
-            "https://loremflickr.com/1080/720/construction?random=5",
-        ],
-        [
-            "https://loremflickr.com/1080/720/construction?random=6",
-            "https://loremflickr.com/1080/720/construction?random=7",
-            "https://loremflickr.com/1080/720/construction?random=8",
-            "https://loremflickr.com/1080/720/construction?random=9",
-            "https://loremflickr.com/1080/720/construction?random=10",
-        ],
-        [
-            "https://loremflickr.com/1080/720/construction?random=11",
-            "https://loremflickr.com/1080/720/construction?random=12",
-            "https://loremflickr.com/1080/720/construction?random=13",
-            "https://loremflickr.com/1080/720/construction?random=14",
-            "https://loremflickr.com/1080/720/construction?random=15",
-        ],
-        [
-            "https://loremflickr.com/1080/720/construction?random=16",
-            "https://loremflickr.com/1080/720/construction?random=17",
-            "https://loremflickr.com/1080/720/construction?random=18",
-            "https://loremflickr.com/1080/720/construction?random=19",
-            "https://loremflickr.com/1080/720/construction?random=20",
-        ],
-        [
-            "https://loremflickr.com/1080/720/construction?random=21",
-            "https://loremflickr.com/1080/720/construction?random=22",
-            "https://loremflickr.com/1080/720/construction?random=23",
-            "https://loremflickr.com/1080/720/construction?random=24",
-            "https://loremflickr.com/1080/720/construction?random=25",
-        ],
-        [
-            "https://loremflickr.com/1080/720/construction?random=26",
-            "https://loremflickr.com/1080/720/construction?random=27",
-            "https://loremflickr.com/1080/720/construction?random=28",
-            "https://loremflickr.com/1080/720/construction?random=29",
-            "https://loremflickr.com/1080/720/construction?random=30",
-        ],
-    ];
+    const imagePaths = Array.from({ length: 19 }, (_, i) => `app/assets/home/${i + 1}.jpg`);
+
+    const shuffledImages = shuffleArray(imagePaths);
+
+    const numberOfGroups = 6;
+    const imageGroups: string[][] = Array.from({ length: numberOfGroups }, () => []);
+
+    shuffledImages.forEach((image, index) => {
+        const groupIndex = index % numberOfGroups;
+        imageGroups[groupIndex].push(image);
+    });
 
     return json({ imageGroups });
 };
+
 
 export default function Index() {
     const { imageGroups } = useLoaderData<{ imageGroups: string[][] }>();

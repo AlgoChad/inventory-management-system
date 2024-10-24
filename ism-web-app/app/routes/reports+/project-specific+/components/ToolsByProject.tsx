@@ -1,60 +1,95 @@
-import React from "react";
+import React, { useState } from "react";
+import { ColumnDef } from "@tanstack/react-table";
 import { CheckinModel } from "~/data/models/checkin/CheckinModel";
 import { ProjectModel } from "~/data/models/project/ProjectModel";
-import Pagination from "~/components/app/custom/Pagination";
 import { Badge } from "~/components/ui/badge";
+import DatatableClient from "~/components/app/custom/DatatableClient";
+import Pagination from "~/components/app/custom/Pagination";
 
 interface ToolsByProjectProps {
     groupedTools: { [key: string]: CheckinModel[] };
-    currentPage: number;
-    totalPages: number;
-    handlePageChange: (page: number) => void;
 }
 
-const ToolsByProject: React.FC<ToolsByProjectProps> = ({ groupedTools, currentPage, totalPages, handlePageChange }) => {
+const ToolsByProject: React.FC<ToolsByProjectProps> = ({ groupedTools }) => {
+    const [currentPage, setCurrentPage] = useState(1);
+    const pageSize = 6;
+    const totalPages = Math.ceil(Object.keys(groupedTools).length / pageSize);
+
+    const columns: ColumnDef<CheckinModel>[] = [
+        {
+            accessorKey: "tool.toolName",
+            header: () => <div className="text-center">Tool Name</div>,
+            cell: ({ row }) => (
+                <div className="text-center text-xs">{row.original.tool.toolName}</div>
+            ),
+        },
+        {
+            accessorKey: "checkInQuantity",
+            header: () => <div className="text-center">Quantity</div>,
+            cell: ({ row }) => (
+                <div className="text-center text-xs">{row.original.checkInQuantity}</div>
+            ),
+        },
+        {
+            accessorKey: "checkOutDate",
+            header: () => <div className="text-center">Check-In Status</div>,
+            cell: ({ getValue }) => (
+                <div className="text-center text-xs">
+                    <Badge variant={getValue() ? "destructive" : "secondary"}>
+                        {getValue() ? "Checked Out" : "Checked In"}
+                    </Badge>
+                </div>
+            ),
+        },
+        {
+            accessorKey: "checkInColor",
+            header: () => <div className="text-center">Check-In Color</div>,
+            cell: ({ getValue }) => (
+                <div className="text-center text-xs">
+                    <div
+                        style={{
+                            backgroundColor: getValue() as string,
+                            width: "10px",
+                            height: "10px",
+                            borderRadius: "50%",
+                            display: "inline-block",
+                        }}
+                    ></div>
+                </div>
+            ),
+        },
+    ];
+
+    const paginatedProjects = Object.keys(groupedTools).slice(
+        (currentPage - 1) * pageSize,
+        currentPage * pageSize
+    );
+
     return (
         <div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {Object.keys(groupedTools).map(projectId => {
-                    const project = groupedTools[projectId][0].project as ProjectModel;
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
+                {paginatedProjects.map((projectId) => {
+                    const project = groupedTools[projectId][0]
+                        .project as ProjectModel;
+                    const data = groupedTools[projectId];
+
                     return (
-                        <div key={projectId} className="bg-white shadow-md rounded-md p-4">
-                            <h3 className="text-lg font-semibold mb-1" style={{ borderBottom: `3px solid ${project.color}` }}>
+                        <div
+                            key={projectId}
+                            className="bg-white shadow-lg rounded-sm p-2"
+                        >
+                            <h3
+                                className="text-base font-semibold mb-1 text-center"
+                                style={{
+                                    borderBottom: `2px solid ${project.color}`,
+                                }}
+                            >
                                 {project.projectName}
                             </h3>
-                            <p className="text-xs text-gray-600 mb-2">{project.projectDescription}</p>
-                            <table className="min-w-full bg-white border border-gray-200 text-xs">
-                                <thead>
-                                    <tr>
-                                        <th className="px-2 py-1 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                                            Tool Name
-                                        </th>
-                                        <th className="px-2 py-1 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                                            Quantity
-                                        </th>
-                                        <th className="px-2 py-1 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                                            Check-In Status
-                                        </th>
-                                        <th className="px-2 py-1 border-b-2 border-gray-200 bg-gray-100 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                                            Color
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {groupedTools[projectId].map((checkin: CheckinModel) => (
-                                        <tr key={checkin.id} className="hover:bg-gray-100">
-                                            <td className="px-2 py-1 border-b border-gray-200">{checkin.tool.toolName}</td>
-                                            <td className="px-2 py-1 border-b border-gray-200">{checkin.checkInQuantity}</td>
-                                            <td className="px-2 py-1 border-b border-gray-200 text-center">
-                                                <Badge variant={checkin.checkOutDate ? "destructive" : "secondary"}>{checkin.checkOutDate ? "Checked Out": "Checked In"}</Badge>
-                                            </td>
-                                            <td className="px-2 py-1 border-b border-gray-200 text-center">
-                                                <div style={{ backgroundColor: checkin.checkInColor, width: '10px', height: '10px', borderRadius: '50%', display: 'inline-block' }}></div>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
+                            <p className="text-xs text-gray-600 mb-1 text-center">
+                                {project.projectDescription}
+                            </p>
+                            <DatatableClient data={data} columns={columns} pageSize={3} />
                         </div>
                     );
                 })}
@@ -63,7 +98,7 @@ const ToolsByProject: React.FC<ToolsByProjectProps> = ({ groupedTools, currentPa
                 <Pagination
                     currentPage={currentPage}
                     totalPages={totalPages}
-                    onPageChange={handlePageChange}
+                    onPageChange={setCurrentPage}
                 />
             </div>
         </div>

@@ -32,7 +32,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 export default function Index() {
     const { checkins, tools } = useLoaderData<typeof loader>();
-    const { paginatedGroups, currentPage, totalPages, handlePageChange, setPageSize } = useFetchProjectSpecifics({ checkins: checkins.data, tools: tools.data });
+    const { groupedTools } = useFetchProjectSpecifics({ checkins: checkins.data, tools: tools.data });
 
     return (
         <div className="flex justify-center items-center w-full bg-gray-100">
@@ -41,13 +41,11 @@ export default function Index() {
                 <div className="mb-8">
                     <WarehouseTable tools={tools.data} totalQuantity={tools.data.reduce((total: number, tool: ToolModel) => total + tool.quantity, 0)} />
                 </div>
+                <hr className="my-8 border-t border-gray-300" />
                 <h2 className="text-2xl font-semibold mb-4 text-center text-gray-700">Tools by Project</h2>
-                <ToolsByProject
-                    groupedTools={paginatedGroups}
-                    currentPage={currentPage}
-                    totalPages={totalPages}
-                    handlePageChange={handlePageChange}
-                />
+                <div className="bg-white border rounded-lg p-4">
+                    <ToolsByProject groupedTools={groupedTools} />
+                </div>
             </div>
         </div>
     );

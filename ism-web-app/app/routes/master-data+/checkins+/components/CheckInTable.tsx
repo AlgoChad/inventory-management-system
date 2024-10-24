@@ -6,11 +6,13 @@ import { CheckinModel } from "~/data/models/checkin/CheckinModel";
 import { ProjectModel } from "~/data/models/project/ProjectModel";
 import { ToolModel } from "~/data/models/tool/ToolModel";
 import { Datatable } from "~/data/models/generic/DatatableModel";
-import { DataTable } from "~/components/app/custom/Datatable";
+import { DataTable } from "~/components/app/custom/DatatableServer";
 import EditCheckinForm from "./EditCheckinForm";
 import TransferCheckinForm from "./TransferCheckinForm";
 import { useSubmit } from "@remix-run/react";
 import { Badge } from "~/components/ui/badge";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~/components/ui/tooltip";
+import { FaCheck, FaEdit, FaExchangeAlt, FaTrash } from "react-icons/fa";
 
 interface CheckinTableProps {
     table: Datatable<CheckinModel>;
@@ -129,9 +131,9 @@ const CheckinTable: React.FC<CheckinTableProps> = ({ table, projects, tools }) =
                 const rowValue = row.original;
                 return (
                     <div className="text-center">
-                        {new Date(
-                            rowValue.checkInDate as unknown as string
-                        ).toLocaleDateString()}
+                        <Badge variant="default">
+                            {new Date(rowValue.checkInDate as unknown as string).toLocaleDateString()}
+                        </Badge>
                     </div>
                 );
             },
@@ -160,9 +162,11 @@ const CheckinTable: React.FC<CheckinTableProps> = ({ table, projects, tools }) =
                 return (
                     <div className="text-center">
                         {rowValue.checkOutDate ? (
-                            new Date(rowValue.checkOutDate as unknown as string).toLocaleDateString()
+                            <Badge variant="secondary">
+                                {new Date(rowValue.checkOutDate as unknown as string).toLocaleDateString()}
+                            </Badge>
                         ) : (
-                            "N/A"
+                            <Badge variant="outline">N/A</Badge>
                         )}
                     </div>
                 );
@@ -191,9 +195,9 @@ const CheckinTable: React.FC<CheckinTableProps> = ({ table, projects, tools }) =
                 const rowValue = row.original;
                 return (
                     <div className="text-center">
-                        {new Date(
-                            rowValue.createdAt as unknown as string
-                        ).toLocaleDateString()}
+                        <Badge variant="default">
+                            {new Date(rowValue.createdAt as unknown as string).toLocaleDateString()}
+                        </Badge>
                     </div>
                 );
             },
@@ -221,16 +225,16 @@ const CheckinTable: React.FC<CheckinTableProps> = ({ table, projects, tools }) =
                 const rowValue = row.original;
                 return (
                     <div className="text-center">
-                        {new Date(
-                            rowValue.updatedAt as unknown as string
-                        ).toLocaleDateString()}
+                        <Badge variant="default">
+                            {new Date(rowValue.updatedAt as unknown as string).toLocaleDateString()}
+                        </Badge>
                     </div>
                 );
             },
         },
         {
             accessorKey: "isCheckOut",
-            header: ({column}) => {
+            header: ({ column }) => {
                 return (
                     <div className="text-center">
                         <span>Status</span>
@@ -241,10 +245,12 @@ const CheckinTable: React.FC<CheckinTableProps> = ({ table, projects, tools }) =
                 const rowValue = row.original;
                 return (
                     <div className="text-center">
-                        <Badge variant={rowValue.checkOutDate ? "destructive" : "secondary"}>{rowValue.checkOutDate ? "Is Checked Out": "Is Checked In"}</Badge>
+                        <Badge variant={rowValue.checkOutDate ? "destructive" : "secondary"}>
+                            {rowValue.checkOutDate ? "Is Checked Out" : "Is Checked In"}
+                        </Badge>
                     </div>
                 );
-            }
+            },
         },
         {
             accessorKey: "actions",
@@ -258,24 +264,54 @@ const CheckinTable: React.FC<CheckinTableProps> = ({ table, projects, tools }) =
             cell: ({ row }) => {
                 const rowValue = row.original;
                 return (
-                    <div className="text-center space-x-2">
-                        {!rowValue.checkOutDate && (
-                            <>
-                                <Button variant="outline" onClick={() => handleCheckout(rowValue.id)}>
-                                    Checkout
-                                </Button>
-                                <Button variant="secondary" onClick={() => openTransferModal(rowValue)}>
-                                    Transfer
-                                </Button>
-                            </>
-                        )}
-                        <Button variant="default" onClick={() => openEditModal(rowValue)}>
-                            Edit
-                        </Button>
-                        <Button variant='destructive' onClick={() => handleDelete(rowValue.id)}>
-                            Delete
-                        </Button>
-                    </div>
+                    <TooltipProvider>
+                        <div className="text-center space-x-2">
+                            {!rowValue.checkOutDate && (
+                                <>
+                                    <Tooltip>
+                                        <TooltipTrigger asChild>
+                                            <Button variant="outline" onClick={() => handleCheckout(rowValue.id)}>
+                                                <FaCheck />
+                                            </Button>
+                                        </TooltipTrigger>
+                                        <TooltipContent>
+                                            <p>Checkout</p>
+                                        </TooltipContent>
+                                    </Tooltip>
+                                    <Tooltip>
+                                        <TooltipTrigger asChild>
+                                            <Button variant="secondary" onClick={() => openTransferModal(rowValue)}>
+                                                <FaExchangeAlt />
+                                            </Button>
+                                        </TooltipTrigger>
+                                        <TooltipContent>
+                                            <p>Transfer</p>
+                                        </TooltipContent>
+                                    </Tooltip>
+                                </>
+                            )}
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Button variant="default" onClick={() => openEditModal(rowValue)}>
+                                        <FaEdit />
+                                    </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    <p>Edit</p>
+                                </TooltipContent>
+                            </Tooltip>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Button variant="destructive" onClick={() => handleDelete(rowValue.id)}>
+                                        <FaTrash />
+                                    </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    <p>Delete</p>
+                                </TooltipContent>
+                            </Tooltip>
+                        </div>
+                    </TooltipProvider>
                 );
             },
         },

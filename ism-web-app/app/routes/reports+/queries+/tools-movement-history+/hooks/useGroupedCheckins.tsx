@@ -13,6 +13,7 @@ interface GroupedCheckins {
             isCheckedOut: boolean;
             checkInQuantity: number;
             checkInColor: string;
+            projectColor: string;
         }[];
     };
 }
@@ -39,6 +40,7 @@ const useGroupedCheckins = (checkins: CheckinModel[]) => {
                 isCheckedOut: checkOutDate? true : false,
                 checkInQuantity,
                 checkInColor,
+                projectColor: project.color,
             });
             return acc;
         }, {} as GroupedCheckins);

@@ -74,7 +74,6 @@ export const loader: LoaderFunction = async ({ request }) => {
             return statusTypes;
         };
 
-
         const getPersonnel = async () => {
             const personnel = await restClient.Get<
                 ApiResponse<PagedList<PersonnelModel[]>>
@@ -106,7 +105,7 @@ export default function Index() {
     const loaderData = useLoaderData<typeof loader>();
     const { tools, conditionTypes, statusTypes, projects, personnel } =
         loaderData;
-  
+
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
     const openCreateModal = () => setIsCreateModalOpen(true);
@@ -118,30 +117,33 @@ export default function Index() {
                 <h1 className="text-2xl font-bold">Tools</h1>
             </div>
             <ScrollArea className="h-auto rounded-md border p-4 bg-white shadow-md">
-                <div className="flex justify-between items-center mb-4">
+                <div className="flex justify-between items-center m-4">
                     <Button className="m-2" onClick={openCreateModal}>
                         Create Tool
                     </Button>
-                    <Form method="GET" className="w-full max-w-md border p-5 rounded-md">
-                        <div className="flex items-center space-x-2">
-                            <div className="flex-grow">
-                                <Label className="block text-sm font-medium text-gray-700">Search</Label>
-                                <Input
-                                    className="mt-1 block w-full text-xs h-[30px] px-2 py-1 border rounded-md"
-                                    name="search"
-                                    type="text"
-                                />
-                            </div>
-                            <Button
-                                variant="outline"
-                                size="sm"
-                                className="h-8 gap-1 mt-6"
-                                type="submit"
-                            >
-                                <Search className="h-3.5 w-3.5" />
+                    <Form
+                        method="GET"
+                        className="flex items-center space-x-2 w-full max-w-md"
+                    >
+                        <div className="flex-grow">
+                            <Label className="block text-sm font-medium text-gray-700">
                                 Search
-                            </Button>
+                            </Label>
+                            <Input
+                                className="mt-1 block w-full text-xs h-[30px] px-2 py-1 border rounded-md"
+                                name="search"
+                                type="text"
+                            />
                         </div>
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            className="h-8 gap-1 mt-6"
+                            type="submit"
+                        >
+                            <Search className="h-3.5 w-3.5" />
+                            Search
+                        </Button>
                     </Form>
                 </div>
                 <ToolTable

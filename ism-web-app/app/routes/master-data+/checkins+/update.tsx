@@ -39,27 +39,58 @@ export const action: ActionFunction = async ({ request }) => {
             throw new Error("Current check-in data is undefined");
         }
         const previousCheckInQuantity = currentCheckin.checkInQuantity;
+        const previousToolId = currentCheckin.toolId;
 
         const quantityDifference = newCheckInQuantity - previousCheckInQuantity;
 
-        const toolResponse: ApiResponse<ToolModel> = await restClient.Get(`/tools/${toolId}`);
-        if (toolResponse.status !== "success") {
-            throw new Error("Failed to fetch tool details");
+        const previousToolResponse: ApiResponse<ToolModel> = await restClient.Get(`/tools/${previousToolId}`);
+        if (previousToolResponse.status !== "success") {
+            throw new Error("Failed to fetch previous tool details");
         }
-        const tool = toolResponse.data;
-
-        if (!tool) {
-            throw new Error("Tool data is undefined");
+        const previousTool = previousToolResponse.data;
+        if (!previousTool) {
+            throw new Error("Previous tool data is undefined");
         }
 
-        const updatedToolQuantity = tool.quantity - quantityDifference;
-        const updateToolResponse: ApiResponse<ToolModel> = await restClient.Put(`/tools/${toolId}`, {
-            payload: {
-                quantity: updatedToolQuantity,
-            },
-        });
-        if (updateToolResponse.status !== "success") {
-            throw new Error("Failed to update tool quantity");
+        const newToolResponse: ApiResponse<ToolModel> = await restClient.Get(`/tools/${toolId}`);
+        if (newToolResponse.status !== "success") {
+            throw new Error("Failed to fetch new tool details");
+        }
+        const newTool = newToolResponse.data;
+        if (!newTool) {
+            throw new Error("New tool data is undefined");
+        }
+
+        if (previousToolId !== parseInt(toolId, 10)) {
+            const updatedPreviousToolQuantity = previousTool.quantity + previousCheckInQuantity;
+            const updatePreviousToolResponse: ApiResponse<ToolModel> = await restClient.Put(`/tools/${previousToolId}`, {
+                payload: {
+                    quantity: updatedPreviousToolQuantity,
+                },
+            });
+            if (updatePreviousToolResponse.status !== "success") {
+                throw new Error("Failed to update previous tool quantity");
+            }
+
+            const updatedNewToolQuantity = newTool.quantity - newCheckInQuantity;
+            const updateNewToolResponse: ApiResponse<ToolModel> = await restClient.Put(`/tools/${toolId}`, {
+                payload: {
+                    quantity: updatedNewToolQuantity,
+                },
+            });
+            if (updateNewToolResponse.status !== "success") {
+                throw new Error("Failed to update new tool quantity");
+            }
+        } else {
+            const updatedToolQuantity = newTool.quantity - quantityDifference;
+            const updateToolResponse: ApiResponse<ToolModel> = await restClient.Put(`/tools/${toolId}`, {
+                payload: {
+                    quantity: updatedToolQuantity,
+                },
+            });
+            if (updateToolResponse.status !== "success") {
+                throw new Error("Failed to update tool quantity");
+            }
         }
 
         const newProject: ApiResponse<ProjectModel> = await restClient.Get(`/projects/${projectId}`);
