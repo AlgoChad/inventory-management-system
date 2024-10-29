@@ -6,6 +6,7 @@ import RestClient from "@/app/data/rest/RestClient";
 import { getSession, commitSession } from "app/sessions";
 import { ApiResponse } from "~/data/models/generic/ApiModel";
 import { Button } from "~/components/ui/button";
+import liveWiseLogo from "~/assets/livewise.jpg";
 
 const API_BASE_URL = process.env.API_BASE_URL as string;
 const API_TOKEN = process.env.API_TOKEN as string;
@@ -48,8 +49,11 @@ export default function LoginPage() {
     const [showPassword, setShowPassword] = useState(false);
 
     return (
-        <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-lg transform transition-all duration-500 hover:scale-105">
+        <div className="max-w-md mx-auto mt-5 p-6 bg-white rounded-lg shadow-lg transform transition-all duration-500 hover:scale-105">
             <h1 className="text-2xl font-semibold text-center text-gray-800">Login</h1>
+            <center>
+                <img src={liveWiseLogo} alt="Live Wise Construction" className="h-50 rounded-md shadow-lg" />
+            </center>
             <Form method="post" className="space-y-4 mt-4">
                 <div>
                     <label htmlFor="email" className="block text-sm font-medium text-gray-700">

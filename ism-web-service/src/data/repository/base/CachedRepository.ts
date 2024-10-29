@@ -17,7 +17,7 @@ export default class CachedRepository<T extends { id?: number | bigint | undefin
 
     public GetEntity(
         func?: (query: PrismaClient) => T, 
-        isCached?: boolean,
+        isCached: boolean = false,
         queryParams?: any
     ): T | undefined {
         const cacheKey = this.CacheHandler.GetCacheKey('GetEntity', func?.toString(), func, queryParams);
@@ -34,7 +34,7 @@ export default class CachedRepository<T extends { id?: number | bigint | undefin
 
     public async GetEntityAsync(
         func?: (query: PrismaClient) => Promise<T>, 
-        isCached?: boolean,
+        isCached: boolean = false,
         queryParams?: any
     ): Promise<T | undefined> {
         const cacheKey = this.CacheHandler.GetCacheKey('GetEntityAsync', func?.toString(), func, queryParams);
@@ -51,7 +51,7 @@ export default class CachedRepository<T extends { id?: number | bigint | undefin
 
     public GetById(
         id: number | bigint,
-        isCached: boolean = true
+        isCached: boolean = false
     ): T | undefined {
         const cacheKey = this.CacheHandler.GetCacheKey('GetById', id.toString());
 
@@ -67,7 +67,7 @@ export default class CachedRepository<T extends { id?: number | bigint | undefin
 
     public async GetByIdAsync(
         id: number | bigint,
-        isCached: boolean = true
+        isCached: boolean = false
     ): Promise<T | undefined> {
         const cacheKey = this.CacheHandler.GetCacheKey('GetByIdAsync', id.toString());
 
@@ -83,7 +83,7 @@ export default class CachedRepository<T extends { id?: number | bigint | undefin
 
     public GetAll(
         func?: (query: PrismaClient) => T[],
-        isCached?: boolean,
+        isCached: boolean = false,
         queryParams?: any
     ): T[] {
         const cacheKey = this.CacheHandler.GetCacheKey('GetAll', func?.toString(), func, queryParams);
@@ -100,7 +100,7 @@ export default class CachedRepository<T extends { id?: number | bigint | undefin
 
     public async GetAllAsync(
         func?: ((query: PrismaClient) => Promise<T[]>) | undefined,
-        isCached?: boolean,
+        isCached: boolean = false,
         queryParams?: any
     ): Promise<T[]> {
         const cacheKey = this.CacheHandler.GetCacheKey('GetAllAsync', func?.toString(), func, queryParams);
@@ -119,7 +119,7 @@ export default class CachedRepository<T extends { id?: number | bigint | undefin
         func?: ((query: PrismaClient) => T[]) | undefined,
         pageIndex?: number,
         pageSize?: number,
-        isCached?: boolean,
+        isCached: boolean = false,
         queryParams?: any
     ): PagedList<T> {
         const cacheKey = this.CacheHandler.GetCacheKey(
@@ -145,7 +145,7 @@ export default class CachedRepository<T extends { id?: number | bigint | undefin
         func?: ((query: PrismaClient) => Promise<T[]>) | undefined,
         pageIndex?: number,
         pageSize?: number,
-        isCached?: boolean,
+        isCached: boolean = false,
         queryParams?: any
     ): Promise<PagedList<T>> {
         const cacheKey = this.CacheHandler.GetCacheKey(

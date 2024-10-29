@@ -89,29 +89,22 @@ export default abstract class EntityRepository<T extends { id?: number | bigint 
         try {
             const skip = (pageIndex - 1) * pageSize;
             let allResults: T[] = [];
+            let totalCount: number = 0;
     
             if (func) {
                 const result = func(this.ModelClient);
                 allResults = result ?? [];
+                totalCount = allResults.length;
+                allResults = allResults.slice(skip, skip + pageSize);
             } else {
+                totalCount = this.ModelClient.count();
                 allResults = this.ModelClient.findMany({
                     skip,
                     take: pageSize
-                }) as T[];
+                });
             }
     
-            const totalCount = allResults.length;
-            const paginatedResults = allResults.slice(skip, skip + pageSize);
-    
-            return {
-                list: paginatedResults,
-                pagination: {
-                    totalItems: totalCount,
-                    totalPages: Math.ceil(totalCount / pageSize),
-                    currentPage: pageIndex,
-                    pageSize: pageSize
-                }
-            };
+            return this.createPagedList(allResults, totalCount, pageIndex, pageSize);
         } catch (error) {
             console.error('Error fetching paged entities:', error);
             throw error;
@@ -126,33 +119,44 @@ export default abstract class EntityRepository<T extends { id?: number | bigint 
         try {
             const skip = (pageIndex - 1) * pageSize;
             let allResults: T[] = [];
+            let totalCount: number = 0;
     
             if (func) {
                 const result = await func(this.ModelClient);
                 allResults = result ?? [];
+                totalCount = allResults.length;
+                allResults = allResults.slice(skip, skip + pageSize);
             } else {
+                totalCount = await this.ModelClient.count();
                 allResults = await this.ModelClient.findMany({
                     skip,
                     take: pageSize
                 });
             }
     
-            const totalCount = allResults.length;
-            const paginatedResults = allResults.slice(skip, skip + pageSize);
-    
-            return {
-                list: paginatedResults,
-                pagination: {
-                    totalItems: totalCount,
-                    totalPages: Math.ceil(totalCount / pageSize),
-                    currentPage: pageIndex,
-                    pageSize: pageSize
-                }
-            };
+            return this.createPagedList(allResults, totalCount, pageIndex, pageSize);
         } catch (error) {
             console.error('Error fetching paged entities:', error);
             throw error;
         }
+    }
+    
+    private createPagedList(
+        allResults: T[],
+        totalCount: number,
+        pageIndex: number,
+        pageSize: number
+    ): PagedList<T> {
+        allResults = allResults.slice(0, pageSize);
+        return {
+            list: allResults,
+            pagination: {
+                totalItems: totalCount,
+                totalPages: Math.ceil(totalCount / pageSize),
+                currentPage: pageIndex,
+                pageSize: pageSize
+            }
+        };
     }
 
     public Insert(entity: CreateInput): T;

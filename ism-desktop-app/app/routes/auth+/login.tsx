@@ -3,7 +3,7 @@ import { Form, useActionData, redirect } from "@remix-run/react";
 import { ActionFunction, json } from "@remix-run/node";
 import { LoginModel, LoginResult } from "@/app/data/models/authentication/AuthenticationModel";
 import RestClient from "@/app/data/rest/RestClient";
-
+import liveWiseLogo from "~/assets/livewise.jpg";
 import { ApiResponse } from "~/data/models/generic/ApiModel";
 import { Button } from "~/components/ui/button";
 
@@ -44,6 +44,7 @@ export default function LoginPage() {
     return (
         <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-lg transform transition-all duration-500 hover:scale-105">
             <h1 className="text-2xl font-semibold text-center text-gray-800">Login</h1>
+            <img src={liveWiseLogo} alt="Live Wise Construction" className="h-50 rounded-md shadow-lg" />
             <Form method="post" className="space-y-4 mt-4">
                 <div>
                     <label htmlFor="email" className="block text-sm font-medium text-gray-700">

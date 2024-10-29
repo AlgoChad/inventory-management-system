@@ -85,11 +85,11 @@ const CustomPagination: React.FC<PaginationProps> = ({ currentPage, totalPages, 
         <Pagination>
             <PaginationContent>
                 <PaginationItem>
-                    <PaginationPrevious href="#" onClick={handlePrevious} />
+                    <PaginationPrevious onClick={handlePrevious} />
                 </PaginationItem>
                 {renderPageNumbers()}
                 <PaginationItem>
-                    <PaginationNext href="#" onClick={handleNext} />
+                    <PaginationNext onClick={handleNext} />
                 </PaginationItem>
             </PaginationContent>
             <div className="flex justify-end items-center text-black mx-2 text-xs">

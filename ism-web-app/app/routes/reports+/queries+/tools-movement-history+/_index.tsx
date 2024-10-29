@@ -37,8 +37,8 @@ export default function Index() {
 
     return (
         <div className="p-4 bg-gray-100 min-h-screen">
-            <h1 className="text-3xl font-bold mb-6 text-center text-gray-800">Tool Movement History</h1>
             <div className="bg-white p-6 rounded-lg shadow-lg">
+                <h1 className="text-3xl font-bold mb-6 text-center text-gray-800">Tool Movement History</h1>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {paginatedCheckins.map(([toolId, { tool, projects }]) => (
                         <div key={toolId} className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">

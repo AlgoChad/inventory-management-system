@@ -155,15 +155,8 @@ class CheckinService implements ICheckinService {
     ): Promise<PagedList<CheckinModel>> {
         const { page, limit, search, column, direction } = params;
         try {
-            const where: Prisma.CheckinWhereInput = {
-                tool: {
-                    toolDescription: {
-                        contains: params.search,
-                        mode: "insensitive",
-                    },
-                },
-            };
 
+            console.log(params);
             const result = await this._repository.GetAllPagedAsync(
                 async (query: PrismaClient) => {
                     const orderBy: { [key: string]: "asc" | "desc" } = {};
@@ -181,9 +174,7 @@ class CheckinService implements ICheckinService {
                     });
 
                     return result;
-                },
-                page,
-                limit
+                }, page, limit
             );
 
             return result as PagedList<CheckinModel>;
