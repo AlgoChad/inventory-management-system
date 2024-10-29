@@ -32,7 +32,6 @@ export const action: ActionFunction = async ({ request }) => {
 
     try {
         const response: ApiResponse<ChangePasswordResult> = await restClient.Post("/auth/change-password", { payload: changePasswordModel });
-        console.log(response);
         if (response.status === "success") {
             return json({ success: response.data?.isSuccess, message: response.data?.message });
         } else {
