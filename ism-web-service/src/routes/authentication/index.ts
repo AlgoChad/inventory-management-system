@@ -5,6 +5,7 @@ import {
     LoginModel,
     LogoutModel,
     RefreshTokenModel,
+    ChangePasswordModel,
 } from "@/src/data/models/authentication/AuthenticationModel";
 import IAuthenticationService from "@/src/core/services/authentication/IAuthenticationService";
 import AuthenticationController from "./AuthenticationController";
@@ -28,6 +29,9 @@ const authenticationRoutes = new Elysia({ prefix: "/auth" })
     })
     .post("/refresh-token", async (req: ApiRequest<{}, {}, RefreshTokenModel>) => {
         return await authController.refreshToken(req);
+    })
+    .post("/change-password", async (req: ApiRequest<{}, {}, ChangePasswordModel>) => {
+        return await authController.changePassword(req);
     });
 
 export default authenticationRoutes;

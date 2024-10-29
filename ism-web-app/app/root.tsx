@@ -12,6 +12,7 @@ import Navbar from "./components/app/custom/NavBar";
 import Header from "./components/app/custom/Header";
 import { getSession } from "~/sessions";
 import { requireUserSession } from "./session-check";
+import { Toaster } from "sonner";
 
 export const loader: LoaderFunction = async ({ request }) => {
     await requireUserSession({
@@ -54,6 +55,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                     <Header />
                     <main className="flex-1 overflow-y-auto container w-100% mx-auto p-4 mt-5">
                         {children}
+                        <Toaster />
                     </main>
                 </div>
             </div>

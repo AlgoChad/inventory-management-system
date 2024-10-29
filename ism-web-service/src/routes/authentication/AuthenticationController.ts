@@ -8,6 +8,8 @@ import {
     RefreshTokenResult,
     LoginResult,
     LogoutResult,
+    ChangePasswordModel,
+    ChangePasswordResult,
 } from "@/src/data/models/authentication/AuthenticationModel";
 import {
     ApiResponse,
@@ -97,6 +99,22 @@ class AuthenticationController extends BaseController {
             return CreateResponse<RefreshTokenResult>(
                 result.isValid ? "success" : "error",
                 result.isValid ? "Token refreshed successfully" : "Token refresh failed",
+                undefined,
+                result
+            );
+        } catch (error) {
+            return this.handleError(error);
+        }
+    }
+
+    public async changePassword(
+        req: ApiRequest<{}, {}, ChangePasswordModel>
+    ): Promise<ApiResponse<ChangePasswordResult> | ProblemDetail> {
+        try {
+            const result = await this.authService.ChangePasswordAsync(req.body.payload);
+            return CreateResponse<ChangePasswordResult>(
+                result.isSuccess ? "success" : "error",
+                result.message ?? "Operation completed",
                 undefined,
                 result
             );

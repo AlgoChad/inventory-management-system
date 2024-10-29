@@ -8,6 +8,8 @@ import {
     LoginResult,
     LogoutResult,
     UserAuthResult,
+    ChangePasswordModel,
+    ChangePasswordResult,
 } from "@/src/data/models/authentication/AuthenticationModel";
 import UserRepository from "@/src/data/repository/UserRepository";
 import IAuthenticationService from "./IAuthenticationService";
@@ -186,6 +188,63 @@ class AuthenticationService implements IAuthenticationService {
         } catch (error) {
             console.error("Error during logout:", error);
             throw new Error("Logout failed");
+        }
+    }
+    
+    public async ChangePasswordAsync(changePasswordModel: ChangePasswordModel): Promise<ChangePasswordResult> {
+        const { userId, oldPassword, newPassword } = changePasswordModel;
+        try {
+            const user = await this._repository.GetEntityAsync(
+                async (query: PrismaClient) => {
+                    return await query.findFirst({
+                        where: {
+                            id: userId,
+                        },
+                    });
+                }
+            );
+
+            if (user === null) {
+                return { isSuccess: false, message: "User not found" };
+            }
+
+            if (user?.isPasswordChanged) {
+                return { isSuccess: false, message: "Password has already been changed" };
+            }
+
+            if (!user?.password) {
+                return { isSuccess: false, message: "Password is undefined" };
+            }
+
+            const currentHashedPassword: string = user.password.toString();
+            const isOldPasswordValid = await Bun.password.verify(
+                oldPassword,
+                currentHashedPassword
+            );
+
+            if (!isOldPasswordValid) {
+                return { isSuccess: false, message: "Invalid old password" };
+            }
+
+            const newHashedPassword = await Bun.password.hash(newPassword, {
+                algorithm: "bcrypt",
+                cost: 5,
+            });
+
+            const result = await this._repository.UpdateAsync({
+                id: user.id as number,
+                data: {
+                    password: newHashedPassword,
+                    isPasswordChanged: true,
+                },
+            });
+
+            return result !== null
+                ? { isSuccess: true, message: "Password changed successfully" }
+                : { isSuccess: false, message: "Password change failed" };
+        } catch (error) {
+            console.error("Error during password change:", error);
+            return { isSuccess: false, message: "Password change failed" };
         }
     }
 

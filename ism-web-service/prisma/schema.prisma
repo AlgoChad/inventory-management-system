@@ -24,18 +24,18 @@ model StatusType {
 }
 
 model Tool {
-    id              Int           @id @default(autoincrement())
-    toolNumber      String        @unique
-    toolName        String
-    quantity        Int
-    conditionId     Int
-    statusId        Int
-    condition       ConditionType @relation(fields: [conditionId], references: [id])
-    status          StatusType    @relation(fields: [statusId], references: [id])
-    personnelId     Int?
-    personnel       Personnel?    @relation(fields: [personnelId], references: [id])
-    createdAt       DateTime      @default(now())
-    updatedAt       DateTime      @updatedAt
+    id          Int           @id @default(autoincrement())
+    toolNumber  String        @unique
+    toolName    String
+    quantity    Int
+    conditionId Int
+    statusId    Int
+    condition   ConditionType @relation(fields: [conditionId], references: [id])
+    status      StatusType    @relation(fields: [statusId], references: [id])
+    personnelId Int?
+    personnel   Personnel?    @relation(fields: [personnelId], references: [id])
+    createdAt   DateTime      @default(now())
+    updatedAt   DateTime      @updatedAt
 
     Checkin Checkin[]
 }
@@ -79,12 +79,13 @@ model Personnel {
 }
 
 model User {
-    id           Int        @id @default(autoincrement())
-    username     String     @unique
-    password     String
-    accessToken  String?
-    refreshToken String?
-    personnel    Personnel?
-    createdAt    DateTime   @default(now())
-    updatedAt    DateTime   @updatedAt
+    id                Int        @id @default(autoincrement())
+    username          String     @unique
+    password          String
+    isPasswordChanged Boolean    @default(false)
+    accessToken       String?
+    refreshToken      String?
+    personnel         Personnel?
+    createdAt         DateTime   @default(now())
+    updatedAt         DateTime   @updatedAt
 }
