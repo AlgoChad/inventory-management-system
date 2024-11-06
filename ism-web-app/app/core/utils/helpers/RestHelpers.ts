@@ -1,11 +1,10 @@
 import { v4 as uuidv4 } from 'uuid';
 import { 
     ApiResponse, 
-    ApiResponseSchema, 
     ProblemDetail, 
     ProblemDetailSchema 
 } from "@/app/data/models/generic/ApiModel";
-import { z, ZodObject } from 'zod';
+
 
 export const TrimSearchQueryValue = (searchQuery: Record<string, string>) => {
     for (const query in searchQuery) {
@@ -33,6 +32,14 @@ export const GenerateQueryString = (params: Record<string, any>): string => {
         }
     });
     return searchParams.toString();
+};
+
+export const FormDataToObject = (formData: FormData): Record<string, any> => {
+    const obj: Record<string, any> = {};
+    formData.forEach((value, key) => {
+        obj[key] = value;
+    });
+    return obj;
 };
 
 export const CreateResponse = <T>(

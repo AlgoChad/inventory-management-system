@@ -1,108 +1,91 @@
-import { json, LoaderFunction } from "@remix-run/node";
+import { ActionFunction, json, LoaderFunction } from "@remix-run/node";
 import { Form, useLoaderData } from "@remix-run/react";
-import { useEffect, useState } from "react";
-import { SanitizeRequest } from "~/core/utils/helpers/RestHelpers";
-import { ApiResponse } from "~/data/models/generic/ApiModel";
-import { Datatable } from "~/data/models/generic/DatatableModel";
-import { PagedList } from "~/data/models/generic/PaginationModel";
+import { useState } from "react";
+import { FormDataToObject, SanitizeRequest } from "~/core/utils/helpers/RestHelpers";
 import { ToolModel } from "~/data/models/tool/ToolModel";
-import RestClient from "~/data/rest/RestClient";
 import ToolTable from "./components/ToolsTable";
 import CreateToolForm from "./components/ToolForm";
 import { Button } from "~/components/ui/button";
-import { StatusTypeModel } from "~/data/models/status-type/StatusTypeModel";
-import { ConditionTypeModel } from "~/data/models/condition-type/ConditionTypeModel";
 import { ScrollArea } from "~/components/ui/scroll-area";
-import { PersonnelModel } from "~/data/models/personnel/PersonnelModel";
 import { Label } from "~/components/ui/label";
 import { Input } from "~/components/ui/input";
 import { Search } from "lucide-react";
+import IToolService from "~/core/services/tools/IToolService";
+import ToolService from "~/core/services/tools/ToolService";
 
 export const loader: LoaderFunction = async ({ request }) => {
-    const API_BASE_URL = process.env.API_BASE_URL as string;
-    const API_TOKEN = process.env.API_TOKEN as string;
-    const restClient = new RestClient(API_BASE_URL, API_TOKEN);
-
+    const toolService: IToolService = new ToolService();
     const parsedArgs = SanitizeRequest(request);
 
     try {
-        const getTools = async () => {
-            const tools = await restClient.Get<
-                ApiResponse<PagedList<ToolModel>>
-            >(`/tools`, {
-                page: parsedArgs.page || 1,
-                limit: parsedArgs.limit || 10,
+        const getToolsPageData = async () => {
+            return await toolService.GetToolPageDataAsync({
+                page: Number(parsedArgs.page) || 1,
+                limit: Number(parsedArgs.limit) || 10,
                 search: parsedArgs.search || "",
                 column: parsedArgs.orderBy || "createdAt",
-                direction: parsedArgs.orderDir || "asc",
+                direction: (parsedArgs.orderDir === "asc" || parsedArgs.orderDir === "desc") ? parsedArgs.orderDir : "asc",
             });
-
-            if (!tools.data) {
-                throw new Response("Failed to load data", { status: 500 });
-            }
-
-            const toolsTable: Datatable<ToolModel> = {
-                data: tools.data.list,
-                pagination: {
-                    page: tools.data.pagination.currentPage,
-                    length: tools.data.pagination.pageSize,
-                    totalCount: tools.data.pagination.totalItems,
-                },
-                defaultSort: {
-                    id: "createdAt",
-                    desc: "asc",
-                },
-            };
-
-            return toolsTable;
         };
 
-        const getConditionTypes = async () => {
-            const conditionTypes = await restClient.Get<
-                ApiResponse<ConditionTypeModel[]>
-            >(`/condition-types/all`);
-
-            return conditionTypes;
-        };
-
-        const getStatusTypes = async () => {
-            const statusTypes = await restClient.Get<
-                ApiResponse<StatusTypeModel[]>
-            >(`/status-types/all`);
-
-            return statusTypes;
-        };
-
-        const getPersonnel = async () => {
-            const personnel = await restClient.Get<
-                ApiResponse<PagedList<PersonnelModel[]>>
-            >(`/personnel/all`);
-
-            return personnel;
-        };
-
-        const [tools, conditionTypes, statusTypes, personnel] =
-            await Promise.all([
-                getTools(),
-                getConditionTypes(),
-                getStatusTypes(),
-                getPersonnel(),
-            ]);
-
-        return json({
-            tools,
-            conditionTypes,
-            statusTypes,
-            personnel,
-        });
+        return json(await getToolsPageData());
     } catch (error) {
         throw new Response("Failed to load data", { status: 500 });
     }
 };
 
+export const action: ActionFunction = async ({ request }) => {
+    const toolService: IToolService = new ToolService();
+
+    const formData = await request.formData();
+    const data = FormDataToObject(formData);
+
+    const { toolName, quantity, conditionId, statusId, personnelId } = data;
+
+    if (
+        typeof toolName !== "string" || toolName.trim() === "" ||
+        typeof quantity !== "string" || quantity.trim() === ""
+    ) {
+        return json(
+            { success: false, error: "Invalid data provided" },
+            { status: 400 }
+        );
+    }
+
+    const toolNumber = toolName
+        .split(" ")
+        .map(word => word.charAt(0).toUpperCase())
+        .join("") + "-00" + Math.floor(Math.random() * 1000);
+
+    try {
+        const result: ToolModel = await toolService.CreateToolAsync({
+            toolName,
+            toolNumber,
+            quantity: Number(quantity),
+            conditionId: Number(conditionId),
+            statusId: Number(statusId),
+            personnelId: Number(personnelId),
+        });
+
+        if (!result) {
+            return json(
+                { success: false, error: "Failed to create tool" },
+                { status: 400 }
+            );
+        }
+
+        return json({ success: true, message: "Tool created successfully" });
+    } catch (error) {
+        return json(
+            { success: false, error: (error as Error).message },
+            { status: 500 }
+        );
+    }
+};
+
 export default function Index() {
     const loaderData = useLoaderData<typeof loader>();
-    const { tools, conditionTypes, statusTypes, projects, personnel } =
+    const { tools, conditionTypes, statusTypes, personnel } =
         loaderData;
 
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -147,18 +130,18 @@ export default function Index() {
                 </div>
                 <ToolTable
                     table={tools}
-                    conditionTypes={conditionTypes.data}
-                    statusTypes={statusTypes.data}
-                    personnel={personnel.data}
+                    conditionTypes={conditionTypes}
+                    statusTypes={statusTypes}
+                    personnel={personnel}
                 />
             </ScrollArea>
             {isCreateModalOpen && (
                 <CreateToolForm
                     isOpen={isCreateModalOpen}
                     onClose={closeCreateModal}
-                    conditionTypes={conditionTypes.data}
-                    statusTypes={statusTypes.data}
-                    personnel={personnel.data}
+                    conditionTypes={conditionTypes}
+                    statusTypes={statusTypes}
+                    personnel={personnel}
                 />
             )}
         </div>

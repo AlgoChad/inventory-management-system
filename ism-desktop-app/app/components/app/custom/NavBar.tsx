@@ -90,7 +90,7 @@ const navItems: NavElement[] = [
         ],
     },
     { type: "divider" },
-    { path: "/settings/account", label: "Account", icon: FaUserCog },
+    { path: "/auth/account", label: "Account", icon: FaUserCog },
     { type: "divider" },
     { path: "/about", label: "About", icon: FaInfoCircle },
 ];

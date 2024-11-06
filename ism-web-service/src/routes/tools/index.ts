@@ -22,7 +22,7 @@ const toolRoutes = new Elysia({ prefix: "/tools" })
         return await toolController.getAllToolsPaged(req);
     })
     .get("/all", async (req: ApiRequest<{}, {}, {}, Token>) => {
-        return await toolController.getAllTools();
+        return await toolController.getAllTools(req);
     })
     .get("/:id", async (req: ApiRequest<{}, { id: number }, {}, Token>) => {
         return await toolController.getToolById(req);

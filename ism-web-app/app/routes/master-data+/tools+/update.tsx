@@ -1,18 +1,16 @@
 import { ActionFunction, json, redirect } from "@remix-run/node";
-import RestClient from "~/data/rest/RestClient";
-
-const API_BASE_URL = process.env.API_BASE_URL as string;
-const API_TOKEN = process.env.API_TOKEN as string;
-const restClient = new RestClient(API_BASE_URL, API_TOKEN);
+import IToolService from "~/core/services/tools/IToolService";
+import ToolService from "~/core/services/tools/ToolService";
 
 export const action: ActionFunction = async ({ request }) => {
+    const toolService: IToolService = new ToolService();
+
     const formData = await request.formData();
     const id = formData.get("id");
     const toolName = formData.get("toolName");
     const quantity = formData.get("quantity");
     const conditionId = formData.get("conditionId");
     const statusId = formData.get("statusId");
-    const projectId = formData.get("projectId");
     const personnelId = formData.get("personnelId");
 
     if (
@@ -27,16 +25,21 @@ export const action: ActionFunction = async ({ request }) => {
     }
 
     try {
-        const response = await restClient.Put(`/tools/${id}`, {
-            payload: {
-                toolName,
-                quantity: Number(quantity),
-                conditionId: conditionId ? Number(conditionId) : undefined,
-                statusId: statusId ? Number(statusId) : undefined,
-                projectId: projectId ? Number(projectId) : undefined,
-                personnelId: personnelId ? Number(personnelId) : undefined,
-            }
+        const result = await toolService.UpdateToolAsync(Number(id), {
+            toolName,
+            quantity: Number(quantity),
+            conditionId: conditionId ? Number(conditionId) : undefined,
+            statusId: statusId ? Number(statusId) : undefined,
+            personnelId: personnelId ? Number(personnelId) : undefined,
         });
+
+        if (!result) {
+            return json(
+                { success: false, error: "Failed to update tool" },
+                { status: 500 }
+            );
+        }
+        
         return redirect("/master-data/tools");
     } catch (error) {
         return json(

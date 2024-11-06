@@ -37,10 +37,11 @@ export const action: ActionFunction = async ({ request }) => {
         const transferQty = Number(transferQuantity);
 
         if (transferQty === currentQuantity) {
-            const updateCheckinModel: UpdateCheckinModel = {
-                checkOutDate: new Date(),
-            };
-            await restClient.Put(`/checkins/${checkInId}`, { payload: updateCheckinModel });
+            // const updateCheckinModel: UpdateCheckinModel = {
+            //     checkOutDate: new Date(),
+            // };
+            // await restClient.Put(`/checkins/${checkInId}`, { payload: updateCheckinModel });
+            await restClient.Post(`/checkins/delete/${checkInId}`, {});
         } else {
             const updatedQuantity = currentQuantity - transferQty;
             const updateCheckinModel: UpdateCheckinModel = {

@@ -156,7 +156,6 @@ class CheckinService implements ICheckinService {
         const { page, limit, search, column, direction } = params;
         try {
 
-            console.log(params);
             const result = await this._repository.GetAllPagedAsync(
                 async (query: PrismaClient) => {
                     const orderBy: { [key: string]: "asc" | "desc" } = {};

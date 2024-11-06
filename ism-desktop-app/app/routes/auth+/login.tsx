@@ -3,9 +3,9 @@ import { Form, useActionData, redirect } from "@remix-run/react";
 import { ActionFunction, json } from "@remix-run/node";
 import { LoginModel, LoginResult } from "@/app/data/models/authentication/AuthenticationModel";
 import RestClient from "@/app/data/rest/RestClient";
-import liveWiseLogo from "~/assets/livewise.jpg";
 import { ApiResponse } from "~/data/models/generic/ApiModel";
 import { Button } from "~/components/ui/button";
+import liveWiseLogo from "~/assets/livewise.jpg";
 
 export const action: ActionFunction = async ({ request }) => {
     const API_BASE_URL = process.env.API_BASE_URL as string;
@@ -25,7 +25,7 @@ export const action: ActionFunction = async ({ request }) => {
     try {
         const response: ApiResponse<LoginResult> = await restClient.Post("/auth/login", { payload: loginModel });
         if (response.status === "success") {
-           
+          
             return redirect("/home");
         } else {
             return json({ error: response?.data?.message || "Login failed" }, { status: 400 });
@@ -42,9 +42,11 @@ export default function LoginPage() {
     const [showPassword, setShowPassword] = useState(false);
 
     return (
-        <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-lg transform transition-all duration-500 hover:scale-105">
+        <div className="max-w-md mx-auto mt-5 p-6 bg-white rounded-lg shadow-lg transform transition-all duration-500 hover:scale-105">
             <h1 className="text-2xl font-semibold text-center text-gray-800">Login</h1>
-            <img src={liveWiseLogo} alt="Live Wise Construction" className="h-50 rounded-md shadow-lg" />
+            <center>
+                <img src={liveWiseLogo} alt="Live Wise Construction" className="h-50 rounded-md shadow-lg" />
+            </center>
             <Form method="post" className="space-y-4 mt-4">
                 <div>
                     <label htmlFor="email" className="block text-sm font-medium text-gray-700">

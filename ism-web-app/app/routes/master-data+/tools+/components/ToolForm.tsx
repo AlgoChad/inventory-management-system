@@ -31,7 +31,7 @@ const CreateToolForm: React.FC<CreateToolFormProps> = ({ isOpen, onClose, condit
         if (statusId !== undefined) formData.append("statusId", statusId.toString());
         if (personnelId !== undefined) formData.append("personnelId", personnelId.toString());
 
-        submit(formData, { method: "post", action: "/master-data/tools/create" });
+        submit(formData, { method: "post", action: "/master-data/tools" });
         onClose();
     };
 

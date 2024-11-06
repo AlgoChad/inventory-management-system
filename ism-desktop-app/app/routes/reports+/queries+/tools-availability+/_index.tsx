@@ -55,12 +55,12 @@ export default function Index() {
 
     return (
         <div className="p-4 bg-gray-100">
-            <h1 className="text-3xl font-bold mb-6 text-center text-gray-800">
-                Tools Availability
-            </h1>
             <div className="bg-white p-6 rounded-lg shadow-lg">
                 <div className="flex justify-center mb-4">
-                    <Button onClick={toggleView}>
+                    <h1 className="text-3xl font-bold mb-6 text-center text-gray-800">
+                        Tools Availability
+                    </h1>
+                    <Button className="mx-5" onClick={toggleView}>
                         {view === "status"
                             ? "Show by Condition"
                             : "Show by Status"}

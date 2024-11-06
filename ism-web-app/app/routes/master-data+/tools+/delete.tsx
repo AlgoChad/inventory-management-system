@@ -1,11 +1,9 @@
 import { ActionFunction, json, redirect } from "@remix-run/node";
-import RestClient from "~/data/rest/RestClient";
-
-const API_BASE_URL = process.env.API_BASE_URL as string;
-const API_TOKEN = process.env.API_TOKEN as string;
-const restClient = new RestClient(API_BASE_URL, API_TOKEN);
+import IToolService from "~/core/services/tools/IToolService";
+import ToolService from "~/core/services/tools/ToolService";
 
 export const action: ActionFunction = async ({ request }) => {
+    const toolService: IToolService = new ToolService();
     const formData = await request.formData();
     const id = formData.get("id");
 
@@ -17,7 +15,8 @@ export const action: ActionFunction = async ({ request }) => {
     }
 
     try {
-        const response = await restClient.Post(`/tools/delete/${id}`, {});
+        await toolService.DeleteToolAsync(Number(id));
+
         return redirect("/master-data/tools");
     } catch (error) {
         return json(
