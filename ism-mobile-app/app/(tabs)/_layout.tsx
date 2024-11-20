@@ -3,9 +3,7 @@ import React from "react";
 
 import { TabBarIcon } from "@/components/navigation/TabBarIcon";
 import { Colors } from "@/constants/Colors";
-import { useColorScheme } from "@/hooks/useColorScheme";
-
-import { AntDesign, FontAwesome } from "@expo/vector-icons";
+import { AntDesign, FontAwesome, MaterialIcons } from "@expo/vector-icons";
 import { View, StyleSheet } from "react-native";
 
 export default function TabLayout() {
@@ -46,6 +44,21 @@ export default function TabLayout() {
                                 name={focused ? "home" : "home-outline"}
                                 color="#000000"
                             />
+                        </View>
+                    ),
+                }}
+            />
+            <Tabs.Screen
+                name="checkins"
+                options={{
+                    tabBarIcon: ({ color, focused }) => (
+                        <View
+                            style={[
+                                styles.iconContainer,
+                                focused && styles.iconContainerFocused,
+                            ]}
+                        >
+                            <MaterialIcons name="checklist" size={24} color="#000000" />
                         </View>
                     ),
                 }}

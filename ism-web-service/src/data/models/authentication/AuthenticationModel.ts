@@ -65,3 +65,9 @@ export type ChangePasswordResult = {
     isSuccess: boolean;
     message?: string;
 };
+
+export type UserRoleResult = {
+    isSuccess: boolean;
+    roles?: string[];
+    message?: string;
+};

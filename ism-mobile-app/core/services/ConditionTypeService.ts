@@ -8,8 +8,8 @@ import { ApiResponse } from "@/data/models/generic/ApiModel";
 import { PagedList } from "@/data/models/generic/PaginationModel";
 import RestClient from "@/data/rest/RestClient";
 
-const API_BASE_URL = "http://192.168.254.104:3000/api";
-const API_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJ0ZXN0QGdtYWlsLmNvbSIsImlhdCI6MTcyOTEyNjM3NCwiZXhwIjoxNzI5MTI3Mjc0fQ.PGNA3XLqt6oYc5m3POdlXncEutnY9irZofx8b8uYeDk";
+const API_BASE_URL = "https://a04e-158-62-42-150.ngrok-free.app/api";
+const API_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJpYXQiOjE3Mjk1MjAxOTEsImV4cCI6MTczMjExMjE5MX0.ke2Xab98m43_0v5zbY00shpVoNcB3UrMBXItA1AQDiQ";
 
 const restClient = new RestClient(API_BASE_URL, API_TOKEN);
 
