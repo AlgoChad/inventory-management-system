@@ -26,6 +26,7 @@ export default class RestClient {
             const response: AxiosResponse<T> = await this.axiosInstance.get(`${this.baseUrl}${url}${queryString}`);
             return response.data;
         } catch (error) {
+            console.log(error);
             const err = error as any;
             throw new Error(`Failed to fetch data: ${err.response?.statusText || err.message}`);
         }

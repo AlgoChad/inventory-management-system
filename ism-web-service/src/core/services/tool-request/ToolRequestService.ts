@@ -13,18 +13,30 @@ import ToolRequestRepository from "@/src/data/repository/ToolRequestRepository";
 import { PagedList } from "@/src/data/models/generic/PaginationModel";
 import { PrismaClient } from "@prisma/client/extension";
 import { Prisma } from "@prisma/client";
+import ImageRepository from "@/src/data/repository/ImageRepository";
 
 class ToolRequestService implements IToolRequestService {
     private readonly _toolRequestRepository: typeof ToolRequestRepository;
     private readonly _toolRepairRequestRepository: typeof ToolRepairRequestRepository;
+    private readonly _imageRepository: typeof ImageRepository;
 
     constructor() {
         this._toolRequestRepository = ToolRequestRepository;
         this._toolRepairRequestRepository = ToolRepairRequestRepository;
+        this._imageRepository = ImageRepository;
     }
 
     public async GetAllToolsRequestPagedAsync(params: any): Promise<PagedList<ToolRequest>> {
-        const { page, limit, search, column, direction } = params;
+        const {
+            page = 1,
+            limit = 10,
+            search = "",
+            column = "createdAt",
+            direction = "desc"
+        } = params;
+
+        console.log("Params:", params);
+    
         try {
             const where = search ? {
                 OR: [
@@ -46,25 +58,25 @@ class ToolRequestService implements IToolRequestService {
                     },
                 ],
             } : {};
-
+    
             const result = await this._toolRequestRepository.GetAllPagedAsync(
                 async (query: PrismaClient) => {
                     const orderBy: any = {};
-
+    
                     if (column && direction) {
                         const formattedColumn = column.replace(/_/g, '.');
                         const keys = formattedColumn.split('.');
                         let current = orderBy;
-
+    
                         for (let i = 0; i < keys.length - 1; i++) {
                             current[keys[i]] = current[keys[i]] || {};
                             current = current[keys[i]];
                         }
-
+    
                         current[keys[keys.length - 1]] = direction;
                     }
-
-                    const result = await query.findFirst({
+    
+                    const result = await query.findMany({
                         where,
                         include: {
                             tool: true,
@@ -72,11 +84,11 @@ class ToolRequestService implements IToolRequestService {
                         },
                         orderBy: orderBy,
                     });
-
+    
                     return result;
                 }, page, limit, false
             );
-
+    
             return result as PagedList<ToolRequest>;
         } catch (error) {
             console.error("Error retrieving tool requests:", error);
@@ -85,7 +97,14 @@ class ToolRequestService implements IToolRequestService {
     }
 
     public async GetAllToolsRepairRequestPagedAsync(params: any): Promise<PagedList<ToolRepairRequest>> {
-        const { page, limit, search, column, direction } = params;
+        const {
+            page = 1,
+            limit = 10,
+            search = "",
+            column = "createdAt",
+            direction = "desc"
+        } = params;
+
         try {
             const where = search ? {
                 OR: [
@@ -151,7 +170,7 @@ class ToolRequestService implements IToolRequestService {
             const toolRequest = await this._toolRequestRepository.GetEntityAsync(
                 async (query: PrismaClient) => {
                     return await query.findFirst({
-                        where: { id },
+                        where: { id: Number(id) },
                         include: {
                             tool: true,
                             personnel: true,
@@ -172,7 +191,7 @@ class ToolRequestService implements IToolRequestService {
             const toolRepairRequest = await this._toolRepairRequestRepository.GetEntityAsync(
                 async (query: PrismaClient) => {
                     return await query.findFirst({
-                        where: { id },
+                        where: { id: Number(id) },
                         include: {
                             tool: true,
                             personnel: true,
@@ -202,8 +221,13 @@ class ToolRequestService implements IToolRequestService {
                         id: toolRequestModel.personnelId,
                     }
                 },
+                project: {
+                    connect: {
+                        id: toolRequestModel.projectId,
+                    }
+                },
                 quantity: toolRequestModel.quantity,
-                status: "PENDING"
+                status: "Pending"
             }
 
             const toolRequest = await this._toolRequestRepository.InsertAsync(toolRequestCreateInput);
@@ -230,7 +254,7 @@ class ToolRequestService implements IToolRequestService {
                 },
                 quantity: toolRepairRequestModel.quantity,
                 description: toolRepairRequestModel.description,
-                status: "PENDING",
+                status: "Pending",
                 images: {
                     create: toolRepairRequestModel.images?.map((image) => ({
                         name: image.name,
@@ -250,8 +274,8 @@ class ToolRequestService implements IToolRequestService {
 
     public async UpdateToolRequestAsync(id: number, toolRequestModel: UpdateToolRequestModel): Promise<RequestResult> {
         try {
-            const toolRequest = await this._toolRequestRepository.UpdateAsync({
-                id,
+            await this._toolRequestRepository.UpdateAsync({
+                id: Number(id),
                 data: toolRequestModel,
             });
 
@@ -271,7 +295,7 @@ class ToolRequestService implements IToolRequestService {
     public async UpdateToolRepairRequestAsync(id: number, toolRepairRequestModel: UpdateToolRepairRequestModel): Promise<RequestResult> {
         try {
             await this._toolRepairRequestRepository.UpdateAsync({
-                id,
+                id: Number(id),
                 data: {
                     ...toolRepairRequestModel,
                     images: {
@@ -302,7 +326,7 @@ class ToolRequestService implements IToolRequestService {
             const toolRequestResult = await this._toolRequestRepository.GetEntityAsync(
                 async (query: PrismaClient) => {
                     return await query.findFirst({
-                        where: { id },
+                        where: { id: Number(id) },
                     });
                 }
             );
@@ -334,20 +358,33 @@ class ToolRequestService implements IToolRequestService {
             const toolRepairRequestResult = await this._toolRepairRequestRepository.GetEntityAsync(
                 async (query: PrismaClient) => {
                     return await query.findFirst({
-                        where: { id },
+                        where: { id: Number(id) },
+                        include: { images: true },
                     });
                 }
             );
-
+    
             if (!toolRepairRequestResult) {
                 return {
                     isSuccess: false,
                     message: "Tool repair request not found",
                 };
             }
-
+    
+            const relatedImages = await this._imageRepository.GetAllAsync(
+                async (query: PrismaClient) => {
+                    return await query.findMany({
+                        where: { toolRepairRequestId: Number(id) },
+                    });
+                }
+            )
+            
+            await this._imageRepository.DeleteAsync(
+                relatedImages
+            );
+    
             await this._toolRepairRequestRepository.DeleteAsync(toolRepairRequestResult);
-
+    
             return {
                 isSuccess: true,
                 message: "Tool repair request deleted successfully",

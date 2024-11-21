@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Button, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
 export interface PaginationProps {
     currentPage: number;
@@ -57,22 +57,6 @@ export const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages,
             );
         }
 
-        if (startPage > 1) {
-            pageNumbers.unshift(
-                <Text key="start-ellipsis" style={styles.ellipsis}>
-                    ...
-                </Text>
-            );
-        }
-
-        if (endPage < totalPages) {
-            pageNumbers.push(
-                <Text key="end-ellipsis" style={styles.ellipsis}>
-                    ...
-                </Text>
-            );
-        }
-
         return pageNumbers;
     };
 
@@ -111,46 +95,44 @@ const styles = StyleSheet.create({
         marginBottom: 4,
     },
     pageButton: {
-        padding: 4,
+        padding: 2,
         marginHorizontal: 2,
         borderRadius: 4,
         borderWidth: 1,
-        backgroundColor: 'black',
-        borderColor: 'black',
+        backgroundColor: '#f0f0f0',
+        borderColor: '#ccc',
         alignItems: 'center',
         justifyContent: 'center',
+        minWidth: 24,
+        height: 24,
     },
     disabledButton: {
-        backgroundColor: 'gray',
-        borderColor: 'gray',
+        backgroundColor: '#e0e0e0',
+        borderColor: '#ccc',
     },
     buttonText: {
-        color: 'white',
+        color: '#333',
         fontSize: 12,
     },
     activePageButton: {
-        backgroundColor: 'black',
-        borderColor: 'black',
+        backgroundColor: 'white',
+        borderColor: 'gray',
     },
     inactivePageButton: {
         backgroundColor: 'white',
-        borderColor: 'black',
+        borderColor: '#ccc',
     },
     activePageText: {
-        color: 'white',
+        color: 'gray',
         fontSize: 12,
     },
     inactivePageText: {
-        color: 'black',
-        fontSize: 12,
-    },
-    ellipsis: {
-        paddingHorizontal: 4,
-        marginHorizontal: 2,
+        color: '#333',
         fontSize: 12,
     },
     pageInfo: {
         marginLeft: 4,
         fontSize: 12,
+        color: '#333',
     },
 });

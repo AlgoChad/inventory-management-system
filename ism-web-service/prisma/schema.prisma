@@ -53,6 +53,8 @@ model Project {
     updatedAt          DateTime @updatedAt
 
     Checkin Checkin[]
+
+    ToolRequest ToolRequest[]
 }
 
 model Checkin {
@@ -100,6 +102,7 @@ model ToolRequest {
     id          Int      @id @default(autoincrement())
     toolId      Int
     personnelId Int
+    projectId   Int
     quantity    Int
     status      String   @default("PENDING")
     createdAt   DateTime @default(now())
@@ -107,6 +110,7 @@ model ToolRequest {
 
     tool        Tool     @relation(fields: [toolId], references: [id])
     personnel   Personnel @relation(fields: [personnelId], references: [id])
+    project     Project  @relation(fields: [projectId], references: [id])
 }
 
 model ToolRepairRequest {

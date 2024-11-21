@@ -1,68 +1,59 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
     StyleSheet,
-    ActivityIndicator,
     View,
     SafeAreaView,
+    Text,
+    TouchableOpacity,
 } from "react-native";
-import CheckinService from "@/core/services/CheckinService";
-import ToolService from "@/core/services/ToolService";
-import { CheckinModel } from "@/data/models/checkin/CheckinModel";
-import { ToolModel } from "@/data/models/tool/ToolModel";
-import WarehouseModal from "~/components/home/WarehouseModal";
-import ProjectsModal from "~/components/home/ProjectModal";
-
+import { useNavigation } from "@react-navigation/native";
+import ParallaxScrollView from "@/components/ParallaxScrollView";
 
 const HomeScreen = () => {
-    const [tools, setTools] = useState<ToolModel[]>([]);
-    const [checkins, setCheckins] = useState<CheckinModel[]>([]);
-    const [loading, setLoading] = useState(true);
+    const navigation = useNavigation();
 
-    useEffect(() => {
-        fetchData();
-    }, []);
-
-    const fetchData = async () => {
-        setLoading(true);
-        try {
-            const toolsResponse = await ToolService.getAllTools();
-            const checkinsResponse = await CheckinService.getAllCheckins();
-
-            if (toolsResponse.data && checkinsResponse.data) {
-                setTools(toolsResponse.data);
-                setCheckins(checkinsResponse.data);
-            } else {
-                throw new Error("Failed to load data");
-            }
-        } catch (error) {
-            console.error("Failed to fetch data:", error);
-        } finally {
-            setLoading(false);
-        }
+    const navigateToScreen = (screen: string) => {
+        navigation.navigate(screen as never);
     };
 
-    const groupedTools = checkins.reduce((acc: { [key: string]: CheckinModel[] }, checkin) => {
-        const projectId = checkin.projectId.toString();
-        if (!acc[projectId]) {
-            acc[projectId] = [];
-        }
-        acc[projectId].push(checkin);
-        return acc;
-    }, {});
-
-    const totalTools = tools.reduce((sum, tool) => sum + tool.quantity, 0);
-
     return (
-        <SafeAreaView style={styles.container}>
-            {loading ? (
-                <ActivityIndicator size="large" color="#0000ff" />
-            ) : (
-                <>
-                    <WarehouseModal tools={tools} totalTools={totalTools} />
-                    <ProjectsModal groupedTools={groupedTools} />
-                </>
-            )}
-        </SafeAreaView>
+        <ParallaxScrollView
+            headerImage={<View style={styles.parallaxHeader}><Text style={styles.parallaxHeaderText}>Home</Text></View>}
+            headerBackgroundColor={{ dark: "#2f5f7c", light: "#2f5f7c" }}
+        >
+            <SafeAreaView style={styles.container}>
+                <View style={styles.buttonContainer}>
+                    <View style={styles.row}>
+                        <TouchableOpacity
+                            style={styles.button}
+                            onPress={() => navigateToScreen("projects")}
+                        >
+                            <Text style={styles.buttonText}>Projects</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={styles.button}
+                            onPress={() => navigateToScreen("warehouse")}
+                        >
+                            <Text style={styles.buttonText}>Warehouse</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={styles.row}>
+                        <TouchableOpacity
+                            style={styles.button}
+                            onPress={() => navigateToScreen("tool-request")}
+                        >
+                            <Text style={styles.buttonText}>Tool Request</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={styles.button}
+                            onPress={() => navigateToScreen("tool-repair")}
+                        >
+                            <Text style={styles.buttonText}>Tool Repair</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </SafeAreaView>
+        </ParallaxScrollView>
     );
 };
 
@@ -70,9 +61,46 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 16,
-        paddingTop: 64,
         backgroundColor: "#f8f8f8",
-        marginBottom: 96,
+    },
+    parallaxHeader: {
+        height: 250,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#2f5f7c',
+        borderBottomLeftRadius: 50,
+        borderBottomRightRadius: 50,
+    },
+    parallaxHeaderText: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        color: '#fff',
+    },
+    buttonContainer: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    row: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        width: "100%",
+        marginBottom: 20,
+    },
+    button: {
+        backgroundColor: "#4a7a9b",
+        padding: 20,
+        borderRadius: 10,
+        width: "45%",
+        aspectRatio: 1,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    buttonText: {
+        color: "#fff",
+        fontSize: 18,
+        fontWeight: "bold",
+        textAlign: "center",
     },
 });
 

@@ -29,13 +29,13 @@ class ToolRequestController extends BaseController {
     }
 
     public async getAllToolRequests(
-        req: ApiRequest<{}, {}, { page: number; limit: number; search?: string; column?: string; direction?: "asc" | "desc" }>
+        req: ApiRequest<{ page: number; limit: number; search?: string; column?: string; direction?: "asc" | "desc" }, {}, {}>
     ): Promise<ApiResponse<PagedList<ToolRequest>> | ProblemDetail> {
         try {
             const validationError = await this.validateAccessToken(req);
             if (validationError) return validationError as unknown as ApiResponse<PagedList<ToolRequest>>;
 
-            const result = await this.toolRequestService.GetAllToolsRequestPagedAsync(req.body.payload);
+            const result = await this.toolRequestService.GetAllToolsRequestPagedAsync(req.query);
             return CreateResponse<PagedList<ToolRequest>>(
                 "success",
                 "Tool requests retrieved successfully",
@@ -48,13 +48,13 @@ class ToolRequestController extends BaseController {
     }
 
     public async getAllToolRepairRequests(
-        req: ApiRequest<{}, {}, { page: number; limit: number; search?: string; column?: string; direction?: "asc" | "desc" }>
+        req: ApiRequest<{ page: number; limit: number; search?: string; column?: string; direction?: "asc" | "desc" }, {}, {}>
     ): Promise<ApiResponse<PagedList<ToolRepairRequest>> | ProblemDetail> {
         try {
             const validationError = await this.validateAccessToken(req);
             if (validationError) return validationError as unknown as ApiResponse<PagedList<ToolRepairRequest>>;
 
-            const result = await this.toolRequestService.GetAllToolsRepairRequestPagedAsync(req.body.payload);
+            const result = await this.toolRequestService.GetAllToolsRepairRequestPagedAsync(req.query);
             return CreateResponse<PagedList<ToolRepairRequest>>(
                 "success",
                 "Tool repair requests retrieved successfully",

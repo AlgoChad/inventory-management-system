@@ -17,10 +17,10 @@ const toolRequestService: IToolRequestService = new ToolRequestService();
 const toolRequestController = new ToolRequestController(toolRequestService, authenticationService);
 
 const toolRequestRoutes = new Elysia({ prefix: "/tool-request" })
-    .get("/requests", async (req: ApiRequest<{}, {}, { page: number; limit: number; search?: string; column?: string; direction?: "asc" | "desc" }>) => {
+    .get("/requests", async (req: ApiRequest<{ page: number; limit: number; search?: string; column?: string; direction?: "asc" | "desc" }, {}, {}>) => {
         return await toolRequestController.getAllToolRequests(req);
     })
-    .get("/repair-requests", async (req: ApiRequest<{}, {}, { page: number; limit: number; search?: string; column?: string; direction?: "asc" | "desc" }>) => {
+    .get("/repair-requests", async (req: ApiRequest<{ page: number; limit: number; search?: string; column?: string; direction?: "asc" | "desc" }, {}, {}>) => {
         return await toolRequestController.getAllToolRepairRequests(req);
     })
     .get("/request/:id", async (req: ApiRequest<{}, {id: number}, {}>) => {
@@ -41,10 +41,11 @@ const toolRequestRoutes = new Elysia({ prefix: "/tool-request" })
     .put("/update-repair-request/:id", async (req: ApiRequest<{}, { id: number }, UpdateToolRepairRequestModel>) => {
         return await toolRequestController.updateToolRepairRequest(req);
     })
-    .delete("/delete-request/:id", async (req: ApiRequest<{}, { id: number }, {}>) => {
+    .post("/delete-request/:id", async (req: ApiRequest<{}, { id: number }, {}>) => {
+        console.log(req);
         return await toolRequestController.deleteToolRequest(req);
     })
-    .delete("/delete-repair-request/:id", async (req: ApiRequest<{}, { id: number }, {}>) => {
+    .post("/delete-repair-request/:id", async (req: ApiRequest<{}, { id: number }, {}>) => {
         return await toolRequestController.deleteToolRepairRequest(req);
     });
 

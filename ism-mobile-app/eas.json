@@ -9,13 +9,23 @@
       "distribution": "internal",
       "android": {
         "buildType": "apk"
-      }
+      },
+      "channel": "development"
     },
     "preview": {
       "distribution": "internal",
       "android": {
         "buildType": "apk"
-      }
+      },
+      "channel": "channel"
+    },
+    "preview2": {
+        "android": {
+            "gradleCommand": ":app:assembleRelease"
+        }
+    },
+    "preview3": {
+        "developmentClient": true
     },
     "production": {
       "autoIncrement": true,

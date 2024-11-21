@@ -49,7 +49,7 @@ export type ToolRequestModel = {
 
 export type CreateToolRequestModel = Omit<
     ToolRequest,
-    "id" | "status" | "createdAt" | "updatedAt" | "tool" | "personnel"
+    "id" | "status" | "createdAt" | "updatedAt" | "tool" | "personnel" | "project"
 >;
 
 export type UpdateToolRequestModel = Partial<CreateToolRequestModel>;
@@ -79,12 +79,14 @@ export type ToolRequest = {
     id: number;
     toolId: number;
     personnelId: number;
+    projectId: number
     quantity: number;
     status: string;
     createdAt: Date;
     updatedAt: Date;
     tool: ToolModel;
     personnel: any;
+    project: any;
 };
 
 export type ToolRepairRequest = {

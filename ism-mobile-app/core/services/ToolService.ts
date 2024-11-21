@@ -15,7 +15,7 @@ import ConditionTypeService from "./ConditionTypeService";
 import StatusTypeService from "./StatusTypeService";
 import { Datatable } from "@/data/models/generic/DatatableModel";
 
-const API_BASE_URL = "https://a04e-158-62-42-150.ngrok-free.app/api";
+const API_BASE_URL = "https://026b-158-62-42-150.ngrok-free.app/api";
 const API_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJpYXQiOjE3Mjk1MjAxOTEsImV4cCI6MTczMjExMjE5MX0.ke2Xab98m43_0v5zbY00shpVoNcB3UrMBXItA1AQDiQ";
 
 const restClient = new RestClient(API_BASE_URL, API_TOKEN);

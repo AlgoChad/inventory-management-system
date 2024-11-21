@@ -15,7 +15,7 @@ import RestClient from "@/data/rest/RestClient";
 import { ApiResponse } from "@/data/models/generic/ApiModel";
 
 const LoginScreen = () => {
-    const API_BASE_URL = "https://a04e-158-62-42-150.ngrok-free.app/api";
+    const API_BASE_URL = "https://026b-158-62-42-150.ngrok-free.app/api";
     const API_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJpYXQiOjE3Mjk1MjAxOTEsImV4cCI6MTczMjExMjE5MX0.ke2Xab98m43_0v5zbY00shpVoNcB3UrMBXItA1AQDiQ";
 
     const restClient = new RestClient(API_BASE_URL, API_TOKEN);
@@ -99,6 +99,7 @@ const styles = StyleSheet.create({
         fontSize: 24,
         fontWeight: "bold",
         marginBottom: 16,
+        color: "#2f5f7c",
     },
     logo: {
         width: 100,
@@ -134,7 +135,7 @@ const styles = StyleSheet.create({
     button: {
         width: "100%",
         padding: 12,
-        backgroundColor: "#000000",
+        backgroundColor: "#2f5f7c",
         borderRadius: 4,
         alignItems: "center",
     },

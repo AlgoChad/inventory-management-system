@@ -83,6 +83,11 @@ const navItems: NavElement[] = [
                 icon: FaUsers,
             },
             {
+                path: "/master-data/tool-request",
+                label: "Requests",
+                icon: FaUsers,
+            },
+            {
                 path: "/master-data/settings",
                 label: "Dropdown Settings",
                 icon: FaCogs,

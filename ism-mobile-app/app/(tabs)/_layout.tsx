@@ -3,17 +3,20 @@ import React from "react";
 
 import { TabBarIcon } from "@/components/navigation/TabBarIcon";
 import { Colors } from "@/constants/Colors";
-import { AntDesign, FontAwesome, MaterialIcons } from "@expo/vector-icons";
+import { AntDesign, FontAwesome, MaterialIcons, Ionicons, Entypo } from "@expo/vector-icons";
 import { View, StyleSheet } from "react-native";
+
+const lighterShade = "#4a7a9b"; // Lighter shade of #2f5f7c
+const buttonColor = "#fca923"; // Color for the buttons in the nav bar
 
 export default function TabLayout() {
     return (
         <Tabs
             screenOptions={{
-                tabBarActiveTintColor: "#000000",
+                tabBarActiveTintColor: "#ffffff",
                 tabBarInactiveTintColor: "#000000",
                 tabBarStyle: {
-                    backgroundColor: Colors["light"].background,
+                    backgroundColor: lighterShade,
                     height: 80,
                     position: "absolute",
                     bottom: 25,
@@ -40,16 +43,13 @@ export default function TabLayout() {
                                 focused && styles.iconContainerFocused,
                             ]}
                         >
-                            <TabBarIcon
-                                name={focused ? "home" : "home-outline"}
-                                color="#000000"
-                            />
+                            <AntDesign name="home" size={24} color={focused ? "#ffffff" : "#000000"} />
                         </View>
                     ),
                 }}
             />
             <Tabs.Screen
-                name="checkins"
+                name="projects"
                 options={{
                     tabBarIcon: ({ color, focused }) => (
                         <View
@@ -58,13 +58,13 @@ export default function TabLayout() {
                                 focused && styles.iconContainerFocused,
                             ]}
                         >
-                            <MaterialIcons name="checklist" size={24} color="#000000" />
+                            <FontAwesome name="folder-open" size={24} color={focused ? "#ffffff" : "#000000"} />
                         </View>
                     ),
                 }}
             />
             <Tabs.Screen
-                name="settings"
+                name="warehouse"
                 options={{
                     tabBarIcon: ({ color, focused }) => (
                         <View
@@ -73,10 +73,37 @@ export default function TabLayout() {
                                 focused && styles.iconContainerFocused,
                             ]}
                         >
-                            <TabBarIcon
-                                name={focused ? "settings" : "settings-outline"}
-                                color="#000000"
-                            />
+                            <Entypo name="shop" size={24} color={focused ? "#ffffff" : "#000000"} />
+                        </View>
+                    ),
+                }}
+            />
+            <Tabs.Screen
+                name="tool-request"
+                options={{
+                    tabBarIcon: ({ color, focused }) => (
+                        <View
+                            style={[
+                                styles.iconContainer,
+                                focused && styles.iconContainerFocused,
+                            ]}
+                        >
+                            <AntDesign name="tool" size={24} color="black" />
+                        </View>
+                    ),
+                }}
+            />
+            <Tabs.Screen
+                name="tool-repair"
+                options={{
+                    tabBarIcon: ({ color, focused }) => (
+                        <View
+                            style={[
+                                styles.iconContainer,
+                                focused && styles.iconContainerFocused,
+                            ]}
+                        >
+                            <MaterialIcons name="build" size={24} color={focused ? "#ffffff" : "#000000"} />
                         </View>
                     ),
                 }}
@@ -101,6 +128,6 @@ const styles = StyleSheet.create({
         elevation: 6,
     },
     iconContainerFocused: {
-        backgroundColor: "#e0e0e0",
+        backgroundColor: buttonColor,
     },
 });
