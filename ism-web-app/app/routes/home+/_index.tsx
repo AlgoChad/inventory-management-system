@@ -6,7 +6,7 @@ import TileGallery from "./components/TileGallery";
 import { shuffleArray } from "~/core/utils/helpers/GeneralHelpers"; // Utility function for shuffling arrays
 
 export const loader: LoaderFunction = async () => {
-    const imagePaths = Array.from({ length: 19 }, (_, i) => `app/assets/home/${i + 1}.jpg`);
+    const imagePaths = Array.from({ length: 19 }, (_, i) => `/assets/home/${i + 1}.jpg`);
 
     const shuffledImages = shuffleArray(imagePaths);
 
@@ -20,7 +20,6 @@ export const loader: LoaderFunction = async () => {
 
     return json({ imageGroups });
 };
-
 
 export default function Index() {
     const { imageGroups } = useLoaderData<{ imageGroups: string[][] }>();
