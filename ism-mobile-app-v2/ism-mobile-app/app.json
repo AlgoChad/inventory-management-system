@@ -1,0 +1,56 @@
+{
+  "expo": {
+    "name": "Livewise Inventory",
+    "slug": "ism-mobile-app",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/livewise.png",
+    "scheme": "myapp",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/livewise.jpg",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.algo_chad.ismmobileapp"
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./assets/images/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/images/livewise.jpg",
+          "imageWidth": 200,
+          "resizeMode": "contain",
+          "backgroundColor": "#ffffff"
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "e6a93a1c-74d9-4bc4-bc8c-36ea0e963a25"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/e6a93a1c-74d9-4bc4-bc8c-36ea0e963a25"
+    }
+  }
+}

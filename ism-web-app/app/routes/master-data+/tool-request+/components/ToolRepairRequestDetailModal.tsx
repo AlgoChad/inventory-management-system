@@ -44,7 +44,7 @@ const ToolRepairRequestDetailModal: React.FC<ToolRepairRequestDetailModalProps> 
                         <strong>Images:</strong>
                         <div className="flex flex-wrap gap-2 mt-2">
                             {request.images.map((image) => (
-                                <img key={image.id} src={image.base64} alt={image.name} className="w-24 h-24 object-cover rounded-md" />
+                                <img key={image.id} src={`data:image/jpeg;base64,${image.base64}`} alt={image.name} className="w-24 h-24 object-cover rounded-md" />
                             ))}
                         </div>
                     </div>
