@@ -3,14 +3,18 @@ import { Form, useSubmit } from "@remix-run/react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "~/components/ui/dialog";
 import { Button } from "~/components/ui/button";
 
-const CreatePersonnelForm = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => void }) => {
+const RegisterUserForm = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => void }) => {
     const submit = useSubmit();
     const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
 
     const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault();
         const formData = new FormData();
         formData.append("name", name);
+        formData.append("email", email);
+        formData.append("password", password);
 
         submit(formData, { method: "post", action: "/master-data/personnel/create" });
 
@@ -26,7 +30,7 @@ const CreatePersonnelForm = ({ isOpen, onClose }: { isOpen: boolean, onClose: ()
             <DialogContent className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-lg">
                 <DialogHeader>
                     <DialogTitle className="text-xl font-semibold text-gray-800">
-                        Create Personnel
+                        Register User
                     </DialogTitle>
                 </DialogHeader>
                 <div className="mt-4">
@@ -45,11 +49,39 @@ const CreatePersonnelForm = ({ isOpen, onClose }: { isOpen: boolean, onClose: ()
                                 className="mt-1 block w-full px-3 py-2 border border-black rounded-md shadow-sm focus:outline-none focus:ring-black focus:border-black sm:text-sm bg-white text-gray-900"
                             />
                         </div>
+                        <div>
+                            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                                Email:
+                            </label>
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                required
+                                className="mt-1 block w-full px-3 py-2 border border-black rounded-md shadow-sm focus:outline-none focus:ring-black focus:border-black sm:text-sm bg-white text-gray-900"
+                            />
+                        </div>
+                        <div>
+                            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                                Password:
+                            </label>
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                required
+                                className="mt-1 block w-full px-3 py-2 border border-black rounded-md shadow-sm focus:outline-none focus:ring-black focus:border-black sm:text-sm bg-white text-gray-900"
+                            />
+                        </div>
                         <div className="flex justify-end">
                             <Button
                                 type="submit"
                             >
-                                Create
+                                Register
                             </Button>
                         </div>
                     </Form>
@@ -59,4 +91,4 @@ const CreatePersonnelForm = ({ isOpen, onClose }: { isOpen: boolean, onClose: ()
     );
 };
 
-export default CreatePersonnelForm;
+export default RegisterUserForm;

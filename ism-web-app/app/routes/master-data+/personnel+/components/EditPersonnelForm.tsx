@@ -13,6 +13,9 @@ interface EditPersonnelFormProps {
 const EditPersonnelForm: React.FC<EditPersonnelFormProps> = ({ isOpen, onClose, item }) => {
     const submit = useSubmit();
     const [name, setName] = useState(item?.name || "");
+    const [oldPassword, setOldPassword] = useState("");
+    const [newPassword, setNewPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
 
     useEffect(() => {
         if (item) {
@@ -26,6 +29,11 @@ const EditPersonnelForm: React.FC<EditPersonnelFormProps> = ({ isOpen, onClose, 
             const formData = new FormData();
             formData.append("id", item.id.toString());
             formData.append("name", name);
+            if (newPassword) {
+                formData.append("oldPassword", oldPassword);
+                formData.append("newPassword", newPassword);
+                formData.append("confirmPassword", confirmPassword);
+            }
 
             submit(formData, { method: "post", action: "/master-data/personnel/update" });
             onClose();
@@ -57,6 +65,45 @@ const EditPersonnelForm: React.FC<EditPersonnelFormProps> = ({ isOpen, onClose, 
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
                                 required
+                                className="mt-1 block w-full px-3 py-2 border border-black rounded-md shadow-sm focus:outline-none focus:ring-black focus:border-black sm:text-sm bg-white text-gray-900"
+                            />
+                        </div>
+                        <div>
+                            <label htmlFor="oldPassword" className="block text-sm font-medium text-gray-700">
+                                Old Password:
+                            </label>
+                            <input
+                                type="password"
+                                id="oldPassword"
+                                name="oldPassword"
+                                value={oldPassword}
+                                onChange={(e) => setOldPassword(e.target.value)}
+                                className="mt-1 block w-full px-3 py-2 border border-black rounded-md shadow-sm focus:outline-none focus:ring-black focus:border-black sm:text-sm bg-white text-gray-900"
+                            />
+                        </div>
+                        <div>
+                            <label htmlFor="newPassword" className="block text-sm font-medium text-gray-700">
+                                New Password:
+                            </label>
+                            <input
+                                type="password"
+                                id="newPassword"
+                                name="newPassword"
+                                value={newPassword}
+                                onChange={(e) => setNewPassword(e.target.value)}
+                                className="mt-1 block w-full px-3 py-2 border border-black rounded-md shadow-sm focus:outline-none focus:ring-black focus:border-black sm:text-sm bg-white text-gray-900"
+                            />
+                        </div>
+                        <div>
+                            <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
+                                Confirm Password:
+                            </label>
+                            <input
+                                type="password"
+                                id="confirmPassword"
+                                name="confirmPassword"
+                                value={confirmPassword}
+                                onChange={(e) => setConfirmPassword(e.target.value)}
                                 className="mt-1 block w-full px-3 py-2 border border-black rounded-md shadow-sm focus:outline-none focus:ring-black focus:border-black sm:text-sm bg-white text-gray-900"
                             />
                         </div>

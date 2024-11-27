@@ -1,7 +1,8 @@
 import { ActionFunction, json, redirect } from "@remix-run/node";
 import { ApiResponse } from "~/data/models/generic/ApiModel";
-import { PersonnelModel, CreatePersonnelModel, UpdatePersonnelModel } from "~/data/models/personnel/PersonnelModel";
+import { PersonnelModel, UpdatePersonnelModel } from "~/data/models/personnel/PersonnelModel";
 import RestClient from "~/data/rest/RestClient";
+import { ChangePasswordModel } from "~/data/models/authentication/AuthenticationModel";
 
 const API_BASE_URL = process.env.API_BASE_URL as string;
 const API_TOKEN = process.env.API_TOKEN as string;
@@ -11,6 +12,9 @@ export const action: ActionFunction = async ({ request }) => {
     const formData = await request.formData();
     const id = formData.get("id");
     const name = formData.get("name");
+    const oldPassword = formData.get("oldPassword");
+    const newPassword = formData.get("newPassword");
+    const confirmPassword = formData.get("confirmPassword");
 
     if (typeof id !== "string" || typeof name !== "string" || !id || !name) {
         return json({ error: "Invalid form data" }, { status: 400 });
@@ -19,7 +23,17 @@ export const action: ActionFunction = async ({ request }) => {
     const updatePersonnelModel: UpdatePersonnelModel = { name };
 
     try {
-        const response: any = await restClient.Put(`/personnel/${id}`, {payload: updatePersonnelModel});
+        await restClient.Put(`/personnel/${id}`, { payload: updatePersonnelModel });
+
+        if (newPassword && confirmPassword && newPassword === confirmPassword) {
+            const changePasswordModel: ChangePasswordModel = { 
+                userId: parseInt(id), 
+                oldPassword: oldPassword as string, 
+                newPassword: newPassword as string 
+            };
+            await restClient.Post(`/auth/change-password`, { payload: changePasswordModel });
+        }
+
         return redirect("/master-data/personnel");
     } catch (error) {
         return json(
@@ -28,4 +42,3 @@ export const action: ActionFunction = async ({ request }) => {
         );
     }
 };
-
